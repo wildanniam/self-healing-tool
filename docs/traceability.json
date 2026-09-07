@@ -1,0 +1,917 @@
+{
+  "version": 1,
+  "change": "build-self-healing-tool",
+  "requirements": [
+    {
+      "id": "AUD-001",
+      "capability": "audit-workflow",
+      "spec": "openspec/specs/audit-workflow/spec.md",
+      "decisions": [
+        "D16",
+        "D17"
+      ],
+      "scenarios": [
+        "AUD-001-S1",
+        "AUD-001-S2"
+      ],
+      "owner": "maintainer",
+      "status": "established",
+      "tasks": [
+        "8.3"
+      ],
+      "verification": {
+        "id": "V-AUD-001",
+        "method": "Repository check and PR/decision review",
+        "acceptance": "Traceable requirements"
+      },
+      "evidence": []
+    },
+    {
+      "id": "AUD-002",
+      "capability": "audit-workflow",
+      "spec": "openspec/specs/audit-workflow/spec.md",
+      "decisions": [
+        "D15",
+        "D17"
+      ],
+      "scenarios": [
+        "AUD-002-S1",
+        "AUD-002-S2"
+      ],
+      "owner": "maintainer",
+      "status": "established",
+      "tasks": [
+        "8.3"
+      ],
+      "verification": {
+        "id": "V-AUD-002",
+        "method": "Repository check and PR/decision review",
+        "acceptance": "Truthful completion states"
+      },
+      "evidence": []
+    },
+    {
+      "id": "AUD-003",
+      "capability": "audit-workflow",
+      "spec": "openspec/specs/audit-workflow/spec.md",
+      "decisions": [
+        "D05",
+        "D06",
+        "D16",
+        "D17"
+      ],
+      "scenarios": [
+        "AUD-003-S1",
+        "AUD-003-S2"
+      ],
+      "owner": "maintainer",
+      "status": "established",
+      "tasks": [
+        "8.3"
+      ],
+      "verification": {
+        "id": "V-AUD-003",
+        "method": "Repository check and PR/decision review",
+        "acceptance": "Reviewable change lifecycle"
+      },
+      "evidence": []
+    },
+    {
+      "id": "AUD-004",
+      "capability": "audit-workflow",
+      "spec": "openspec/specs/audit-workflow/spec.md",
+      "decisions": [
+        "D14",
+        "D15",
+        "D16",
+        "D17"
+      ],
+      "scenarios": [
+        "AUD-004-S1",
+        "AUD-004-S2"
+      ],
+      "owner": "maintainer",
+      "status": "established",
+      "tasks": [
+        "8.3"
+      ],
+      "verification": {
+        "id": "V-AUD-004",
+        "method": "Repository check and PR/decision review",
+        "acceptance": "Decision and evidence provenance"
+      },
+      "evidence": []
+    },
+    {
+      "id": "INT-001",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D02",
+        "D05",
+        "D06"
+      ],
+      "scenarios": [
+        "INT-001-S1",
+        "INT-001-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "1.2",
+        "6.1",
+        "8.1"
+      ],
+      "verification": {
+        "id": "V-INT-001",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Independent consumer package"
+      },
+      "evidence": []
+    },
+    {
+      "id": "INT-002",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D02",
+        "D09"
+      ],
+      "scenarios": [
+        "INT-002-S1",
+        "INT-002-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "1.3"
+      ],
+      "verification": {
+        "id": "V-INT-002",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Explicit action integration"
+      },
+      "evidence": []
+    },
+    {
+      "id": "INT-003",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "INT-003-S1",
+        "INT-003-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "2.1"
+      ],
+      "verification": {
+        "id": "V-INT-003",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Explicit validated configuration"
+      },
+      "evidence": []
+    },
+    {
+      "id": "INT-004",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D02",
+        "D07"
+      ],
+      "scenarios": [
+        "INT-004-S1",
+        "INT-004-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "1.2",
+        "6.1",
+        "8.1"
+      ],
+      "verification": {
+        "id": "V-INT-004",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Documented compatibility"
+      },
+      "evidence": []
+    },
+    {
+      "id": "INT-005",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D05",
+        "D06",
+        "D14"
+      ],
+      "scenarios": [
+        "INT-005-S1",
+        "INT-005-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "1.1",
+        "8.1"
+      ],
+      "verification": {
+        "id": "V-INT-005",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Authorized source extraction"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-001",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D02",
+        "D09"
+      ],
+      "scenarios": [
+        "HEAL-001-S1",
+        "HEAL-001-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "2.2"
+      ],
+      "verification": {
+        "id": "V-HEAL-001",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Narrow recovery trigger"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-002",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "HEAL-002-S1",
+        "HEAL-002-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "2.3"
+      ],
+      "verification": {
+        "id": "V-HEAL-002",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Bounded attempts"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-003",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D02",
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "HEAL-003-S1",
+        "HEAL-003-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "1.3",
+        "2.3"
+      ],
+      "verification": {
+        "id": "V-HEAL-003",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Preserved test intent"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-004",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "HEAL-004-S1",
+        "HEAL-004-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "2.5"
+      ],
+      "verification": {
+        "id": "V-HEAL-004",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Separated action outcomes"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-005",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "HEAL-005-S1",
+        "HEAL-005-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "2.4"
+      ],
+      "verification": {
+        "id": "V-HEAL-005",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Validated selector output"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-006",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "HEAL-006-S1",
+        "HEAL-006-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "2.5"
+      ],
+      "verification": {
+        "id": "V-HEAL-006",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Visible operational failures"
+      },
+      "evidence": []
+    },
+    {
+      "id": "CTX-001",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D02",
+        "D09"
+      ],
+      "scenarios": [
+        "CTX-001-S1",
+        "CTX-001-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "3.1"
+      ],
+      "verification": {
+        "id": "V-CTX-001",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Action-relevant candidate context"
+      },
+      "evidence": []
+    },
+    {
+      "id": "CTX-002",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D03",
+        "D07",
+        "D09"
+      ],
+      "scenarios": [
+        "CTX-002-S1",
+        "CTX-002-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "3.2"
+      ],
+      "verification": {
+        "id": "V-CTX-002",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Reusable entity context"
+      },
+      "evidence": []
+    },
+    {
+      "id": "CTX-003",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "CTX-003-S1",
+        "CTX-003-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "3.3",
+        "6.3"
+      ],
+      "verification": {
+        "id": "V-CTX-003",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Oracle separation"
+      },
+      "evidence": []
+    },
+    {
+      "id": "CTX-004",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D09",
+        "D13",
+        "D15"
+      ],
+      "scenarios": [
+        "CTX-004-S1",
+        "CTX-004-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "3.1"
+      ],
+      "verification": {
+        "id": "V-CTX-004",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Auditable input budget"
+      },
+      "evidence": []
+    },
+    {
+      "id": "OBS-001",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "OBS-001-S1",
+        "OBS-001-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "4.1"
+      ],
+      "verification": {
+        "id": "V-OBS-001",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Isolated recovery records"
+      },
+      "evidence": []
+    },
+    {
+      "id": "OBS-002",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "OBS-002-S1",
+        "OBS-002-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "4.1",
+        "7.3"
+      ],
+      "verification": {
+        "id": "V-OBS-002",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Independent result dimensions"
+      },
+      "evidence": []
+    },
+    {
+      "id": "OBS-003",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D09",
+        "D12",
+        "D15"
+      ],
+      "scenarios": [
+        "OBS-003-S1",
+        "OBS-003-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "4.2",
+        "6.3",
+        "7.3"
+      ],
+      "verification": {
+        "id": "V-OBS-003",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Comparable time and resource accounting"
+      },
+      "evidence": []
+    },
+    {
+      "id": "OBS-004",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D05",
+        "D06",
+        "D14"
+      ],
+      "scenarios": [
+        "OBS-004-S1",
+        "OBS-004-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "4.3"
+      ],
+      "verification": {
+        "id": "V-OBS-004",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Controlled artifact disclosure"
+      },
+      "evidence": []
+    },
+    {
+      "id": "OBS-005",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D09",
+        "D12",
+        "D15"
+      ],
+      "scenarios": [
+        "OBS-005-S1",
+        "OBS-005-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "4.3"
+      ],
+      "verification": {
+        "id": "V-OBS-005",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Human review support"
+      },
+      "evidence": []
+    },
+    {
+      "id": "DEMO-001",
+      "capability": "local-demo",
+      "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
+      "decisions": [
+        "D05",
+        "D06"
+      ],
+      "scenarios": [
+        "DEMO-001-S1",
+        "DEMO-001-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "5.1"
+      ],
+      "verification": {
+        "id": "V-DEMO-001",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Independent example application"
+      },
+      "evidence": []
+    },
+    {
+      "id": "DEMO-002",
+      "capability": "local-demo",
+      "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
+      "decisions": [
+        "D04",
+        "D05",
+        "D06"
+      ],
+      "scenarios": [
+        "DEMO-002-S1",
+        "DEMO-002-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "5.2"
+      ],
+      "verification": {
+        "id": "V-DEMO-002",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Local target confinement"
+      },
+      "evidence": []
+    },
+    {
+      "id": "DEMO-003",
+      "capability": "local-demo",
+      "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
+      "decisions": [
+        "D04",
+        "D05",
+        "D06"
+      ],
+      "scenarios": [
+        "DEMO-003-S1",
+        "DEMO-003-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "5.3"
+      ],
+      "verification": {
+        "id": "V-DEMO-003",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Synthetic isolated state"
+      },
+      "evidence": []
+    },
+    {
+      "id": "DEMO-004",
+      "capability": "local-demo",
+      "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
+      "decisions": [
+        "D05",
+        "D15"
+      ],
+      "scenarios": [
+        "DEMO-004-S1",
+        "DEMO-004-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "5.1",
+        "5.4"
+      ],
+      "verification": {
+        "id": "V-DEMO-004",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Explicit execution modes"
+      },
+      "evidence": []
+    },
+    {
+      "id": "DEMO-005",
+      "capability": "local-demo",
+      "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
+      "decisions": [
+        "D05",
+        "D06",
+        "D14",
+        "D15"
+      ],
+      "scenarios": [
+        "DEMO-005-S1",
+        "DEMO-005-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "8.1",
+        "8.2",
+        "8.3"
+      ],
+      "verification": {
+        "id": "V-DEMO-005",
+        "method": "Automated contract or integration check plus review",
+        "acceptance": "Reviewed release contents"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-001",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D08",
+        "D10",
+        "D11"
+      ],
+      "scenarios": [
+        "EVAL-001-S1",
+        "EVAL-001-S2"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "6.2",
+        "7.1"
+      ],
+      "verification": {
+        "id": "V-EVAL-001",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Classified and justified cases"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-002",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "EVAL-002-S1",
+        "EVAL-002-S2"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "6.1",
+        "6.2",
+        "6.3"
+      ],
+      "verification": {
+        "id": "V-EVAL-002",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Independent semantic assessment"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-003",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D13",
+        "D15"
+      ],
+      "scenarios": [
+        "EVAL-003-S1",
+        "EVAL-003-S2"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "3.4",
+        "7.2",
+        "8.2"
+      ],
+      "verification": {
+        "id": "V-EVAL-003",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Comparable technical baselines"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-004",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D08",
+        "D10",
+        "D11",
+        "D15"
+      ],
+      "scenarios": [
+        "EVAL-004-S1",
+        "EVAL-004-S2"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "7.1"
+      ],
+      "verification": {
+        "id": "V-EVAL-004",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Frozen final protocol"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-005",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D09",
+        "D15"
+      ],
+      "scenarios": [
+        "EVAL-005-S1",
+        "EVAL-005-S2"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "7.2",
+        "7.3"
+      ],
+      "verification": {
+        "id": "V-EVAL-005",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Complete outcome accounting"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-006",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D08",
+        "D12",
+        "D15"
+      ],
+      "scenarios": [
+        "EVAL-006-S1",
+        "EVAL-006-S2",
+        "EVAL-006-S3"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "7.4",
+        "7.5"
+      ],
+      "verification": {
+        "id": "V-EVAL-006",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Fair practitioner task endpoints"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-007",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D08",
+        "D14",
+        "D15"
+      ],
+      "scenarios": [
+        "EVAL-007-S1",
+        "EVAL-007-S2"
+      ],
+      "owner": "research-author-and-engineer",
+      "status": "planned",
+      "tasks": [
+        "6.3",
+        "7.3",
+        "7.4",
+        "7.5",
+        "8.2"
+      ],
+      "verification": {
+        "id": "V-EVAL-007",
+        "method": "Controlled experiment or protocol review",
+        "acceptance": "Evidence and claim boundaries"
+      },
+      "evidence": []
+    }
+  ],
+  "completedTasks": []
+}
