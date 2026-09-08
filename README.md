@@ -64,3 +64,5 @@ OpenSpec reference: [official setup guide](https://openspec.dev/docs/setup). Con
 The optional persisted live-budget API and package 0.0.1 enforce shared phase/request reservations across instances. See [D20/D21](docs/decisions/2026-09-08-live-pilot.md) and [integration instructions](docs/integration.md).
 
 Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution subsequently completed after D22; see [pilot and provider-stop follow-up](docs/evidence/pilot-followup-2026-09-08.md).
+
+The D23 checkpoint prepares [the final evaluation review package](docs/evaluation/final-review-package.md): private native preflight and a draft protocol/budget. Final collection and its owner-review tasks remain pending.

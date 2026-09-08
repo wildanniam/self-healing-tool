@@ -21,3 +21,9 @@ The deadline race intentionally remains bounded: a late response cannot trigger 
 Node 24.18.0, TypeScript 5.9.3, Playwright 1.62.1/Chromium, macOS arm64. `npm run test:unit`: 18/18 PASS. `npm run test:browser`: 20/20 PASS, including terminal budget/HTTP/provider failure and valid late-response cases; existing parse/validation retries still pass. `npm run test:consumer`: clean import, normal fill, recovery and 22-file allowlist PASS. Checks are offline with synthetic fixtures/fake transport; no key or model request is used.
 
 OpenSpec HEAL-006-S1 now explicitly requires termination without another provider invocation or late action. The new passing regression evidence supports that refinement. Tasks 6.3 and 7.1 remain unchecked until their owner-review portions are complete; delivering a review package is not owner acceptance.
+
+## Report caption follow-up (0.0.3)
+
+Inspection of the failed-pilot report also found that a null selector was captioned `abstained` even when the attempt failed at the provider. Version 0.0.3 renders `no selector` for failures and reserves `abstained` for an actual abstention. Numeric outcomes and historical reports are unchanged. The terminal-provider browser regression now checks this visible distinction. This is presentation/accounting clarity, not a different selection method.
+
+Version 0.0.3 verification: build, both HEAL-006 terminal/late-response browser regressions (2/2) and the clean consumer/22-file allowlist passed. No live request was made.

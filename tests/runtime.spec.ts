@@ -256,6 +256,8 @@ test('HEAL-006 terminal provider failures stop after one invocation with truthfu
     const event = session.snapshot().events[0]!;
     expect(calls).toBe(1); expect(event.attempts).toHaveLength(1);
     expect(event.stopReason).toBe('provider-failure'); expect(event.failure).toBe('provider');
+    expect(renderReport(session.snapshot())).toContain('<code>no selector</code>');
+    expect(renderReport(session.snapshot())).not.toContain('<code>abstained</code>');
     expect(event.attempts[0]).toMatchObject({reason:item.reason,transportAttempted:item.dispatched,usage:item.usage,actionExecuted:false});
     await expect(page.locator('#display')).toHaveValue('');
   }
