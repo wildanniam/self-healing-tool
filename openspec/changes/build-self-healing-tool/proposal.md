@@ -4,7 +4,7 @@ QA practitioners need to recover broken UI locators without silently changing th
 
 Planning source: owner-approved direction dated 2026-09-07, summarized in [the decision register](../../../docs/decisions/2026-09-07-foundation.md). This proposal is tracked by [issue #1](https://github.com/wildanniam/self-healing-tool/issues/1) for specification setup; implementation work will use follow-up issues linked to this change. Planning artifacts being complete does not mean the tool is implemented.
 
-Decision basis: D01–D08 establish the tool and artifact boundaries, D09–D13 the evaluation direction, D14–D15 the evidence constraints, and D16–D17 the durable audit workflow. Per-requirement links are recorded in the traceability register.
+Decision basis: D01–D08 establish the tool and artifact boundaries, D09–D13 the evaluation direction, D14–D15 the evidence constraints, and D16–D17 the durable audit workflow. [D18](../../../docs/decisions/2026-09-08-local-api.md) adds the owner-selected initial API settings on 2026-09-08 under issue #3. Per-requirement links are recorded in the traceability register.
 
 ## What Changes
 
@@ -34,4 +34,4 @@ None. The current `audit-workflow` capability governs repository process; it doe
 
 ## Impact
 
-Future implementation will add library, demo, and evaluation-support modules here. Integration with the real application happens separately in its private repository. This PR adds specifications and repository tooling only; no application source, model execution, participant data, or prior experiment artifacts are migrated. Model selection, API budget, final case manifest, participant availability, public licensing, and release approval remain explicit decisions to resolve at their relevant milestones.
+Future implementation will add library, demo, and evaluation-support modules here. Integration with the real application happens separately in its private repository. Foundation issue #1 adds specifications and repository tooling; follow-up issue #3 prepares the local API environment. No application source, model execution, participant data, or prior experiment artifacts are migrated. D18 selects the initial model/profile. Final experiment configuration, API budget, case manifest, participant availability, public licensing, and release approval remain explicit decisions to resolve at their relevant milestones.

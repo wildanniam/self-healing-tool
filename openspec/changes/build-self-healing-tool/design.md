@@ -49,7 +49,7 @@ The evaluator retains expected targets and outcomes out of band. Sanitize every 
 
 Use one extraction/candidate contract, validator and attempt accounting. Full mode invokes the explicitly configured model; ranker-only selects through a documented deterministic ranking rule without a provider call. Both receive equivalent legitimate task information and no oracle. Freeze tie-breaking, thresholds, model ID, payload limits and stopping rules before final collection. Do not retune one method after inspecting final outcomes.
 
-The initial provider adapter must validate configured values and expose actual usage or unknown usage, rather than silently substituting a model. An exact model and paid budget are parameters selected before live collection; offline fake-provider responses support integration checks but cannot support model performance claims (INT-003, EVAL-003, DEMO-004).
+The initial provider adapter must validate configured values and expose actual usage or unknown usage, rather than silently substituting a model. [D18](../../../docs/decisions/2026-09-08-local-api.md) selects the initial reference profile: OpenAI Chat Completions, gpt-4o-mini, output cap 500, temperature 0, healing limit 3 and DOM-context characters 8000. The local environment/template only records these values; runtime loading and validation are still pending. Total spending, request timeout, complete-payload limits and final experiment model/version are set before live collection; offline fake-provider responses support integration checks but cannot support model performance claims (INT-003, EVAL-003, DEMO-004).
 
 ### 5. Event records separate facts from interpretation
 
@@ -100,4 +100,4 @@ Rollback is removal/reversion of the wrapper integration or package version in t
 
 ## Open Questions
 
-These are parameters or release decisions deferred to named tasks, not permission to start unbounded work: final tool branding/license; exact supported package/module/version matrix after a consumer check; supported model ID and live budget; final case manifest after the pilot; study participants and allowed auxiliary tools. Their owners and preparation requirements are in the decision register. A choice that materially changes the capability contract must update the specs before implementation.
+These are parameters or release decisions deferred to named tasks, not permission to start unbounded work: final tool branding/license; exact supported package/module/version matrix after a consumer check; final experiment model/version and live budget (initial profile selected in D18); final case manifest after the pilot; study participants and allowed auxiliary tools. Their owners and preparation requirements are in the decision register. A choice that materially changes the capability contract must update the specs before implementation.
