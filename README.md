@@ -2,7 +2,7 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: initial library, reporting and synthetic offline demo implemented; live model/private-host evaluation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: initial library, reports and independent offline/live demo verified; private-host live evaluation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
 
 ## Start here
 
@@ -45,7 +45,7 @@ A blank-key environment template and [local setup guide](docs/local-api-setup.md
 
 Codex integrations are checked in under `.agents/skills/`. Use `$openspec-propose` for a new proposal, `$openspec-update-change` for a revision and `$openspec-apply-change` when starting an authorized implementation increment. Keep the foundation change open while its tasks are incomplete.
 
-The first implementation increment covers tasks 1.1–5.3. D21 now authorizes one bounded live batch; task 5.4 remains pending actual execution evidence. The five-case pilot follows separate private-host integration and case review. See [integration instructions](docs/integration.md), [component inventory](docs/implementation/component-inventory.md) and [runtime evidence](docs/evidence/offline-runtime-2026-09-08.md).
+The first implementation increment covers tasks 1.1–5.3. D21 authorizes one bounded live batch; task 5.4 now has actual independent live-demo evidence. The five-case pilot follows separate private-host integration and case review. See [integration instructions](docs/integration.md), [component inventory](docs/implementation/component-inventory.md) and [runtime evidence](docs/evidence/offline-runtime-2026-09-08.md).
 
 ## Try the independent demo
 
@@ -62,3 +62,5 @@ Development checks: `npm run typecheck`, `npm run test:unit`, `npm run test:brow
 OpenSpec reference: [official setup guide](https://openspec.dev/docs/setup). Contribution rules: [AGENTS.md](AGENTS.md).
 
 The optional persisted live-budget API and package 0.0.1 enforce shared phase/request reservations across instances. See [D20/D21](docs/decisions/2026-09-08-live-pilot.md) and [integration instructions](docs/integration.md).
+
+Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution currently awaits the disclosure approval requested after automatic review.

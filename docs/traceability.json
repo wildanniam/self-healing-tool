@@ -1317,7 +1317,7 @@
         "DEMO-004-S2"
       ],
       "owner": "engineer",
-      "status": "implemented",
+      "status": "verified",
       "tasks": [
         "5.1",
         "5.4"
@@ -1347,6 +1347,20 @@
           ],
           "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-LIVE-DEMO-004-CHECK",
+          "kind": "verification",
+          "summary": "Actual independent live smoke and configuration checks (DEMO), or accepted/verified private development case meanings and retained wrong-field observation (EVAL); scoped details in checkpoint, no private live result yet.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "DEMO-004-S1",
+            "DEMO-004-S2"
+          ],
+          "command": "npm run test:unit; npm run demo:live; private npm run test:e2e:healing in audit/ranker-only modes; D20 owner case review",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
           "date": "2026-09-08",
           "result": "pass"
         }
@@ -1394,7 +1408,7 @@
         "EVAL-001-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "6.2",
         "7.1"
@@ -1404,7 +1418,30 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Classified and justified cases"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D20-EVAL-001-IMPL",
+          "kind": "implementation",
+          "summary": "Five classified development case cards and independent private-harness oracles are implemented; owner accepted their meanings in D20. Final manifest remains separate.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "EVAL-001-S2"
+          ]
+        },
+        {
+          "id": "EV-LIVE-EVAL-001-CHECK",
+          "kind": "verification",
+          "summary": "Actual independent live smoke and configuration checks (DEMO), or accepted/verified private development case meanings and retained wrong-field observation (EVAL); scoped details in checkpoint, no private live result yet.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "EVAL-001-S2"
+          ],
+          "command": "npm run test:unit; npm run demo:live; private npm run test:e2e:healing in audit/ranker-only modes; D20 owner case review",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "EVAL-002",
@@ -1451,6 +1488,19 @@
           ],
           "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
           "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-LIVE-EVAL-002-CHECK",
+          "kind": "verification",
+          "summary": "Actual independent live smoke and configuration checks (DEMO), or accepted/verified private development case meanings and retained wrong-field observation (EVAL); scoped details in checkpoint, no private live result yet.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "EVAL-002-S2"
+          ],
+          "command": "npm run test:unit; npm run demo:live; private npm run test:e2e:healing in audit/ranker-only modes; D20 owner case review",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
           "date": "2026-09-08",
           "result": "pass"
         }
@@ -1737,6 +1787,19 @@
         "EV-PRIVATE-INT-001-CHECK",
         "EV-PRIVATE-INT-004-CHECK",
         "EV-PRIVATE-EVAL-002-CHECK"
+      ]
+    },
+    {
+      "task": "5.4",
+      "evidence": [
+        "EV-LIVE-DEMO-004-CHECK"
+      ]
+    },
+    {
+      "task": "6.2",
+      "evidence": [
+        "EV-LIVE-EVAL-001-CHECK",
+        "EV-LIVE-EVAL-002-CHECK"
       ]
     }
   ]

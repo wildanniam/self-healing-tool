@@ -30,12 +30,12 @@
 - [x] 5.1 Engineer builds an independent minimal profile/entity/dialog app and example tests in this repo. Verify a clean clone runs the offline demo without private repository access or model credentials. [DEMO-001, DEMO-004]
 - [x] 5.2 Engineer confines the demo target, redirects and app requests to declared loopback services. Verify remote targets and remote application requests are rejected, with live server-side provider calls separately configured. [DEMO-002]
 - [x] 5.3 Engineer adds deterministic synthetic state and a local reset guard. Verify repeatable local identities and refusal of a mismatched datastore/reset target. [DEMO-003]
-- [ ] 5.4 Engineer documents offline and live modes, validates explicit credentials/limits, and records a bounded live smoke run only when its budget is authorized. Verify missing configuration causes no paid calls and offline results are never presented as model evidence. [DEMO-004]
+- [x] 5.4 Engineer documents offline and live modes, validates explicit credentials/limits, and records a bounded live smoke run only when its budget is authorized. Verify missing configuration causes no paid calls and offline results are never presented as model evidence. [DEMO-004]
 
 ## 6. Private integration and five-case pilot
 
 - [x] 6.1 Engineer integrates the prepared package through a separate private-host issue/PR using that repo's instructions. Verify pristine profile/entity flows locally with synthetic state and existing assertions; retain private evidence there. [INT-001, INT-004, EVAL-002]
-- [ ] 6.2 Engineer prepares five labeled development cases: two normal controls, profile drift, ambiguous entity action and absent target. Wildan reviews task meaning. Verify initial failure, reset, semantic oracle and side-effect checks before measuring healing. [EVAL-001, EVAL-002]
+- [x] 6.2 Engineer prepares five labeled development cases: two normal controls, profile drift, ambiguous entity action and absent target. Wildan reviews task meaning. Verify initial failure, reset, semantic oracle and side-effect checks before measuring healing. [EVAL-001, EVAL-002]
 - [ ] 6.3 Engineer runs the bounded pilot and audits instrumentation under an authorized API budget; Wildan reviews results. Verify actual payload/oracle separation, all attempt outcomes, timing and failures; deliver a pilot findings record without final-study claims. [CTX-003, OBS-003, EVAL-002, EVAL-007]
 
 ## 7. Final protocol and evidence collection
