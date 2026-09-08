@@ -2,7 +2,7 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: initial library, reports and independent offline/live demo verified; private-host live evaluation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: initial library, reports and independent offline/live demo verified; five-case private live pilot completed; final evaluation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
 
 ## Start here
 
@@ -29,7 +29,7 @@ The checks validate OpenSpec structure and traceability, not recovery effectiven
 
 ## Local API configuration
 
-A blank-key environment template and [local setup guide](docs/local-api-setup.md) now document the owner-selected reference settings. Fill `OPENAI_API_KEY` only in your ignored local `.env`; preserve any existing file. Environment loading is explicit in the live demo; offline commands do not load a key. The adapter is verified with fake transport, not a live account.
+A blank-key environment template and [local setup guide](docs/local-api-setup.md) now document the owner-selected reference settings. Fill `OPENAI_API_KEY` only in your ignored local `.env`; preserve any existing file. Environment loading is explicit in the live demo; offline commands do not load a key. The adapter has offline transport checks and a bounded live demo/pilot; read the dated evidence for outcomes and missing usage.
 
 ## Specification map
 
@@ -38,9 +38,9 @@ A blank-key environment template and [local setup guide](docs/local-api-setup.md
 | [Audit workflow](openspec/specs/audit-workflow/spec.md) | AUD | Repository process baseline |
 | [Library integration](openspec/changes/build-self-healing-tool/specs/library-integration/spec.md) | INT | Development package verified; release pending |
 | [Runtime recovery](openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md) | HEAL | Initial offline behavior verified |
-| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Synthetic context checks verified; private pilot pending |
+| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Synthetic checks and private pilot audited; final study pending |
 | [Recovery reporting](openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md) | OBS | Offline report checks verified |
-| [Local demo](openspec/changes/build-self-healing-tool/specs/local-demo/spec.md) | DEMO | Offline demo verified; live/release pending |
+| [Local demo](openspec/changes/build-self-healing-tool/specs/local-demo/spec.md) | DEMO | Offline/live demo verified; release pending |
 | [Evaluation protocol](openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md) | EVAL | Planned |
 
 Codex integrations are checked in under `.agents/skills/`. Use `$openspec-propose` for a new proposal, `$openspec-update-change` for a revision and `$openspec-apply-change` when starting an authorized implementation increment. Keep the foundation change open while its tasks are incomplete.
@@ -63,4 +63,4 @@ OpenSpec reference: [official setup guide](https://openspec.dev/docs/setup). Con
 
 The optional persisted live-budget API and package 0.0.1 enforce shared phase/request reservations across instances. See [D20/D21](docs/decisions/2026-09-08-live-pilot.md) and [integration instructions](docs/integration.md).
 
-Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution currently awaits the disclosure approval requested after automatic review.
+Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution subsequently completed after D22; see [pilot and provider-stop follow-up](docs/evidence/pilot-followup-2026-09-08.md).

@@ -648,7 +648,8 @@
       "decisions": [
         "D09",
         "D15",
-        "D19"
+        "D19",
+        "D23"
       ],
       "scenarios": [
         "HEAL-006-S1",
@@ -686,6 +687,20 @@
           ],
           "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-PROVIDER-STOP-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/pilot-followup-2026-09-08.md",
+          "summary": "Offline browser regressions verify immediate termination on provider/budget failures, truthful dispatch/usage and no late action; existing parse/validation retries remain valid.",
+          "scenarios": [
+            "HEAL-006-S1",
+            "HEAL-006-S2"
+          ],
+          "command": "npm run test:unit; npm run test:browser; npm run test:consumer",
+          "environment": "Node 24.18.0; Playwright 1.62.1 Chromium; macOS arm64; fake transport",
           "date": "2026-09-08",
           "result": "pass"
         }

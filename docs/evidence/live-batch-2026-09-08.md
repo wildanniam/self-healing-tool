@@ -1,5 +1,7 @@
 # Authorized live-batch checkpoint — 2026-09-08
 
+Historical checkpoint: D22 later approved the specific disclosure and the private pilot executed. See [the subsequent evidence](pilot-followup-2026-09-08.md); pending statements below describe the earlier command rejection.
+
 Authority: [D20/D21](../decisions/2026-09-08-live-pilot.md); issue #5/draft PR #6 and private-host issue #174/draft PR #175. Runtime source commit `50595a7768a0091f7bacd1174c5291a77f4b37a8`, package 0.0.1; private harness commit `021c268`. No merge or public release.
 
 ## Verified preparation

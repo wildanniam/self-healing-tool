@@ -79,3 +79,10 @@ Implementation references: [Playwright Locator API](https://playwright.dev/docs/
 The ledger is an application-level guard using caller-supplied model-matched price assumptions, not a change to provider-account billing controls. The serialized UTF-8 byte count plus 1024 framing tokens and maximum output form a conservative cost reservation. Actual reported usage remains separate and unknown values remain unknown. A held lock or pending request fails closed; inspect evidence rather than deleting/resetting a live ledger.
 
 The supplied live demo now requires `HEALING_LIVE_BATCH_FILE` in addition to the existing explicit key/request cap. It saves the actual sanitized request body separately beside the ledger for local review. Offline demo usage is unchanged.
+
+
+## Provider failure policy (development 0.0.2)
+
+Provider, transport and budget exceptions terminate the current event as `provider-failure`, unless the total deadline expired (`time-limit`). A candidate-repair attempt cannot fix a halted ledger, unavailable API or uncertain request. Parse/selector-validation failures still use the configured remaining attempts. No default timeout, selection score or prompt changed.
+
+The deadline race may return before the adapter records its cancellation. In that case the event truthfully keeps dispatch/usage unknown; the separately retained budget ledger can establish transport dispatch during the external audit, but missing token usage stays unknown. Late provider output is never applied. Do not clear a halted ledger or interpret API failure as correct abstention.

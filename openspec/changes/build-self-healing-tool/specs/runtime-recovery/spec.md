@@ -72,7 +72,7 @@ Configuration, provider, parsing, validation, and action failures SHALL remain d
 
 #### Scenario: HEAL-006-S1
 - **WHEN** The provider request fails or times out
-- **THEN** the recovery event records an operational failure and any resource information that is actually available
+- **THEN** the recovery event records an operational failure and any resource information that is actually available, terminates without another provider invocation for that event, and never executes a late response
 
 #### Scenario: HEAL-006-S2
 - **WHEN** Token usage is unavailable after a request failure
