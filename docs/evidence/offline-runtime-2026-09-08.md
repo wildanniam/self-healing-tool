@@ -54,3 +54,7 @@ Task 5.4 remains unchecked: missing-configuration refusal and offline/live instr
 The active change is not archived and runtime specs are not promoted wholesale to the current baseline. Individual task/evidence status is in `docs/traceability.json`. CI/audit results and PR links will be recorded after they actually complete.
 
 Repository audit after evidence updates: `npm run check` PASS (36 requirements, 73 scenarios, 30 tasks, 18 completed); `npm run test:audit` 7/7 PASS; `git diff --check` PASS.
+
+## Fresh-CI dependency resolution correction
+
+The first GitHub run passed typecheck, unit and browser checks but failed the consumer install: an empty registry-metadata cache made `npm install --offline` report `playwright@undefined`/ERESOLVE. The consumer check now permits fetching the exact public peer dependency with `--prefer-offline`; no force/legacy-peer-deps override is used. "Offline" describes model execution, not a promise that a fresh dependency/browser installation needs no internet. See failed run [34207848790](https://github.com/wildanniam/self-healing-tool/actions/runs/34207848790). Runtime behavior and the prepared package are unchanged.

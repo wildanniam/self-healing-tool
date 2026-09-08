@@ -4,7 +4,7 @@
 
 This private development package exports ESM JavaScript and TypeScript declarations. Use Node.js 24 or 25 and consumer-owned `playwright` **1.62.1**. Local checks use Node 25.8.2/macOS arm64; CI covers Node 24/Linux. Chromium is the tested browser. Other Playwright/browser versions, CommonJS, frames, shadow-root extraction and arbitrary native Locator adaptation are not verified.
 
-Build with `npm run build`; prepare a tarball with `npm pack`. Install that tarball as a dependency of your own test project. `npm run test:consumer` installs an allowlisted tarball in an isolated temporary project and runs real browser actions without a private application or model key. Public publication/license remains a separate decision.
+Build with `npm run build`; prepare a tarball with `npm pack`. Install that tarball as a dependency of your own test project. `npm run test:consumer` installs an allowlisted local tarball and exact public Playwright peer in an isolated temporary project (npm may fetch public dependencies) and runs real browser actions without a private application or model key. Public publication/license remains a separate decision.
 
 ## Explicit integration
 
