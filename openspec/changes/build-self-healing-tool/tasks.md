@@ -34,7 +34,7 @@
 
 ## 6. Private integration and five-case pilot
 
-- [ ] 6.1 Engineer integrates the prepared package through a separate private-host issue/PR using that repo's instructions. Verify pristine profile/entity flows locally with synthetic state and existing assertions; retain private evidence there. [INT-001, INT-004, EVAL-002]
+- [x] 6.1 Engineer integrates the prepared package through a separate private-host issue/PR using that repo's instructions. Verify pristine profile/entity flows locally with synthetic state and existing assertions; retain private evidence there. [INT-001, INT-004, EVAL-002]
 - [ ] 6.2 Engineer prepares five labeled development cases: two normal controls, profile drift, ambiguous entity action and absent target. Wildan reviews task meaning. Verify initial failure, reset, semantic oracle and side-effect checks before measuring healing. [EVAL-001, EVAL-002]
 - [ ] 6.3 Engineer runs the bounded pilot and audits instrumentation under an authorized API budget; Wildan reviews results. Verify actual payload/oracle separation, all attempt outcomes, timing and failures; deliver a pilot findings record without final-study claims. [CTX-003, OBS-003, EVAL-002, EVAL-007]
 

@@ -11,7 +11,7 @@ Local environment: macOS arm64, Node **25.8.2** and **24.18.0**, npm **11.11.1**
 | `npm run typecheck` | PASS | Runtime source typechecks under the pinned compiler/types |
 | `npm run test:unit` | 11/11 PASS | D18 validation, strict output parser, intercepted provider transport and failure/resource accounting; live-mode missing-key/cap refusal |
 | `npm run test:browser` | 18/18 PASS (Node 24; 17-test pre-extension suite also passed Node 25) | Actual Chromium synthetic behavior, supported error gate, missing fill, malformed/invalid selectors, accepted-but-failed click, provider timeout, entity context, oracle separation, reports/diagnostics and demo confinement/reset |
-| `npm run test:consumer` | PASS | Prepared tarball installs offline in an isolated temporary consumer; public import, normal fill and ranker recovery pass with no private repository or key |
+| `npm run test:consumer` | PASS | Prepared tarball installs in an isolated temporary consumer (public dependency downloads allowed); public import, normal fill and ranker recovery pass with no private repository or key |
 | `npm run demo:offline` | PASS | Control fill, mutated profile field and repeated-entity action pass in the independent local demo |
 
 The consumer tarball contains 20 allowlisted files: compiled JS/declarations, package metadata, README, integration instructions and the component inventory. It contains no source/Git automation, application suite, `.env`, sessions or run outputs. The check verifies the actual manifest rather than only the `files` field.
@@ -49,7 +49,7 @@ The first browser pass exposed missing separators between adjacent label text no
 
 ## Pending work and actual authorization boundaries
 
-Task 5.4 remains unchecked: missing-configuration refusal and offline/live instructions are tested, but an owner-budgeted live smoke has not run. No real credential was read/displayed by the agent and no paid request was sent. Tasks 6.x–8.x remain pending: private-host integration/pilot, protocol freeze, final collection, practitioner sessions, reviewed release and closure. Source-distribution rights for held reference components are unresolved; public licensing, merge and publication are not approved by engineering completion.
+Task 5.4 remains unchecked: missing-configuration refusal and offline/live instructions are tested, but an owner-budgeted live smoke has not run. No real credential was read/displayed by the agent and no paid request was sent. Task 6.1 is now complete; see [the private integration checkpoint](private-integration-2026-09-08.md). Tasks 6.2–8.3 remain pending for owner-reviewed cases/live pilot, protocol freeze, final collection, practitioner sessions, reviewed release and closure. Source-distribution rights for held reference components are unresolved; public licensing, merge and publication are not approved by engineering completion.
 
 The active change is not archived and runtime specs are not promoted wholesale to the current baseline. Individual task/evidence status is in `docs/traceability.json`. CI/audit results and PR links will be recorded after they actually complete.
 
@@ -58,3 +58,5 @@ Repository audit after evidence updates: `npm run check` PASS (36 requirements, 
 ## Fresh-CI dependency resolution correction
 
 The first GitHub run passed typecheck, unit and browser checks but failed the consumer install: an empty registry-metadata cache made `npm install --offline` report `playwright@undefined`/ERESOLVE. The consumer check now permits fetching the exact public peer dependency with `--prefer-offline`; no force/legacy-peer-deps override is used. "Offline" describes model execution, not a promise that a fresh dependency/browser installation needs no internet. See failed run [34207848790](https://github.com/wildanniam/self-healing-tool/actions/runs/34207848790). Runtime behavior and the prepared package are unchanged.
+
+Later checkpoint: private task 6.1 brings completion to 19/30. The 18/30 audit above is the historical initial-runtime result.

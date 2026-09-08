@@ -152,6 +152,20 @@
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-PRIVATE-INT-001-CHECK",
+          "kind": "verification",
+          "summary": "Private package integration and native controls passed; wrong-field negative outcome retained. Owner case review/live pilot remain pending. See checkpoint for scope.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "INT-001-S1",
+            "INT-001-S2"
+          ],
+          "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
+          "date": "2026-09-08",
+          "result": "pass"
         }
       ]
     },
@@ -303,6 +317,20 @@
           ],
           "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-PRIVATE-INT-004-CHECK",
+          "kind": "verification",
+          "summary": "Private package integration and native controls passed; wrong-field negative outcome retained. Owner case review/live pilot remain pending. See checkpoint for scope.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "INT-004-S1",
+            "INT-004-S2"
+          ],
+          "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
           "date": "2026-09-08",
           "result": "pass"
         }
@@ -1391,7 +1419,7 @@
         "EVAL-002-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "6.1",
         "6.2",
@@ -1402,7 +1430,31 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Independent semantic assessment"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-PRIVATE-EVAL-002-IMPL",
+          "kind": "implementation",
+          "summary": "Consumer-side field, observed-dialog and account-state checks are implemented in private PR #175; live per-attempt audit and owner review remain pending.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "EVAL-002-S1",
+            "EVAL-002-S2"
+          ]
+        },
+        {
+          "id": "EV-PRIVATE-EVAL-002-CHECK",
+          "kind": "verification",
+          "summary": "Private package integration and native controls passed; wrong-field negative outcome retained. Owner case review/live pilot remain pending. See checkpoint for scope.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "EVAL-002-S2"
+          ],
+          "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "EVAL-003",
@@ -1677,6 +1729,14 @@
       "task": "5.3",
       "evidence": [
         "EV-RUNTIME-DEMO-003-CHECK"
+      ]
+    },
+    {
+      "task": "6.1",
+      "evidence": [
+        "EV-PRIVATE-INT-001-CHECK",
+        "EV-PRIVATE-INT-004-CHECK",
+        "EV-PRIVATE-EVAL-002-CHECK"
       ]
     }
   ]
