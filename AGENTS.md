@@ -4,7 +4,7 @@ Reply to Wildan in Indonesian. Write specifications, code identifiers and projec
 
 ## Current state and reading order
 
-This repository has a verified library and an audited five-case private live pilot; final evaluation and release are pending. Package 0.0.2 stops the current event on provider failure; consult the dated evidence and pending review package. Read `README.md`, `docs/decisions/2026-09-07-foundation.md`, `docs/audit-workflow.md`, current `openspec/specs/`, and the active `build-self-healing-tool` proposal/specs/design/tasks before implementation. Read the relevant Atlas Vault project hub/latest decision note for research context when available.
+This repository has a verified library and an audited five-case private live pilot; D24 final evaluation is authorized and frozen; release is pending. Package 0.0.3 is pinned for measurement; consult dated evidence and D24 before collection. Read `README.md`, `docs/decisions/2026-09-07-foundation.md`, `docs/audit-workflow.md`, current `openspec/specs/`, and the active `build-self-healing-tool` proposal/specs/design/tasks before implementation. Read the relevant Atlas Vault project hub/latest decision note for research context when available.
 
 The audit workflow is established. Runtime/demo task completion is recorded only where acceptance evidence exists; use the register and dated evidence for exact coverage. Do not infer implementation from an OpenSpec artifact marked done.
 
@@ -39,3 +39,5 @@ Use `npm run typecheck`, `npm run test:unit`, `npm run test:browser`, `npm run t
 The package currently uses ESM, Node 24/25, Playwright 1.62.1 and Chromium. Keep provider/session configuration consistent, context allowlisted, emitted model output as data only, assessments out of selection inputs, and browser retries within budget. Distribution is allowlisted and private until owner review. See `docs/integration.md` and the component inventory.
 
 Provider/transport/budget failure terminates an event; parse/validation retries remain bounded. Keep the halted D21 pilot ledger and unknown usage intact. D22 permits the specified private pilot UI disclosure; D23 authorizes autonomous engineering to a concrete final-protocol review package. Neither needs repeated permission for the same scope. Final collection follows the separate reviewed protocol/budget.
+
+D24 accepts the 20-condition protocol, paired three-repeat comparison and one US$2/144-request final batch including the acknowledged old reservation. Consult docs/decisions/2026-09-09-final-evaluation.md; do not request the same approval again, reset the old ledger or automatically create additional paid batches. Retain frozen results before later engineering increments.

@@ -43,3 +43,5 @@ Future implementation will add library, demo, and evaluation-support modules her
 [D20/D21](../../../docs/decisions/2026-09-08-live-pilot.md) record accepted five-case pilot meanings and an explicitly authorized one-batch live API budget. Tasks 5.4/6.3 may now execute once their limits/instrumentation are verified; final-study authorization remains separate.
 
 [D22/D23](../../../docs/decisions/2026-09-08-live-pilot.md) resolve private pilot disclosure and authorize staged autonomous preparation. Issue #7 records pilot evidence, terminal provider-failure behavior and the final-protocol review package. Provider exceptions terminate recovery; malformed output and candidate validation retain bounded retries. Final collection still requires the agreed review checkpoint.
+
+[D24](../../../docs/decisions/2026-09-09-final-evaluation.md) accepts the reviewed technical protocol/budget and authorizes autonomous final collection/analysis under issue #9 and private-host #178. Freeze and behavioral verification precede dispatch; final interpretation, practitioner decisions and release remain subsequent.
