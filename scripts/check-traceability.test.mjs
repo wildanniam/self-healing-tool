@@ -10,7 +10,7 @@ const source = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'spec-audit-test-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  for (const path of ['README.md', 'AGENTS.md', '.env.example', 'docs', 'openspec', '.github']) cpSync(join(source, path), join(root, path), { recursive: true });
+  for (const path of ['README.md', 'AGENTS.md', '.env.example', 'docs', 'openspec', '.github', 'src', 'tests', 'examples', 'scripts', 'package.json', 'tsconfig.json', 'playwright.config.ts']) cpSync(join(source, path), join(root, path), { recursive: true });
   return root;
 }
 function editRegister(root, mutate) {
@@ -20,7 +20,7 @@ function editRegister(root, mutate) {
   writeFileSync(path, JSON.stringify(register));
 }
 
-test('the checked-in planning baseline is internally consistent', () => {
+test('the checked-in traceability register is internally consistent', () => {
   assert.deepEqual(checkTraceability(source).errors, []);
 });
 
@@ -40,7 +40,7 @@ test('missing scenario coverage and unknown decisions fail', (t) => {
 
 test('verified status requires passing evidence, not a status edit', (t) => {
   const root = fixture(t);
-  editRegister(root, (data) => { data.requirements.find((r) => r.id === 'HEAL-001').status = 'verified'; });
+  editRegister(root, (data) => { const r = data.requirements.find((r) => r.id === 'HEAL-001'); r.status = 'verified'; r.evidence = []; });
   assert.match(checkTraceability(root).errors.join('\n'), /verified without passing evidence/);
 });
 
@@ -48,6 +48,7 @@ test('a checked task requires its own completion evidence record', (t) => {
   const root = fixture(t);
   const file = join(root, 'openspec/changes/build-self-healing-tool/tasks.md');
   writeFileSync(file, readFileSync(file, 'utf8').replace('- [ ] 1.1', '- [x] 1.1'));
+  editRegister(root, data => { data.completedTasks = data.completedTasks.filter(t => t.task !== '1.1'); });
   assert.match(checkTraceability(root).errors.join('\n'), /Checked task 1.1 has no completion record/);
 });
 
@@ -66,7 +67,7 @@ test('a real-shaped evidence record can support a completed task', (t) => {
     const req = data.requirements.find((r) => r.id === 'INT-005');
     req.status = 'verified';
     req.evidence = [{ id: 'EV-TEST-ONLY', kind: 'verification', ref: 'docs/verification-plan.md', summary: 'Synthetic checker fixture; never a project evidence record', scenarios: req.scenarios, command: 'fixture', environment: 'test', date: '2026-09-07', result: 'pass' }];
-    data.completedTasks = [{ task: '1.1', evidence: ['EV-TEST-ONLY'] }];
+    data.completedTasks = [...data.completedTasks.filter(t => t.task !== '1.1'), { task: '1.1', evidence: ['EV-TEST-ONLY'] }];
   });
   assert.deepEqual(checkTraceability(root).errors, []);
 });

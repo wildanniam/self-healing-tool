@@ -1,35 +1,35 @@
 ## 1. Extraction and consumer boundary
 
-- [ ] 1.1 Engineer creates the implementation issue and prepares a component origin/include/exclude inventory; Wildan resolves uncertain distribution rights before inclusion. Verify the reviewable inventory contains no restricted raw artifacts or copied history. [INT-005]
-- [ ] 1.2 Engineer creates the minimal package/build/export contract in this repo, including a documented supported runtime/Playwright configuration. Verify a prepared tarball imports in a clean consumer without the private application or source/Git automation exports. [INT-001, INT-004]
-- [ ] 1.3 Engineer implements explicit click/fill integration while retaining native navigation and assertions. Verify normal actions cause zero provider calls and unchanged native test operations still work. [INT-002, HEAL-003]
+- [x] 1.1 Engineer creates the implementation issue and prepares a component origin/include/exclude inventory; Wildan resolves uncertain distribution rights before inclusion. Verify the reviewable inventory contains no restricted raw artifacts or copied history. [INT-005]
+- [x] 1.2 Engineer creates the minimal package/build/export contract in this repo, including a documented supported runtime/Playwright configuration. Verify a prepared tarball imports in a clean consumer without the private application or source/Git automation exports. [INT-001, INT-004]
+- [x] 1.3 Engineer implements explicit click/fill integration while retaining native navigation and assertions. Verify normal actions cause zero provider calls and unchanged native test operations still work. [INT-002, HEAL-003]
 
 ## 2. Recovery contract
 
-- [ ] 2.1 Engineer implements validated provider/model/attempt/time/context configuration starting from the D18 reference profile, with no silent model fallback. Verify invalid configurations fail before provider invocation and supported values are reported without secrets. [INT-003]
-- [ ] 2.2 Engineer implements missing-locator classification. Verify zero-match drift enters recovery and malformed, multiple-match, page-closed and present-but-disabled errors retain their original failures without model calls. [HEAL-001]
-- [ ] 2.3 Engineer implements the bounded attempt/time state machine. Verify exhausted budgets stop, rejected attempts remain recorded, and original fill values/assertions are preserved. [HEAL-002, HEAL-003]
-- [ ] 2.4 Engineer implements constrained output parsing and pre-action validation. Verify malformed/code outputs, non-unique selectors and incompatible fields are rejected without executing generated code. [HEAL-005]
-- [ ] 2.5 Engineer separates candidate/action/semantic outcomes and provider/parse/action failure classes. Verify accepted-but-failed actions remain failures, unassessed semantics stay unknown, and unavailable usage is not zero. [HEAL-004, HEAL-006]
+- [x] 2.1 Engineer implements validated provider/model/attempt/time/context configuration starting from the D18 reference profile, with no silent model fallback. Verify invalid configurations fail before provider invocation and supported values are reported without secrets. [INT-003]
+- [x] 2.2 Engineer implements missing-locator classification. Verify zero-match drift enters recovery and malformed, multiple-match, page-closed and present-but-disabled errors retain their original failures without model calls. [HEAL-001]
+- [x] 2.3 Engineer implements the bounded attempt/time state machine. Verify exhausted budgets stop, rejected attempts remain recorded, and original fill values/assertions are preserved. [HEAL-002, HEAL-003]
+- [x] 2.4 Engineer implements constrained output parsing and pre-action validation. Verify malformed/code outputs, non-unique selectors and incompatible fields are rejected without executing generated code. [HEAL-005]
+- [x] 2.5 Engineer separates candidate/action/semantic outcomes and provider/parse/action failure classes. Verify accepted-but-failed actions remain failures, unassessed semantics stay unknown, and unavailable usage is not zero. [HEAL-004, HEAL-006]
 
 ## 3. Context and selection
 
-- [ ] 3.1 Engineer implements action-compatible candidate extraction and bounded payloads. Verify mixed controls, truncation metadata and target-outside-candidates reporting on independent synthetic fixtures. [CTX-001, CTX-004]
-- [ ] 3.2 Engineer implements generic repeated-entity/container context. Verify table, repeated-card and native-dialog fixtures distinguish legitimate entity labels without private selectors. [CTX-002]
-- [ ] 3.3 Engineer sanitizes primary and fallback ranking/provider inputs. Verify sentinel oracle markers and answer locators are absent from actual serialized payloads while legitimate task identity remains. [CTX-003]
-- [ ] 3.4 Engineer implements full and ranker-only selection over a common contract. Verify equivalent candidate inputs, validation and budgets, deterministic ranker behavior and zero ranker-only model calls. [EVAL-003]
+- [x] 3.1 Engineer implements action-compatible candidate extraction and bounded payloads. Verify mixed controls, truncation metadata and target-outside-candidates reporting on independent synthetic fixtures. [CTX-001, CTX-004]
+- [x] 3.2 Engineer implements generic repeated-entity/container context. Verify table, repeated-card and native-dialog fixtures distinguish legitimate entity labels without private selectors. [CTX-002]
+- [x] 3.3 Engineer sanitizes primary and fallback ranking/provider inputs. Verify sentinel oracle markers and answer locators are absent from actual serialized payloads while legitimate task identity remains. [CTX-003]
+- [x] 3.4 Engineer implements full and ranker-only selection over a common contract. Verify equivalent candidate inputs, validation and budgets, deterministic ranker behavior and zero ranker-only model calls. [EVAL-003]
 
 ## 4. Evidence and reports
 
-- [ ] 4.1 Engineer implements per-run/event/attempt records and repeat lineage. Verify concurrent/repeated outputs do not overwrite prior evidence and every wrong effect stays visible after later progress. [OBS-001, OBS-002]
-- [ ] 4.2 Engineer implements timing/usage/cost accounting. Verify original timeout and retry are included only in the labeled total interval, failed requests are retained, missing usage stays unknown and zero-success cost-per-correct-repair is undefined. [OBS-003]
-- [ ] 4.3 Engineer implements default omission/redaction, optional local diagnostics and escaped human-readable reports. Verify secret/session sentinels and executable markup cannot leak through normal reports, and proposed changes are reviewable without source auto-application. [OBS-004, OBS-005]
+- [x] 4.1 Engineer implements per-run/event/attempt records and repeat lineage. Verify concurrent/repeated outputs do not overwrite prior evidence and every wrong effect stays visible after later progress. [OBS-001, OBS-002]
+- [x] 4.2 Engineer implements timing/usage/cost accounting. Verify original timeout and retry are included only in the labeled total interval, failed requests are retained, missing usage stays unknown and zero-success cost-per-correct-repair is undefined. [OBS-003]
+- [x] 4.3 Engineer implements default omission/redaction, optional local diagnostics and escaped human-readable reports. Verify secret/session sentinels and executable markup cannot leak through normal reports, and proposed changes are reviewable without source auto-application. [OBS-004, OBS-005]
 
 ## 5. Independent synthetic demo
 
-- [ ] 5.1 Engineer builds an independent minimal profile/entity/dialog app and example tests in this repo. Verify a clean clone runs the offline demo without private repository access or model credentials. [DEMO-001, DEMO-004]
-- [ ] 5.2 Engineer confines the demo target, redirects and app requests to declared loopback services. Verify remote targets and remote application requests are rejected, with live server-side provider calls separately configured. [DEMO-002]
-- [ ] 5.3 Engineer adds deterministic synthetic state and a local reset guard. Verify repeatable local identities and refusal of a mismatched datastore/reset target. [DEMO-003]
+- [x] 5.1 Engineer builds an independent minimal profile/entity/dialog app and example tests in this repo. Verify a clean clone runs the offline demo without private repository access or model credentials. [DEMO-001, DEMO-004]
+- [x] 5.2 Engineer confines the demo target, redirects and app requests to declared loopback services. Verify remote targets and remote application requests are rejected, with live server-side provider calls separately configured. [DEMO-002]
+- [x] 5.3 Engineer adds deterministic synthetic state and a local reset guard. Verify repeatable local identities and refusal of a mismatched datastore/reset target. [DEMO-003]
 - [ ] 5.4 Engineer documents offline and live modes, validates explicit credentials/limits, and records a bounded live smoke run only when its budget is authorized. Verify missing configuration causes no paid calls and offline results are never presented as model evidence. [DEMO-004]
 
 ## 6. Private integration and five-case pilot

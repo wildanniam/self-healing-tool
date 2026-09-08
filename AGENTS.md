@@ -4,9 +4,9 @@ Reply to Wildan in Indonesian. Write specifications, code identifiers and projec
 
 ## Current state and reading order
 
-This repository is at the specification stage. Read `README.md`, `docs/decisions/2026-09-07-foundation.md`, `docs/audit-workflow.md`, current `openspec/specs/`, and the active `build-self-healing-tool` proposal/specs/design/tasks before implementation. Read the relevant Atlas Vault project hub/latest decision note for research context when available.
+This repository has an initial offline-verified runtime increment; live-model evaluation and release are pending. Read `README.md`, `docs/decisions/2026-09-07-foundation.md`, `docs/audit-workflow.md`, current `openspec/specs/`, and the active `build-self-healing-tool` proposal/specs/design/tasks before implementation. Read the relevant Atlas Vault project hub/latest decision note for research context when available.
 
-Only the audit workflow is currently established. All runtime/demo/evaluation requirements and implementation tasks remain proposed until evidence is recorded. Do not infer implementation from an OpenSpec artifact marked done.
+The audit workflow is established. Runtime/demo task completion is recorded only where acceptance evidence exists; use the register and dated evidence for exact coverage. Do not infer implementation from an OpenSpec artifact marked done.
 
 ## Issue-driven implementation
 
@@ -31,3 +31,9 @@ The private evaluation host, business source, tests, account state and raw evide
 Private-host edits follow that repository's own instructions and issue/PR workflow. Live API spending, participant contact, public release and submission need the applicable owner authorization; prepare the concrete materials first and honor any authorization already given. This setup does not authorize those actions.
 
 Do not commit credentials, raw sensitive context or browser sessions. The eventual demo must run against declared localhost services. The generic library's integration contract is distinct from the supplied demo runner's local-target restrictions.
+
+## Runtime development commands and boundaries
+
+Use `npm run typecheck`, `npm run test:unit`, `npm run test:browser`, `npm run test:consumer`, `npm run check` and `npm run test:audit` for relevant increments. `npm run demo:offline` is a synthetic ranker-only walkthrough. All these commands avoid reading `.env` or making paid requests. Do not run `demo:live` without the applicable live-run budget authorization. Preserve an existing `.env` and never print it.
+
+The package currently uses ESM, Node 24/25, Playwright 1.62.1 and Chromium. Keep provider/session configuration consistent, context allowlisted, emitted model output as data only, assessments out of selection inputs, and browser retries within budget. Distribution is allowlisted and private until owner review. See `docs/integration.md` and the component inventory.
