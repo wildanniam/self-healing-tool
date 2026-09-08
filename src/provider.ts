@@ -1,9 +1,9 @@
-import type { Config, Context, Provider, ProviderResponse, Usage } from './types.js';
+import type { Config, Context, Provider, ProviderResponse, ProviderMetadata, Usage } from './types.js';
 import { ConfigurationError, validateConfig } from './config.js';
 
 export class ProviderError extends Error {
   readonly usage: Usage | null;
-  constructor(code: string, usage: Usage | null = null, readonly transportAttempted: boolean | null = null) { super(code); this.name = 'ProviderError'; this.usage = usage; }
+  constructor(code: string, usage: Usage | null = null, readonly transportAttempted: boolean | null = null, readonly metadata: ProviderMetadata | null = null) { super(code); this.name = 'ProviderError'; this.usage = usage; }
 }
 export function parseSelector(output: string): string | null {
   const parsed: unknown = JSON.parse(output);
@@ -25,6 +25,14 @@ export function normalizeUsage(usage: unknown): Usage | null {
   const value = usage as Partial<Usage>;
   return Number.isSafeInteger(value.inputTokens) && value.inputTokens! >= 0 && Number.isSafeInteger(value.outputTokens) && value.outputTokens! >= 0
     ? { inputTokens: value.inputTokens!, outputTokens: value.outputTokens! } : null;
+}
+/** Bounded projection; never retain arbitrary response properties or raw finish text. */
+export function normalizeProviderMetadata(value: unknown): ProviderMetadata | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const data = value as Partial<ProviderMetadata>;
+  const returnedModel = typeof data.returnedModel === 'string' && data.returnedModel.length <= 128 && /^(?:gpt-[a-zA-Z0-9._-]+|o[1-9](?:-[a-zA-Z0-9._-]+)?)$/.test(data.returnedModel) ? data.returnedModel : null;
+  const finishReason = ['stop', 'length', 'content_filter', 'tool_calls', 'function_call'].includes(data.finishReason ?? '') ? data.finishReason! : null;
+  return returnedModel === null && finishReason === null ? null : { returnedModel, finishReason };
 }
 /** No ambient secrets, no configurable endpoint, no redirects, no hidden transport retry. */
 export function createOpenAIProvider(options: { apiKey: string; config: Readonly<Config>; maxRequests: number }): Provider {
@@ -64,9 +72,10 @@ export function createOpenAIProvider(options: { apiKey: string; config: Readonly
         const rawUsage = body.usage;
         const usage: Usage | null = rawUsage && Number.isInteger(rawUsage.prompt_tokens) && rawUsage.prompt_tokens >= 0 && Number.isInteger(rawUsage.completion_tokens) && rawUsage.completion_tokens >= 0
           ? { inputTokens: rawUsage.prompt_tokens, outputTokens: rawUsage.completion_tokens } : null;
+        const metadata = normalizeProviderMetadata({ returnedModel: body.model, finishReason: body.choices?.[0]?.finish_reason });
         const output = body.choices?.[0]?.message?.content;
-        if (typeof output !== 'string') throw new ProviderError('provider_missing_output', usage, true);
-        return { output, usage, transportAttempted: true };
+        if (typeof output !== 'string') throw new ProviderError('provider_missing_output', usage, true, metadata);
+        return { output, usage, transportAttempted: true, metadata };
       } catch (error) {
         if (error instanceof ProviderError) throw error;
         throw new ProviderError(signal.aborted ? 'provider_aborted' : 'provider_transport_failure', null, true);

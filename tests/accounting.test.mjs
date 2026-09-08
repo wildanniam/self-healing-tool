@@ -29,3 +29,19 @@ test('a request rejected by the configured cap is an invocation, not a transport
   assert.equal(summary.providerInvocations, 1); assert.equal(summary.providerRequests, 0);
   assert.equal(summary.totalCostUsd, 0); assert.equal(summary.unknownUsageRequests, 0);
 });
+
+
+test('OBS-002 wrong-effect summaries count unique events/attempts without deleting repeated assessments', () => {
+  const data=run(); data.events[0].semantic='correct'; data.events[0].actionExecuted=true;
+  data.assessments=[
+    {eventId:'event',attemptId:'attempt-1',semantic:'incorrect',wrongEffect:true},
+    {eventId:'event',semantic:'incorrect',wrongEffect:true},
+    {eventId:'event',attemptId:'attempt-1',semantic:'incorrect',wrongEffect:true},
+    {eventId:'event',semantic:'correct',wrongEffect:false},
+  ];
+  const summary=summarize(data,price);
+  assert.equal(summary.wrongEffects,1);assert.equal(summary.wrongEffectAttempts,1);assert.equal(summary.wrongEffectAssessments,3);
+  assert.equal(summary.correctRepairs,0);assert.equal(data.assessments.length,4);
+  data.assessments.push({eventId:'event',attemptId:'attempt-2',wrongEffect:true});
+  assert.equal(summarize(data,price).wrongEffectAttempts,2);assert.equal(summarize(data,price).wrongEffects,1);
+});

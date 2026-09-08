@@ -45,3 +45,9 @@ Future implementation will add library, demo, and evaluation-support modules her
 [D22/D23](../../../docs/decisions/2026-09-08-live-pilot.md) resolve private pilot disclosure and authorize staged autonomous preparation. Issue #7 records pilot evidence, terminal provider-failure behavior and the final-protocol review package. Provider exceptions terminate recovery; malformed output and candidate validation retain bounded retries. Final collection still requires the agreed review checkpoint.
 
 [D24](../../../docs/decisions/2026-09-09-final-evaluation.md) accepts the reviewed technical protocol/budget and authorizes autonomous final collection/analysis under issue #9 and private-host #178. Freeze and behavioral verification precede dispatch; final interpretation, practitioner decisions and release remain subsequent.
+
+## D24 post-collection observability increment
+
+Issue #9 also prepares version 0.0.4 after collection: preserve allowlisted returned model/finish metadata for future runs. Version 0.0.3 discards these fields, leaving the measured alias unresolved. This is an offline-tested provenance improvement, not a selection change or a retroactive repair of frozen evidence.
+
+The same post-collection increment corrects duplicate wrong-effect summary counting: event and attempt assessments can refer to one observed action. Frozen per-slot analysis already counts unique slots and remains unchanged.

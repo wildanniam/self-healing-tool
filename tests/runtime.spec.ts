@@ -279,3 +279,30 @@ test('HEAL-006 timed-out provider cannot retry or apply a late valid answer', as
   finish(); await page.evaluate(()=>Promise.resolve());
   expect(session.snapshot()).toEqual(before); await expect(page.locator('#display')).toHaveValue('');
 });
+
+
+test('OBS-006 attempt/report provenance survives parse failures and errors; absent custom metadata stays unknown', async ({ page }) => {
+  await page.setContent(form);
+  const metadata = {returnedModel:'gpt-4o-mini-2024-07-18',finishReason:'length' as const,credential:'PRIVATE_EXTRA'};
+  const providers: Provider[] = [
+    {kind:'offline',async select(){return {output:'not-json',usage:null,metadata};}},
+    {kind:'offline',async select(){throw new ProviderError('provider_missing_output',null,true,metadata);}},
+    {kind:'offline',async select(){throw new ProviderError('provider_transport_failure',null,true);}},
+    {kind:'offline',async select(){return {output:'{"selector":null}',usage:null};}},
+  ];
+  for (const [i,provider] of providers.entries()) {
+    const session = createHealingSession(page,{config:{...config,mode:'full',maxAttempts:1},provider});
+    await expect(session.fill('#missing','not-sent',{description:'Display name'})).rejects.toBeInstanceOf(HealingFailure);
+    const snapshot = session.snapshot(), attempt = snapshot.events[0]!.attempts[0]!;
+    expect(attempt.providerMetadata).toEqual(i<2?{returnedModel:metadata.returnedModel,finishReason:'length'}:null);
+    expect(snapshot.config.model).toBe('gpt-4o-mini');
+    expect(JSON.stringify(snapshot)).not.toContain('PRIVATE_EXTRA');
+    const html = renderReport(snapshot);
+    expect(html).not.toContain('PRIVATE_EXTRA');
+    expect(html.includes('gpt-4o-mini-2024-07-18')).toBe(i<2);
+  }
+  const provider: Provider = {kind:'offline',async select(c){return {output:JSON.stringify({selector:c.candidates[0]!.selector}),usage:null,metadata};}};
+  const session=createHealingSession(page,{config:{...config,mode:'full'},provider});
+  const event=await session.fill('#missing','redacted',{description:'Display name'});
+  expect(event.actionExecuted).toBe(true);expect(event.attempts[0]!.providerMetadata?.returnedModel).toBe(metadata.returnedModel);
+});

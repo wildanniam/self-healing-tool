@@ -30,6 +30,10 @@ Reports SHALL distinguish locator acceptance, action success, semantic outcome w
 - **WHEN** Only runtime structural checks have executed
 - **THEN** the report displays semantic outcome as unassessed
 
+#### Scenario: OBS-002-S3
+- **WHEN** Attempt-level and event-level assessments describe the same wrong-target action
+- **THEN** aggregate reporting counts unique affected events and attempts separately from assessment records, without double-counting or erasing any record
+
 ### Requirement: OBS-003 Comparable time and resource accounting
 
 Reports SHALL separate internal healing latency, total recovery time including the original failed action timeout and retry, and setup time; costs MUST include failed attempts and identify model and price assumptions.
@@ -65,3 +69,15 @@ Reports SHALL present the original and proposed locator, action, validation and 
 #### Scenario: OBS-005-S2
 - **WHEN** A page label contains markup
 - **THEN** the report renders it as data rather than executable HTML
+
+### Requirement: OBS-006 Returned model provenance
+
+Future provider-backed reports SHALL distinguish the requested model configuration from allowlisted returned model and finish metadata. Missing or invalid metadata MUST remain unknown without copying arbitrary provider fields or rewriting earlier evidence.
+
+#### Scenario: OBS-006-S1
+- **WHEN** A provider response supplies valid model and finish metadata, including one whose selector output later fails parsing
+- **THEN** the corresponding attempt preserves these fields independently of selection outcome and requested configuration
+
+#### Scenario: OBS-006-S2
+- **WHEN** Metadata is missing, invalid or accompanied by private extra fields, or a transport fails before a response
+- **THEN** only validated allowlisted fields appear in snapshots/reports and unavailable values remain null

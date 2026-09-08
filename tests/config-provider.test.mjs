@@ -35,7 +35,7 @@ test('OpenAI transport uses explicit profile, bounds requests and strips non-usa
   };
   const provider = createOpenAIProvider({ apiKey: 'test-placeholder', config, maxRequests: 1 });
   const result = await provider.select(context, new AbortController().signal);
-  assert.deepEqual(result, { output: '{"selector":null}', usage: { inputTokens: 123, outputTokens: 4 }, transportAttempted: true });
+  assert.deepEqual(result, { output: '{"selector":null}', usage: { inputTokens: 123, outputTokens: 4 }, transportAttempted: true, metadata: null });
   await assert.rejects(provider.select(context, new AbortController().signal), /request_limit_exhausted/);
   assert.equal(count, 1);
   assert.ok(serializeRequest(context, config).length < config.payloadMaxChars);
@@ -58,4 +58,25 @@ test('provider cannot dispatch an oversized payload or use an already aborted si
   const signal = AbortSignal.abort();
   await assert.rejects(provider.select(context, signal), /provider_aborted/);
   assert.equal(calls, 0);
+});
+
+
+test('OBS-006 allowlisted response provenance survives missing selector output without copying provider extras', async t => {
+  const prior = globalThis.fetch; t.after(() => { globalThis.fetch = prior; });
+  let missing = false;
+  globalThis.fetch = async () => new Response(JSON.stringify({ model: 'gpt-4o-mini-2024-07-18', apiKey: 'PRIVATE_EXTRA', choices: [{finish_reason: 'length', message: {content: missing ? null : '{invalid selector JSON'}}], usage: {prompt_tokens: 10, completion_tokens: 5} }));
+  const p = createOpenAIProvider({apiKey:'test-placeholder', config:validateConfig(), maxRequests:2});
+  const response = await p.select(context, new AbortController().signal);
+  assert.deepEqual(response.metadata, {returnedModel:'gpt-4o-mini-2024-07-18', finishReason:'length'});
+  assert(!JSON.stringify(response).includes('PRIVATE_EXTRA'));
+  assert.throws(() => parseSelector(response.output));
+  missing = true;
+  await assert.rejects(p.select(context, new AbortController().signal), e => e.message === 'provider_missing_output' && e.metadata.returnedModel === response.metadata.returnedModel && e.metadata.finishReason === 'length' && e.usage.inputTokens === 10);
+});
+
+test('OBS-006 metadata projection rejects arbitrary text and preserves partial/absent availability', async () => {
+  const {normalizeProviderMetadata} = await import('../dist/provider.js');
+  for (const value of [undefined,null,{},[],{returnedModel:'sk-PRIVATE_SECRET',finishReason:'<script>private</script>'},{returnedModel:'gpt-'+ 'a'.repeat(150)}, {returnedModel:'gpt-model@example.com'}]) assert.equal(normalizeProviderMetadata(value),null);
+  assert.deepEqual(normalizeProviderMetadata({returnedModel:'gpt-4o-mini',credential:'PRIVATE_EXTRA'}),{returnedModel:'gpt-4o-mini',finishReason:null});
+  assert.deepEqual(normalizeProviderMetadata({finishReason:'content_filter',raw:'PRIVATE_EXTRA'}),{returnedModel:null,finishReason:'content_filter'});
 });

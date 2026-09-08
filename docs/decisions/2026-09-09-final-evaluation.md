@@ -13,3 +13,7 @@ Implement and verify the runner offline, then freeze source/config/manifest/sche
 Subsequent evidence-driven engineering increments must be versioned separately from the frozen measurement. Offline regressions and an analysis/review package are authorized; new paid re-evaluations, changes to research scope, participant contact, merge, release and submission are not automatically authorized. Owner review of final interpretation remains subsequent to producing the actual findings; acceptance is not an invented empirical result.
 
 Work: self-healing-tool #9 / private Koderea #178. Existing pilot and preflight evidence remain historical.
+
+## Execution checkpoint
+
+Final collection completed 120/120 slots; [findings](../evidence/final-evaluation-2026-09-09.md) retain all failures and no aggregate LLM advantage. Separate 0.0.4 increment corrects summary duplication and retains future returned model metadata; offline evidence only. Owner review of interpretation is still open. D24 does not authorize another paid batch by this completion.

@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Run } from './types.js';
 import { escapeHtml, redact } from './privacy.js';
+import { normalizeProviderMetadata } from './provider.js';
 
 export interface PriceAssumption { model: string; version: string; inputUsdPerMillion: number; outputUsdPerMillion: number }
 export function summarize(run: Run, price?: PriceAssumption) {
@@ -16,7 +17,9 @@ export function summarize(run: Run, price?: PriceAssumption) {
   const observedCostUsd = billed.length === 0 ? 0 : price ? (inputTokens * price.inputUsdPerMillion + outputTokens * price.outputUsdPerMillion) / 1000000 : null;
   const correctRepairs = run.events.filter(e => e.recoveryTriggered && e.actionExecuted && e.semantic === 'correct' && !run.assessments.some(a => a.eventId === e.id && a.wrongEffect)).length;
   return { events: run.events.length, recoveries: run.events.filter(e => e.recoveryTriggered).length, correctRepairs,
-    wrongEffects: run.assessments.filter(a => a.wrongEffect).length,
+    wrongEffects: new Set(run.assessments.filter(a => a.wrongEffect).map(a => a.eventId)).size,
+    wrongEffectAttempts: new Set(run.assessments.filter(a => a.wrongEffect && a.attemptId).map(a => JSON.stringify([a.eventId, a.attemptId]))).size,
+    wrongEffectAssessments: run.assessments.filter(a => a.wrongEffect).length,
     providerInvocations: invoked.length, providerRequests: billed.filter(a => a.transportAttempted === true).length, unknownDispatchInvocations, observedInputTokens: inputTokens, observedOutputTokens: outputTokens,
     unknownUsageRequests, observedCostUsd,
     totalCostUsd: unknownUsageRequests || unknownDispatchInvocations ? null : observedCostUsd,
@@ -39,6 +42,7 @@ export function reportView(run: Run, price?: PriceAssumption) {
       contextCoverage: e.context?.coverage ?? null,
       attempts: e.attempts.map(a => ({ id: a.id, number: a.number, selector: a.selector ? redact(a.selector) : null,
         candidateAccepted: a.candidateAccepted, actionExecuted: a.actionExecuted, failure: a.failure, reason: a.reason,
+        providerMetadata: normalizeProviderMetadata(a.providerMetadata),
         providerCalled: a.providerCalled, transportAttempted: a.transportAttempted, usage: a.usage, durationMs: a.durationMs, providerMs: a.providerMs, actionMs: a.actionMs })),
     })),
     assessments: run.assessments.map(a => ({ eventId: a.eventId, attemptId: a.attemptId, semantic: a.semantic,
