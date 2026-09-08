@@ -18,12 +18,12 @@ try {
   writeFileSync(join(consumer, 'smoke.mjs'), `import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import * as api from 'self-healing-tool';
-assert.deepEqual(Object.keys(api).sort(), ['ConfigurationError','DEFAULT_CONFIG','HealingFailure','ProviderError','configFromEnv','createHealingSession','createOpenAIProvider','renderReport','reportView','summarize','validateConfig','writeReport'].sort());
+assert.deepEqual(Object.keys(api).sort(), ['ConfigurationError','DEFAULT_CONFIG','HealingFailure','ProviderError','configFromEnv','createHealingSession','createOpenAIProvider','createBudgetedOpenAIProvider','createLiveBudget','readLiveBudget','serializeRequest','renderReport','reportView','summarize','validateConfig','writeReport'].sort());
 const browser = await chromium.launch();
 try {
  const page = await browser.newPage();
  await page.setContent('<label>Display name<input id="current"></label>');
- const session = api.createHealingSession(page, { config: { actionTimeoutMs: 80 } });
+ const session = api.createHealingSession(page, { config: { actionTimeoutMs: 1000 } });
  await session.fill('#current', 'normal', {description:'Display name'});
  await session.fill('#old', 'recovered', {description:'Display name'});
  assert.equal(await page.locator('#current').inputValue(), 'recovered');

@@ -7,6 +7,7 @@ const baseEnv = Object.fromEntries(['PATH', 'HOME', 'TMPDIR'].filter(k => proces
 for (const [name, additional, expected] of [
   ['missing request limit', {}, /HEALING_LIVE_MAX_REQUESTS/],
   ['missing key', { HEALING_LIVE_MAX_REQUESTS: '1' }, /OPENAI_API_KEY/],
+  ['missing ledger', { HEALING_LIVE_MAX_REQUESTS: '6', OPENAI_API_KEY: 'test-only-placeholder' }, /HEALING_LIVE_BATCH_FILE/],
 ]) test(`live demo rejects ${name} before starting any services or model calls`, () => {
   const result = spawnSync(process.execPath, ['examples/local-demo/run.mjs', '--live'], { cwd: root, env: { ...baseEnv, ...additional }, encoding: 'utf8', timeout: 5000 });
   assert.equal(result.status, 1); assert.match(result.stderr, expected); assert.equal(result.stdout, '');

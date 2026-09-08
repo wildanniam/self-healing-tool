@@ -70,3 +70,12 @@ The demo's in-memory browser state resets by reloading its own declared instance
 ## Sources and limits
 
 Implementation references: [Playwright Locator API](https://playwright.dev/docs/api/class-locator) and [OpenAI Chat Completions](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create), consulted 2026-09-08. APIs used are checked against the pinned local dependency types. The independent demo does not reproduce the separate private-host evaluation. See [component origin inventory](implementation/component-inventory.md) and [active tasks](../openspec/changes/build-self-healing-tool/tasks.md).
+
+
+## Optional persisted live-request budget
+
+`createLiveBudget(absolutePath, plan)` creates a new owner-only ledger and refuses overwrite. `createBudgetedOpenAIProvider({apiKey, config, ledgerPath, phase})` wraps the same OpenAI adapter and reserves a request plus conservative estimated token cost before dispatch. Phase/total limits persist across provider instances and process restarts; unknown/incomplete usage halts subsequent dispatch. Reservations are retained, not refunded for retries. `readLiveBudget` exposes sanitized accounting; `serializeRequest` supports an explicit private payload audit. Keep ledgers/context records local and out of source control.
+
+The ledger is an application-level guard using caller-supplied model-matched price assumptions, not a change to provider-account billing controls. The serialized UTF-8 byte count plus 1024 framing tokens and maximum output form a conservative cost reservation. Actual reported usage remains separate and unknown values remain unknown. A held lock or pending request fails closed; inspect evidence rather than deleting/resetting a live ledger.
+
+The supplied live demo now requires `HEALING_LIVE_BATCH_FILE` in addition to the existing explicit key/request cap. It saves the actual sanitized request body separately beside the ledger for local review. Offline demo usage is unchanged.

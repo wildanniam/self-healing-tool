@@ -1,6 +1,6 @@
 {
   "name": "self-healing-tool",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Bounded Playwright locator recovery with inspectable outcomes.",
   "license": "UNLICENSED",

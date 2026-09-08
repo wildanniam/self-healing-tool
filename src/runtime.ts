@@ -96,7 +96,7 @@ export function createHealingSession(page: Page, options: {
             attempt.providerCalled = true; const providerStarted = performance.now();
             let response;
             try { response = await within(signal => options.provider!.select(structuredClone(event.context!), signal), Math.min(config.providerTimeoutMs, remaining())); }
-            catch (error) { attempt.failure = 'provider'; attempt.reason = error instanceof ProviderError && /^(provider_(?:http_\d{3}|aborted|empty_response|response_limit|missing_output|transport_failure|payload_limit)|request_limit_exhausted)$/.test(error.message) ? error.message : 'provider_timeout_or_failure'; if (error instanceof ProviderError) { attempt.usage = normalizeUsage(error.usage); attempt.transportAttempted = run.provider === 'openai' ? error.transportAttempted : false; } continue; }
+            catch (error) { attempt.failure = 'provider'; attempt.reason = error instanceof ProviderError && /^(provider_(?:http_\d{3}|aborted|empty_response|response_limit|missing_output|transport_failure|payload_limit|budget_locked|budget_unreconciled|budget_cost_limit)|request_limit_exhausted)$/.test(error.message) ? error.message : 'provider_timeout_or_failure'; if (error instanceof ProviderError) { attempt.usage = normalizeUsage(error.usage); attempt.transportAttempted = run.provider === 'openai' ? error.transportAttempted : false; } continue; }
             finally { attempt.providerMs = performance.now() - providerStarted; }
             attempt.usage = normalizeUsage(response.usage);
             attempt.transportAttempted = run.provider === 'openai' ? response.transportAttempted ?? null : false;

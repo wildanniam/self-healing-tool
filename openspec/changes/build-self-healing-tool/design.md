@@ -109,3 +109,10 @@ The package is ESM on Node 24/25 with consumer-owned Playwright 1.62.1/Chromium.
 Initial non-final limits: 1000 ms original/retry actions, 15000 ms recovery, 5000 ms provider, 30 candidates, 8000 candidate-JSON characters and 12000 complete-request characters. The provider is explicit; offline ranker-only is the default. Native HTTP uses Chat Completions without SDK transport retries. Reports distinguish adapter invocation from transport attempt and expose unknown resource measurements. Private-host semantic instrumentation still needs its own pilot evidence.
 
 These choices refine the planned contracts, not the study's scientific claims or final parameter freeze. See [integration](../../../docs/integration.md) for the exact selection/measurement rules and [inventory](../../../docs/implementation/component-inventory.md) for component origin.
+
+
+## Authorized live pilot refinement — D20/D21
+
+D20 accepts the five prepared development cases. D21 authorizes one batch capped at US$0.25 and fifteen requests across the demo (six) and private pilot (nine). Implement an opt-in persisted budget ledger alongside the provider: reserve before dispatch under an exclusive file lock, retain request/phase/cost reservations across provider instances/processes, never overwrite an existing ledger, and stop on unresolved usage. Record price assumptions; estimate conservatively from serialized-request UTF-8 bytes plus message-framing allowance and maximum output, without claiming a provider-side account spending limit.
+
+Private evaluation records actual serialized candidate inputs locally after checking sentinel/secret exclusion; expected targets and observed side effects remain in evaluator memory/records. Observe input/dialog effects throughout attempts, retaining intermediate wrong effects even if the final action succeeds. Controls still use native assertions. Method failure/refusal is a recorded research outcome, not a reason to suppress later cases or rerun until success. This refines bounded spending/reporting and task 5.4/6.3 execution; it does not change candidate selection or freeze the final protocol.
