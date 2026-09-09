@@ -1,90 +1,120 @@
 import type { Page } from 'playwright';
-import type { Action, Candidate, Config, Context, Task } from './types.js';
-import { cleanContextText } from './privacy.js';
+import type { Action, Candidate, CandidateFeatures, Config, Context, Task } from './types.js';
+import { cleanContextText, redact } from './privacy.js';
 import { serializeRequest } from './provider.js';
+import { rankThesis } from './ranking.js';
 
-export async function collectContext(page: Page, action: Action, task: Task, config: Readonly<Config>, omitted: readonly string[]): Promise<Context> {
-  const extracted = await page.evaluate(({ action }) => {
-    const labelText = (element: Element): string => {
-      if (element.closest('script,style,[hidden],[aria-hidden="true"],[data-oracle],[data-evaluator],[data-healing-evaluator]')) return '';
-      const clone = element.cloneNode(true) as Element;
-      clone.querySelectorAll('script,style,input,textarea,select,[hidden],[aria-hidden="true"],[data-oracle],[data-evaluator],[data-healing-evaluator]').forEach(n => n.remove());
-      const walker = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT);
-      const chunks: string[] = [];
-      while (walker.nextNode()) chunks.push(walker.currentNode.textContent ?? '');
-      return chunks.join(' ').replace(/\s+/g, ' ').trim().slice(0, 600);
-    };
-    const all = [...document.querySelectorAll('input,textarea,button,a[href],select,[role="button"],[contenteditable="true"]')];
-    const candidates: Omit<Candidate, 'score'>[] = [];
-    for (const [order, element] of all.slice(0, 5000).entries()) {
-      if (element.closest('[hidden],[aria-hidden="true"],[data-oracle],[data-evaluator],[data-healing-evaluator]')) continue;
-      const tag = element.tagName.toLowerCase();
-      const type = element.getAttribute('type')?.toLowerCase() ?? '';
-      const inputTypes = ['', 'text', 'search', 'email', 'url', 'tel', 'password', 'number', 'date', 'time', 'datetime-local', 'month', 'week'];
-      const fillable = (tag === 'input' && inputTypes.includes(type)) || tag === 'textarea' || element.getAttribute('contenteditable') === 'true';
-      if (action === 'fill' && !fillable) continue;
-      const style = getComputedStyle(element);
-      if (!element.getClientRects().length || style.visibility === 'hidden' || style.display === 'none') continue;
-      if (element.matches(':disabled,[aria-disabled="true"]') || (action === 'fill' && element.hasAttribute('readonly'))) continue;
-      const labels = 'labels' in element ? [...((element as HTMLInputElement).labels ?? [])].map(labelText).join(' ') : '';
-      const labelledBy = (element.getAttribute('aria-labelledby') ?? '').split(/\s+/).map(id => document.getElementById(id)).filter((x): x is HTMLElement => !!x).map(labelText).join(' ');
-      const label = element.getAttribute('aria-label') || labelledBy || labels || element.getAttribute('placeholder') || (tag === 'input' || tag === 'textarea' ? '' : labelText(element));
-      let container = element.closest('tr,li,article,dialog,[role="dialog"],[role="listitem"]');
-      if (!container) {
-        for (let parent = element.parentElement, depth = 0; parent && depth < 5; parent = parent.parentElement, depth++) {
-          const siblings = [...(parent.parentElement?.children ?? [])];
-          if (siblings.filter(s => s.tagName === parent!.tagName && s.querySelector('button,input,textarea,[role="button"]')).length > 1) { container = parent; break; }
-        }
-      }
-      const parts: string[] = [];
-      for (let node: Element | null = element; node; node = node.parentElement) {
-        const name = node.tagName.toLowerCase();
-        const siblings = [...(node.parentElement?.children ?? [])].filter(n => n.tagName === node!.tagName);
-        parts.unshift(`${name}:nth-of-type(${siblings.indexOf(node) + 1 || 1})`);
-        if (name === 'html') break;
-      }
-      // Structural paths contain no test-id or evaluator annotation. No raw DOM fallback.
-      candidates.push({ selector: parts.join(' > '), tag, type, label,
-        container: container ? labelText(container) : '',
-        containerKind: container ? container.tagName.toLowerCase() : 'none', order });
-    }
-    return { candidates, scanTruncated: all.length > 5000 };
-  }, { action });
-  const cleanTask: Task = { description: cleanContextText(task.description, omitted) };
-  if (task.scope) cleanTask.scope = cleanContextText(task.scope, omitted);
-  const tokens = (s: string) => [...new Set(s.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])];
-  const wanted = tokens(`${cleanTask.description} ${cleanTask.scope ?? ''}`);
-  const scopeTokens = tokens(cleanTask.scope ?? '');
-  const ranked: Candidate[] = extracted.candidates.map(candidate => {
-    const label = cleanContextText(candidate.label, omitted);
-    const container = cleanContextText(candidate.container, omitted);
-    const labelTokens = new Set(tokens(label));
-    const contextTokens = new Set(tokens(container));
-    const score = wanted.reduce((sum, token) => sum + (labelTokens.has(token) ? 3 : 0) + (contextTokens.has(token) ? 1 : 0), 0)
-      + scopeTokens.reduce((sum, token) => sum + (contextTokens.has(token) ? 3 : 0), 0);
-    return { ...candidate, label, container, score };
-  }).sort((a, b) => b.score - a.score || a.order - b.order);
-  const context: Context = { action, task: cleanTask, candidates: ranked.slice(0, config.maxCandidates), coverage: {
-    discovered: ranked.length, included: 0, omitted: 0,
-    textTruncated: extracted.scanTruncated || extracted.candidates.some(c => c.label.length >= 600 || c.container.length >= 600 || c.label.length > 500 || c.container.length > 500),
-    domChars: 0, payloadChars: 0, domLimit: config.domMaxChars, payloadLimit: config.payloadMaxChars, candidateLimit: config.maxCandidates,
-  } };
-  function measure() {
-    const coverage = context.coverage;
-    coverage.included = context.candidates.length;
-    coverage.omitted = ranked.length - context.candidates.length;
-    coverage.domChars = JSON.stringify(context.candidates).length;
-    // Fixed point accounts for the digits in the payload-size field itself.
-    for (let n = 0; n < 4; n++) coverage.payloadChars = serializeRequest(context, config).length;
-  }
+/** Applied after all context/feedback changes; counts the actual complete request. */
+export function fitContext(context: Context, config: Readonly<Config>): Context {
+  const measure=()=>{
+    const v=context.coverage;v.included=context.candidates.length;v.omitted=v.discovered-v.included;
+    v.domChars=JSON.stringify(context.candidates).length+(context.cleanedDom?.length??0);
+    for(let i=0;i<6;i++)v.payloadChars=serializeRequest(context,config).length;
+  };
   measure();
-  while (context.candidates.length && (context.coverage.domChars > config.domMaxChars || context.coverage.payloadChars > config.payloadMaxChars)) {
-    context.candidates.pop(); measure();
+  while(context.coverage.domChars>config.domMaxChars||context.coverage.payloadChars>config.payloadMaxChars){
+    if(context.cleanedDom){context.cleanedDom=context.cleanedDom.slice(0,Math.max(0,context.cleanedDom.length-256));context.coverage.textTruncated=true;}
+    else if(context.candidates.length)context.candidates.pop();
+    else throw new Error('context_budget_exhausted');
+    measure();
   }
-  if (context.coverage.payloadChars > config.payloadMaxChars) throw new Error('context_budget_exhausted');
   return context;
 }
-
-export function rankerSelection(context: Readonly<Context>, rejected: ReadonlySet<string>): string | null {
-  return context.candidates.find(c => c.score > 0 && !rejected.has(c.selector))?.selector ?? null;
+export async function collectContext(page: Page, action: Action, task: Task, config: Readonly<Config>, omitted: readonly string[], originalSelector=''): Promise<Context> {
+  const extracted=await page.evaluate(({action})=>{
+    const blocked='script,style,svg,head,noscript,iframe,canvas,[data-oracle],[data-evaluator],[data-healing-evaluator]';
+    const compact=(s:string|null)=> (s??'').replace(/\s+/g,' ').trim();
+    const text=(e:Element|null,limit=500)=>{
+      if(!e||e.closest(blocked+', [hidden], [aria-hidden="true"]')||e.matches('input,textarea,select,[contenteditable="true"]'))return '';
+      const clone=e.cloneNode(true) as Element;
+      clone.querySelectorAll(blocked+',input,textarea,select,[contenteditable="true"],[hidden],[aria-hidden="true"]').forEach(n=>n.remove());
+      const walker=document.createTreeWalker(clone,NodeFilter.SHOW_TEXT);const parts:string[]=[];while(walker.nextNode())parts.push(walker.currentNode.textContent??'');
+      return compact(parts.join(' ')).slice(0,limit);
+    };
+    const q=(s:string)=>JSON.stringify(s);
+    const attributes=['id','name','type','placeholder','role','aria-label','data-testid','data-test','data-cy','title'];
+    const nodes=[...document.querySelectorAll('input,textarea,button,a,select,[role],[aria-label],[placeholder],[name],[data-testid],[data-test],[data-cy],[contenteditable="true"]')];
+    const candidates:Candidate[]=[];
+    for(const [order,e] of nodes.slice(0,5000).entries()){
+      if(e.closest(blocked))continue;
+      const tag=e.tagName.toLowerCase(),type=e.getAttribute('type')?.toLowerCase()??'',role=e.getAttribute('role')??'';
+      const fillable=tag==='textarea'||e.getAttribute('contenteditable')==='true'||tag==='input'&&!['hidden','button','submit','reset','checkbox','radio','file','image','range','color'].includes(type);
+      const clickable=['button','a','input','select'].includes(tag)||['button','link','tab','menuitem','option','checkbox','radio','switch'].includes(role);
+      if(action==='fill'?!fillable:!clickable)continue;
+      const style=getComputedStyle(e);
+      const visible=!!e.getClientRects().length&&style.display!=='none'&&style.visibility!=='hidden'&&style.opacity!=='0'&&!e.closest('[hidden],[aria-hidden="true"]');
+      const disabled=e.matches(':disabled,[aria-disabled="true"]')||action==='fill'&&e.hasAttribute('readonly');
+      const attr=Object.fromEntries(attributes.map(a=>[a,e.getAttribute(a)??'']));
+      const classes=[...e.classList].filter(c=>c.length<30&&!/^css-/.test(c)).slice(0,5);
+      const labels='labels' in e?[...((e as HTMLInputElement).labels??[])].map(n=>text(n,60)).join(' '):text(e.closest('label'),60);
+      const ariaRefs=(e.getAttribute('aria-labelledby')??'').split(/\s+/).map(id=>text(document.getElementById(id),80)).join(' ').trim();
+      const ownText=['input','textarea','select'].includes(tag)||e.getAttribute('contenteditable')==='true'?'':text(e,80);
+      const label=attr['aria-label']||ariaRefs||labels||attr.placeholder||ownText||'';
+      let container=e.closest('tr,li,article,dialog,[role="dialog"],[role="listitem"],[role="complementary"]');
+      if(!container)for(let p=e.parentElement,depth=0;p&&depth<5;p=p.parentElement,depth++){
+        const siblings=[...(p.parentElement?.children??[])];if(siblings.filter(s=>s.tagName===p!.tagName&&s.querySelector('button,input,textarea,[role="button"]')).length>1){container=p;break;}
+      }
+      const row=e.closest('tr');
+      const rowContext=row?[...row.querySelectorAll('td,th')].slice(0,6).map(cell=>{const clone=cell.cloneNode(true) as Element;clone.querySelectorAll('button,a,input,textarea,select').forEach(n=>n.remove());return text(clone,160);}).filter(Boolean).join(' | ').slice(0,160):'';
+      const parent=e.parentElement;
+      const parentContext=parent?parent.tagName.toLowerCase()+(parent.id?'#'+parent.id:'')+[...parent.classList].filter(c=>c.length<20).slice(0,2).map(c=>'.'+c).join(''):'';
+      const features:CandidateFeatures={id:attr.id,name:attr.name,placeholder:attr.placeholder,role,ariaLabel:attr['aria-label'],dataTestId:attr['data-testid'],dataTest:attr['data-test'],dataCy:attr['data-cy'],title:attr.title,classes,text:ownText,nearestLabel:labels||ariaRefs,rowContext,parentContext,containerContext:text(container),visible,disabled};
+      const suggestions:string[]=[];
+      if(attr.id)suggestions.push('#'+CSS.escape(attr.id));
+      for(const a of ['data-testid','data-test','data-cy','name','aria-label','placeholder'])if(attr[a])suggestions.push(`[${a}=${q(attr[a]!)}]`);
+      if(ownText)suggestions.push(`${tag}:text-is(${q(ownText)})`);
+      if(labels)suggestions.push(`label:has-text(${q(labels)}) ${tag}`);
+      for(const cls of classes)suggestions.push(`${tag}.${CSS.escape(cls)}`);
+      // Generic heading/cell scope, never a business name or positional path.
+      if(container&&container!==e){
+        const heading=container.querySelector(':scope > h1,:scope > h2,:scope > h3,:scope > legend,:scope > td,:scope > th');
+        const identity=text(heading,160);
+        if(heading&&identity){const scope=container.tagName.toLowerCase()+`:has(> ${heading.tagName.toLowerCase()}:text-is(${q(identity)}))`;for(const base of [...suggestions])suggestions.push(`${scope} ${base}`);}
+      }
+      const unique=(s:string)=>{try{return document.querySelectorAll(s).length===1;}catch{return false;}};
+      const ordered=[...suggestions.filter(unique),...suggestions.filter(s=>s.includes(':has(> ')),...suggestions];
+      const suggestedLocators=[...new Set(ordered)].slice(0,16);
+      candidates.push({selector:suggestedLocators[0]??tag,tag,type,label,container:text(container),containerKind:container?.tagName.toLowerCase()??'none',order,score:0,features,suggestedLocators});
+    }
+    const clone=document.documentElement.cloneNode(true) as Element;
+    clone.querySelectorAll(blocked+', [hidden], [aria-hidden="true"]').forEach(n=>n.remove());
+    clone.querySelectorAll('[contenteditable="true"]').forEach(n=>n.textContent='');
+    for(const e of [clone,...clone.querySelectorAll('*')]){
+      for(const a of [...e.attributes])if(!attributes.includes(a.name)&&!['class','for','aria-labelledby'].includes(a.name))e.removeAttribute(a.name);
+      if(['textarea','select'].includes(e.tagName.toLowerCase()))e.textContent='';
+    }
+    const walker=document.createTreeWalker(clone,NodeFilter.SHOW_COMMENT);const comments:Node[]=[];while(walker.nextNode())comments.push(walker.currentNode);comments.forEach(n=>n.parentNode?.removeChild(n));
+    return {candidates,cleanedDom:clone.outerHTML,scanTruncated:nodes.length>5000};
+  },{action});
+  const clean=(s:string)=>cleanContextText(s,omitted);
+  const safeSelector=(s:string)=>{const safe=clean(s);return safe===s&&!/\[redacted/.test(s)?safe:'';};
+  const candidates=extracted.candidates.map(c=>{
+    const f:CandidateFeatures={};
+    for(const [key,value] of Object.entries(c.features??{})){
+      if(typeof value==='boolean')Object.assign(f,{[key]:value});
+      else if(Array.isArray(value))Object.assign(f,{[key]:value.map(clean).filter(Boolean)});
+      else if(typeof value==='string')Object.assign(f,{[key]:clean(value)});
+    }
+    const suggestions=(c.suggestedLocators??[]).map(safeSelector).filter(Boolean);
+    return {...c,label:clean(c.label),container:clean(c.container),type:clean(c.type),features:f,suggestedLocators:suggestions,selector:suggestions[0]??c.tag};
+  });
+  const cleanTask={description:clean(task.description),...(task.scope?{scope:clean(task.scope)}:{})};
+  const failed=safeSelector(originalSelector);
+  const ranked=rankThesis(candidates,action,cleanTask,failed);
+  const selected=ranked.slice(0,config.maxCandidates);
+  // Redaction also covers text/attribute values in the separately bounded fallback.
+  const cleaned=redact(extracted.cleanedDom,omitted).split(/\r?\n/).filter(line=>!/(?:oracle|ground[\s_-]?truth|expected[\s_-]?(?:selector|locator)|eval[\s_-]?sentinel)/i.test(line)).join(' ').replace(/\s+/g,' ').trim();
+  const context:Context={action,task:cleanTask,method:'thesis-aligned-v1',failure:{originalSelector:failed,classification:'missing-locator'},candidates:selected,
+    ...(selected.length<5?{cleanedDom:cleaned.slice(0,selected.length?Math.floor(config.domMaxChars/2):config.domMaxChars)}:{}),
+    coverage:{discovered:ranked.length,included:0,omitted:0,textTruncated:extracted.scanTruncated||cleaned.length>config.domMaxChars||extracted.candidates.some(c=>c.label.length>=500||c.container.length>=500||(c.features?.text?.length??0)>=80),domChars:0,payloadChars:0,domLimit:config.domMaxChars,payloadLimit:config.payloadMaxChars,candidateLimit:config.maxCandidates}};
+  fitContext(context,config);
+  if(context.candidates.length<5&&context.cleanedDom===undefined){
+    context.cleanedDom=cleaned.slice(0,context.candidates.length?Math.floor(config.domMaxChars/2):config.domMaxChars);
+    fitContext(context,config);
+  }
+  return context;
+}
+export function rankerSelection(context:Readonly<Context>,rejected:ReadonlySet<string>):string|null{
+  for(const c of context.candidates)if(c.score>0)for(const s of c.suggestedLocators?.length?c.suggestedLocators:[c.selector])if(!rejected.has(s))return s;
+  return null;
 }

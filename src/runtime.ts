@@ -1,9 +1,10 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import type { Page } from 'playwright';
 import { ConfigurationError, validateConfig } from './config.js';
-import { collectContext, rankerSelection } from './context.js';
+import { collectContext, rankerSelection, fitContext } from './context.js';
 import { cleanContextText, redact } from './privacy.js';
-import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata } from './provider.js';
+import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata, serializeRequest } from './provider.js';
+import { normalizeSelectors } from './selectors.js';
 import type { Action, Assessment, Config, Event, Provider, Run, Task } from './types.js';
 
 export class HealingFailure extends Error {
@@ -40,6 +41,8 @@ export function createHealingSession(page: Page, options: {
       event.task = { description: cleanContextText(event.task.description, omitted), ...(event.task.scope ? { scope: cleanContextText(event.task.scope, omitted) } : {}) };
       for (const attempt of event.attempts) {
         if (attempt.selector) attempt.selector = redact(attempt.selector, omitted);
+        if (attempt.proposedSelector) attempt.proposedSelector = redact(attempt.proposedSelector, omitted);
+        attempt.validations = attempt.validations?.map(v => ({ ...v, selector: redact(v.selector, omitted) }));
         const metadata = normalizeProviderMetadata(attempt.providerMetadata);
         attempt.providerMetadata = metadata ? normalizeProviderMetadata({ ...metadata, returnedModel: metadata.returnedModel ? redact(metadata.returnedModel, omitted) : null }) : null;
       }
@@ -83,23 +86,35 @@ export function createHealingSession(page: Page, options: {
       const remaining = () => deadline - performance.now();
       const rejected = new Set<string>();
       try {
-        event.context = await within(() => collectContext(page, action, task, config, omitted), remaining());
+        event.context = await within(() => collectContext(page, action, task, config, omitted, selector), remaining());
       } catch {
         event.failure = remaining() <= 0 ? 'budget' : 'context';
         event.stopReason = remaining() <= 0 ? 'time-limit' : 'context-failure';
         throw new HealingFailure(event.id, originalError);
       }
       for (let number = 1; number <= config.maxAttempts && remaining() > 0; number++) {
+        event.stopReason = 'attempt-limit';
         const attemptStarted = performance.now();
         const attempt: Event['attempts'][number] = { id: randomUUID(), number, selector: null, candidateAccepted: false, actionExecuted: false,
           failure: 'none', reason: '', usage: config.mode === 'ranker-only' ? { inputTokens: 0, outputTokens: 0 } : null,
-          providerMetadata: null, providerCalled: false, transportAttempted: run.provider === 'openai' ? null : false, durationMs: 0, providerMs: 0, actionMs: 0 };
+          validations: [], proposedSelector: null, providerMetadata: null, providerCalled: false, transportAttempted: run.provider === 'openai' ? null : false, durationMs: 0, providerMs: 0, actionMs: 0 };
         event.attempts.push(attempt);
         try {
           if (config.mode === 'full') {
+            let input;
+            try {
+              input = structuredClone(event.context!);
+              const feedback = event.attempts.flatMap(a => a.validations ?? []).map(v => ({ ...v, selector: cleanContextText(v.selector, omitted) }));
+              if (feedback.length) input.feedback = structuredClone(feedback);
+              fitContext(input, config);
+              attempt.inputCoverage = structuredClone(input.coverage);
+              attempt.inputSha256 = createHash('sha256').update(serializeRequest(input, config)).digest('hex');
+            } catch {
+              attempt.failure = 'context'; attempt.reason = 'context_budget_exhausted'; event.stopReason = 'context-failure'; break;
+            }
             attempt.providerCalled = true; const providerStarted = performance.now();
             let response;
-            try { response = await within(signal => options.provider!.select(structuredClone(event.context!), signal), Math.min(config.providerTimeoutMs, remaining())); }
+            try { response = await within(signal => options.provider!.select(input, signal), Math.min(config.providerTimeoutMs, remaining())); }
             catch (error) {
               attempt.failure = 'provider';
               attempt.reason = error instanceof ProviderError && /^(provider_(?:http_\d{3}|aborted|empty_response|response_limit|missing_output|transport_failure|payload_limit|budget_locked|budget_unreconciled|budget_cost_limit)|request_limit_exhausted)$/.test(error.message) ? error.message : 'provider_timeout_or_failure';
@@ -121,17 +136,34 @@ export function createHealingSession(page: Page, options: {
             catch { attempt.failure = 'parse'; attempt.reason = 'unsupported_selector_output'; continue; }
           } else { attempt.selector = rankerSelection(event.context!, rejected); }
           if (remaining() <= 0) { attempt.failure = 'budget'; attempt.reason = 'recovery_time_exhausted'; break; }
-          if (!attempt.selector) { event.stopReason = 'abstained'; attempt.failure = 'abstained'; attempt.reason = 'no_candidate_selected'; break; }
-          const s = attempt.selector; rejected.add(s);
-          try {
-            const locator = page.locator(s);
-            const compatible = await within(async () => {
-              if (await locator.count() !== 1 || !await locator.isVisible() || !await locator.isEnabled()) return false;
-              if (action === 'fill' && !await locator.isEditable()) return false;
-              return event.context!.candidates.some(c => c.selector === s);
-            }, remaining());
-            if (!compatible) { attempt.failure = 'validation'; attempt.reason = 'not_unique_compatible_candidate'; continue; }
-          } catch { attempt.failure = 'validation'; attempt.reason = 'selector_validation_failed'; continue; }
+          if (!attempt.selector) { event.stopReason = 'abstained'; attempt.failure = 'abstained'; attempt.reason = 'no_candidate_selected'; if (config.mode === 'full' && number < config.maxAttempts && remaining() > 0) continue; break; }
+          attempt.proposedSelector = attempt.selector;
+          const variants = normalizeSelectors(attempt.selector);
+          let chosen: string | null = null;
+          if (!variants.length) attempt.validations!.push({selector: attempt.selector, count: 0, reason: 'unsupported_positional_selector'});
+          for (const variant of variants) {
+            let count = 0, reason = '';
+            try {
+              const locator = page.locator(variant);
+              await within(async () => {
+                count = await locator.count();
+                if (count !== 1) { reason = count ? 'ambiguous' : 'no_match'; return; }
+                if (!await locator.isVisible()) { reason = 'not_visible'; return; }
+                if (!await locator.isEnabled()) { reason = 'not_enabled'; return; }
+                const compatible = await locator.evaluate((el, action) => {
+                  const tag=el.tagName.toLowerCase(),role=el.getAttribute('role')??'';
+                  return action==='fill' ? ['input','textarea'].includes(tag)||el.getAttribute('contenteditable')==='true' : ['button','a','div','span','li','img','input','select'].includes(tag)||['button','link','tab','menuitem','option','checkbox','radio','switch'].includes(role);
+                }, action);
+                if (!compatible || action === 'fill' && !await locator.isEditable()) reason = 'action_mismatch';
+              }, remaining());
+            } catch { reason = 'selector_validation_failed'; }
+            if (reason) {
+              const safe = redact(variant, omitted);
+              attempt.validations!.push({selector: safe, count, reason}); rejected.add(variant);
+            } else { chosen = variant; break; }
+          }
+          if (!chosen) { attempt.failure = 'validation'; attempt.reason = attempt.validations!.at(-1)?.reason ?? 'selector_validation_failed'; continue; }
+          const s = chosen; attempt.selector = s; rejected.add(s);
           attempt.candidateAccepted = true;
           if (remaining() <= 0) { attempt.failure = 'budget'; attempt.reason = 'recovery_time_exhausted'; break; }
           const retryStarted = performance.now();
