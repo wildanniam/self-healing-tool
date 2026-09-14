@@ -67,5 +67,5 @@
 - [x] 10.1 Implement bounded explicit consumer contract loading and no-spec compatibility checks. [INT-006]
 - [x] 10.2 Implement input parity, sanitization and budgets for context-only/enforced arms. [CTX-006]
 - [x] 10.3 Implement generic before-recovery admission and refusal/unknown tests on independent synthetic inputs. [HEAL-008]
-- [ ] 10.4 Execute the bounded comparable regression study and post-freeze held-out study, retaining all outcomes and input/freeze audits. [EVAL-008]
-- [ ] 10.5 Produce truthful comparison/limitations, traceability evidence, PR and Atlas checkpoint. [OBS-007]
+- [x] 10.4 Execute the bounded comparable regression study and post-freeze held-out study, retaining all outcomes and input/freeze audits. [EVAL-008]
+- [x] 10.5 Produce truthful comparison/limitations, traceability evidence, PR and Atlas checkpoint. [OBS-007]

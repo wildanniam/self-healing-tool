@@ -2133,7 +2133,7 @@
         "EVAL-008-S3"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "10.4"
       ],
@@ -2142,7 +2142,23 @@
         "method": "Mechanism checks and auditable D26 study",
         "acceptance": "Frozen comparable live study"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D26-EVAL-008-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/spec-aware-evaluation-2026-09-14.md",
+          "scenarios": [
+            "EVAL-008-S1",
+            "EVAL-008-S2",
+            "EVAL-008-S3"
+          ],
+          "summary": "All 324 slots completed with actual model recovery calls; frozen inputs, class-specific outcomes, oracle gaps and accounting audited. Verification pass means trustworthy execution, not universally correct healing.",
+          "command": "Frozen D26 runners; post-collection input audits; evaluation/analyze-holdout.mjs; private audit-self-healing-d26-results.mjs",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "OBS-007",
@@ -2156,7 +2172,7 @@
         "OBS-007-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "10.5"
       ],
@@ -2165,7 +2181,22 @@
         "method": "Mechanism checks and auditable D26 study",
         "acceptance": "Inspect spec decisions without overstating correctness"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D26-OBS-007-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/spec-aware-evaluation-2026-09-14.md",
+          "scenarios": [
+            "OBS-007-S1",
+            "OBS-007-S2"
+          ],
+          "summary": "All 324 slots completed with actual model recovery calls; frozen inputs, class-specific outcomes, oracle gaps and accounting audited. Verification pass means trustworthy execution, not universally correct healing.",
+          "command": "Frozen D26 runners; post-collection input audits; evaluation/analyze-holdout.mjs; private audit-self-healing-d26-results.mjs",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2374,6 +2405,18 @@
       "evidence": [
         "EV-D26-HEAL-008-IMPL",
         "EV-D26-HEAL-008-CHECK"
+      ]
+    },
+    {
+      "task": "10.4",
+      "evidence": [
+        "EV-D26-EVAL-008-LIVE"
+      ]
+    },
+    {
+      "task": "10.5",
+      "evidence": [
+        "EV-D26-OBS-007-LIVE"
       ]
     }
   ]
