@@ -2,7 +2,7 @@
 
 All 144 planned slots completed: 16 condition variants in two synthetic application tasks, three arms and three repeats. This is transfer evidence beyond the known private application, not 144 independent tasks or a real-world benchmark. The method was frozen before the first outcome. No core, contract or fixture was tuned after collection began.
 
-A executes the restored 0.0.5 core; B adds consumer-authored target-contract context; C receives B's input and additionally checks the proposed element against the contract before acting. These arms differ from the historical D24 full/ranker comparison of version 0.0.3. Do not pool their results.
+A executes the restored 0.0.5 core; B adds consumer-authored target-contract context and the additional `href`/`formAction` DOM observations used by that context; C receives B's input and additionally checks the proposed element against the contract before acting. A/B differences cannot be attributed exclusively to specification text. These arms differ from the historical D24 full/ranker comparison of version 0.0.3. Do not pool their results.
 
 ## Outcomes
 
@@ -24,11 +24,11 @@ C prevented the observed wrong effects in this sample, but also stopped six vali
 ## Diagnoses retained without tuning
 
 - **Structure drift, warehouse task:** A and B selected the correct reorder-level field. C rejected it because the relevant warehouse identity was in a `fieldset`/`legend` relationship that the bounded ancestor extractor did not represent. All three repeats lost a legitimate repair. This is insufficient observed context, not a disappearance of the target between selection and action.
-- **Semantic paraphrase, shipment task:** B and C stopped three recoverable opportunities where A acted incorrectly. Context helped avoid the wrong action, but did not complete the intended task.
+- **Semantic paraphrase, shipment task:** B and C stopped three recoverable opportunities where A acted incorrectly. They avoided the observed wrong action but did not complete the intended task; this comparison does not isolate specification text from the additional observations.
 - **Absent warehouse target:** A and B changed another field in all three repeats; C prevented those actions. This reproduces the false-healing problem outside the certificate example.
 - **Missing/stale specification:** A and B reached the intended state in all six physically recoverable opportunities. C stopped all six. Lack of an applicable contract does not establish that a feature was removed.
 
-The clauses and evidence matcher are generic. However, contracts remain manually authored, the matcher is lexical, and observable DOM evidence is not proof of business semantics. A misleading UI can satisfy clauses and still perform the wrong function. The gate only checks recovery; an original locator that still succeeds bypasses it.
+The schema and evidence matcher are generic; clause contents are authored for each target. The loader reads an explicit `self-healing-contract` JSON annotation, rather than interpreting arbitrary OpenSpec prose. The matcher is lexical, and observable DOM evidence is not proof of business semantics. A misleading UI can satisfy clauses and still perform the wrong function. The gate only checks recovery; an original locator that still succeeds bypasses it.
 
 ## Acknowledgment is not an effect oracle
 
