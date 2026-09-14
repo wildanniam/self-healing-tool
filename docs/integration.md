@@ -136,3 +136,5 @@ The loader validates bounded data, records the file basename and SHA-256, and re
 The gate applies only to recovery. A working original locator is executed normally and remains subject to consumer assertions. Labels/containers can be misleading, so admitted actions still need independent business-outcome checks. Narrow clauses can reject valid paraphrases; broad clauses can admit wrong targets. Writing and maintaining these clauses is a measured integration cost, and the D26 study does not claim automatic OpenSpec compilation or universal prevention of false healing.
 
 Use [the frozen comparison protocol](evaluation/spec-aware-protocol.md) for empirical claims. Unit and mocked browser checks verify execution mechanics only.
+
+Operational failure during admission remains separate from a contract decision: an expired recovery deadline yields budget/time-limit, and page closure or failed observation yields context/context-failure. Neither produces a semantic refusal or a spec decision. Only an observed target change can produce spec-target-unavailable/unknown.

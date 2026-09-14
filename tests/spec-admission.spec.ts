@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { createHealingSession, HealingFailure, reportView, summarize, serializeRequest, validateConfig } from '../dist/index.js';
 import { collectContext } from '../dist/context.js';
 import type { TargetContract, TargetSpecOptions, Context, Provider } from '../dist/index.js';
+import type { Page, Locator } from 'playwright';
 
 const config=validateConfig({mode:'full',actionTimeoutMs:700,recoveryTimeoutMs:8000,providerTimeoutMs:2000});
 const contract=(extra:Partial<TargetContract>={}):TargetContract=>({schemaVersion:1,requirementId:'REQ-CONTACT',revision:'r1',intent:'Update billing contact',action:'fill',status:'active',allOf:[{sources:['label'],anyOf:['Billing contact']}],...extra});
@@ -10,6 +11,21 @@ function fake(selector:string, before?:(context:Readonly<Context>)=>Promise<void
   const inputs:string[]=[];
   const provider:Provider={kind:'offline',async select(c){inputs.push(serializeRequest(c,config));await before?.(c);return {output:JSON.stringify({selector}),usage:null};}};
   return {provider,inputs};
+}
+
+/** Fault injection at handle resolution, after normal selector validation has completed. */
+function interceptGate(page:Page, resolve:(locator:Locator,options:Parameters<Locator['elementHandle']>[0])=>ReturnType<Locator['elementHandle']>):Page{
+  return new Proxy(page,{get(target,key){
+    if(key==='locator')return (selector:string)=>{
+      const locator=target.locator(selector);
+      if(selector!=='#billing')return locator;
+      return new Proxy(locator,{get(candidate,property){
+        if(property==='elementHandle')return (options:Parameters<Locator['elementHandle']>[0])=>resolve(candidate,options);
+        const value=Reflect.get(candidate,property,candidate);return typeof value==='function'?value.bind(candidate):value;
+      }});
+    };
+    const value=Reflect.get(target,key,target);return typeof value==='function'?value.bind(target):value;
+  }});
 }
 
 test('INT-006 invalid contract fails before even an otherwise successful original action', async({page})=>{
@@ -109,4 +125,53 @@ test('CTX-006 contract overhead stays under the same payload cap or fails before
   const session=createHealingSession(page,{config:{...config,domMaxChars:1000,payloadMaxChars:2000},provider:f.provider,targetSpec:{mode:'enforce',contract:large,expectedRevision:'r1'}});
   await expect(session.fill('#old','Never',{description:'Billing contact'})).rejects.toBeInstanceOf(HealingFailure);
   expect(f.inputs).toHaveLength(0);expect(session.snapshot().events[0]?.stopReason).toBe('context-failure');
+});
+
+test('HEAL-008 gate deadline is an operational budget failure, never a spec refusal, with no late action',async({page})=>{
+  await page.setContent(html);const f=fake('#billing');
+  let gateStarted=false,disposed=false,release!:()=>void;
+  const pause=new Promise<void>(resolve=>{release=resolve;});
+  const wrapped=interceptGate(page,async(locator,options)=>{
+    const handle=await locator.elementHandle(options);expect(handle).not.toBeNull();
+    const dispose=handle!.dispose.bind(handle);
+    handle!.dispose=async()=>{await dispose();disposed=true;};
+    gateStarted=true;await pause;return handle;
+  });
+  const session=createHealingSession(wrapped,{config:{...config,recoveryTimeoutMs:2500},provider:f.provider,targetSpec:{mode:'enforce',contract:contract(),expectedRevision:'r1'}});
+  try{
+    await expect(session.fill('#old','Never',{description:'Billing contact'})).rejects.toBeInstanceOf(HealingFailure);
+    expect(gateStarted).toBe(true);expect(f.inputs).toHaveLength(1);
+    const before=session.snapshot(),event=before.events[0]!;
+    expect(event).toMatchObject({failure:'budget',stopReason:'time-limit',actionExecuted:false});
+    expect(event.attempts).toHaveLength(1);expect(event.attempts[0]).toMatchObject({failure:'budget',reason:'recovery_time_exhausted',actionExecuted:false});
+    expect(event.targetSpec?.decision).toBeNull();expect(event.attempts[0]!.specDecision).toBeUndefined();
+    expect(summarize(before)).toMatchObject({specRefusals:0,specUnknown:0,acceptedRecoveryActions:0});
+    release();await expect.poll(()=>disposed).toBe(true);
+    expect(session.snapshot()).toEqual(before);await expect(page.locator('#billing')).toHaveValue('');
+  }finally{release();}
+});
+
+for(const closePage of [false,true])test(`HEAL-008 gate ${closePage?'page closure':'observation exception'} is operational, not a semantic refusal`,async({page})=>{
+  await page.setContent(html);const f=fake('#billing');let gateStarted=false;
+  const wrapped=interceptGate(page,async()=>{gateStarted=true;if(closePage)await page.close();throw new Error('PRIVATE_OPERATION_DETAIL');});
+  const session=createHealingSession(wrapped,{config,provider:f.provider,targetSpec:{mode:'enforce',contract:contract(),expectedRevision:'r1'}});
+  await expect(session.fill('#old','Never',{description:'Billing contact'})).rejects.toBeInstanceOf(HealingFailure);
+  expect(gateStarted).toBe(true);expect(f.inputs).toHaveLength(1);
+  const snapshot=session.snapshot(),event=snapshot.events[0]!;
+  expect(event).toMatchObject({failure:'context',stopReason:'context-failure',actionExecuted:false});
+  expect(event.attempts).toHaveLength(1);expect(event.attempts[0]!.reason).toBe(closePage?'gate_page_closed':'gate_observation_failed');
+  expect(event.targetSpec?.decision).toBeNull();expect(event.attempts[0]!.specDecision).toBeUndefined();
+  expect(summarize(snapshot)).toMatchObject({specRefusals:0,specUnknown:0,acceptedRecoveryActions:0});
+  expect(JSON.stringify(snapshot)).not.toContain('PRIVATE_OPERATION_DETAIL');
+  if(!closePage)await expect(page.locator('#billing')).toHaveValue('');
+});
+
+test('HEAL-008 an observed target removal remains a terminal admission unknown',async({page})=>{
+  await page.setContent(html);const f=fake('#billing');
+  const wrapped=interceptGate(page,async locator=>{await locator.evaluate(e=>e.remove());return null;});
+  const session=createHealingSession(wrapped,{config,provider:f.provider,targetSpec:{mode:'enforce',contract:contract(),expectedRevision:'r1'}});
+  await expect(session.fill('#old','Never',{description:'Billing contact'})).rejects.toBeInstanceOf(HealingFailure);
+  const event=session.snapshot().events[0]!;
+  expect(event).toMatchObject({failure:'spec',stopReason:'spec-unknown',actionExecuted:false});
+  expect(event.targetSpec?.decision?.reason).toBe('spec_target_unavailable');expect(f.inputs).toHaveLength(1);expect(event.attempts).toHaveLength(1);
 });

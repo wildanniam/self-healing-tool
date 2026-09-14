@@ -11,6 +11,8 @@ import type { Action, Assessment, Config, Event, Provider, Run, Task, TargetSpec
 export class HealingFailure extends Error {
   constructor(readonly eventId: string, cause: unknown) { super(`Locator recovery failed; inspect event ${eventId}`, { cause }); this.name = 'HealingFailure'; }
 }
+/** Only an observed change to the selected target can produce this admission unknown. */
+class AdmissionTargetChanged extends Error {}
 async function within<T>(operation: (signal: AbortSignal) => Promise<T>, ms: number): Promise<T> {
   if (ms <= 0) throw new Error('time_budget_exhausted');
   const controller = new AbortController(); let timer: ReturnType<typeof setTimeout>;
@@ -192,20 +194,28 @@ export function createHealingSession(page: Page, options: {
           if (remaining() <= 0) { attempt.failure = 'budget'; attempt.reason = 'recovery_time_exhausted'; break; }
           let admittedHandle: ElementHandle<Element> | null = null;
           if(targetSpec?.mode==='enforce'){
+            event.targetSpec!.decision=null;
             try {
               const admitted=await within(async signal => {
                 const locator=page.locator(s);
-                if(await locator.count()!==1)throw new Error('target_changed');
+                if(await locator.count()!==1)throw new AdmissionTargetChanged();
                 const handle=await locator.elementHandle({timeout:Math.max(1,Math.floor(remaining()))}) as ElementHandle<Element>|null;
                 try {
-                  if(!handle||!await handle.isVisible()||!await handle.isEnabled()||action==='fill'&&!await handle.isEditable())throw new Error('target_changed');
+                  if(signal.aborted)throw new Error('time_budget_exhausted');
+                  if(!handle||!await handle.isVisible()||!await handle.isEnabled()||action==='fill'&&!await handle.isEditable())throw new AdmissionTargetChanged();
                   const evidence=await collectSpecEvidence(handle,omitted);
                   if(signal.aborted)throw new Error('time_budget_exhausted');
                   return {handle,decision:evaluateSpecAdmission(specContext!,evidence)};
                 } catch(error){if(handle)await handle.dispose().catch(()=>{});throw error;}
               },remaining());
               admittedHandle=admitted.handle;attempt.specDecision=admitted.decision;
-            } catch {
+            } catch(error) {
+              if(remaining()<=0||error instanceof Error&&error.message==='time_budget_exhausted'){
+                attempt.failure='budget';attempt.reason='recovery_time_exhausted';event.stopReason='time-limit';break;
+              }
+              if(page.isClosed()||!(error instanceof AdmissionTargetChanged)){
+                attempt.failure='context';attempt.reason=page.isClosed()?'gate_page_closed':'gate_observation_failed';event.stopReason='context-failure';break;
+              }
               attempt.specDecision={outcome:'unknown',reason:'spec_target_unavailable',clauses:[]};
             }
             event.targetSpec!.decision=attempt.specDecision!;
