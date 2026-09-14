@@ -2211,7 +2211,7 @@
         "CTX-007-S3"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "11.1"
       ],
@@ -2220,7 +2220,23 @@
         "method": "Generic offline regressions followed by bounded comparable D27 collection",
         "acceptance": "Eligible and verified candidate context"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D27-CTX-007-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/candidate-recovery-engineering-2026-09-14.md",
+          "scenarios": [
+            "CTX-007-S1",
+            "CTX-007-S2",
+            "CTX-007-S3"
+          ],
+          "summary": "Generic regression checks passed before live collection; structural correctness, privacy and budget measurements are not empirical effectiveness claims.",
+          "command": "npm run test:unit; npm run test:browser -- --workers=1; npm run test:consumer; npm run check; npm run test:audit",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "CTX-008",
@@ -2235,7 +2251,7 @@
         "CTX-008-S3"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "11.2"
       ],
@@ -2244,7 +2260,23 @@
         "method": "Generic offline regressions followed by bounded comparable D27 collection",
         "acceptance": "Stable ranking and compact bounded payload"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D27-CTX-008-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/candidate-recovery-engineering-2026-09-14.md",
+          "scenarios": [
+            "CTX-008-S1",
+            "CTX-008-S2",
+            "CTX-008-S3"
+          ],
+          "summary": "Generic regression checks passed before live collection; structural correctness, privacy and budget measurements are not empirical effectiveness claims.",
+          "command": "npm run test:unit; npm run test:browser -- --workers=1; npm run test:consumer; npm run check; npm run test:audit",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-009",
@@ -2258,7 +2290,7 @@
         "HEAL-009-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "11.3"
       ],
@@ -2267,7 +2299,22 @@
         "method": "Generic offline regressions followed by bounded comparable D27 collection",
         "acceptance": "Explicit no-selection normalization"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D27-HEAL-009-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/candidate-recovery-engineering-2026-09-14.md",
+          "scenarios": [
+            "HEAL-009-S1",
+            "HEAL-009-S2"
+          ],
+          "summary": "Generic regression checks passed before live collection; structural correctness, privacy and budget measurements are not empirical effectiveness claims.",
+          "command": "npm run test:unit; npm run test:browser -- --workers=1; npm run test:consumer; npm run check; npm run test:audit",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "EVAL-009",
@@ -2512,6 +2559,24 @@
       "task": "10.5",
       "evidence": [
         "EV-D26-OBS-007-LIVE"
+      ]
+    },
+    {
+      "task": "11.1",
+      "evidence": [
+        "EV-D27-CTX-007-CHECK"
+      ]
+    },
+    {
+      "task": "11.2",
+      "evidence": [
+        "EV-D27-CTX-008-CHECK"
+      ]
+    },
+    {
+      "task": "11.3",
+      "evidence": [
+        "EV-D27-HEAL-009-CHECK"
       ]
     }
   ]
