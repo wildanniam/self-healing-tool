@@ -125,7 +125,7 @@ test('CTX-007 explicitly referenced accessible labels survive hidden presentatio
 test('CTX-007 repeated generic cards keep local identity inside a broader semantic region', async ({ page }) => {
   await page.setContent('<section><h1>Work queue</h1><div><div><h2>Amber</h2><div><button>Review</button></div></div><div><h2>Cobalt</h2><div><button>Review</button></div></div></div></section>');
   const c = await collectContext(page, 'click', { description: 'Review', scope: 'Cobalt' }, config, []);
-  expect(c.candidates).toHaveLength(2); expect(c.candidates[0]!.container).toBe('Cobalt Review');
+  expect(c.candidates).toHaveLength(2); expect(c.candidates[0]!.container).toBe('Cobalt');
   expect(c.candidates[0]!.container).not.toContain('Amber');
   expect(c.coverage.unaddressable).toBe(0); await verifyOrigins(page, c.candidates);
 });

@@ -124,3 +124,20 @@ The D27 rerun SHALL freeze the corrected common core and unchanged comparison ta
 - **WHEN** Post-correction outcomes are compared with D26
 - **THEN** normal controls, correct recovery, wrong effects, refusals, operational failures and usage are reported with complete denominators and no universal or fresh-holdout claim
 
+
+
+### Requirement: EVAL-010 D29 known regression and independent accounting
+
+D29 collection SHALL preserve existing tasks, fixtures, contracts and native oracles, freeze the new implementation and harness, audit exact dispatch payloads and budget reservations, and report unresolved wrong effects and refusals without relabeling known cases as unseen evidence.
+
+#### Scenario: EVAL-010-S1
+- **WHEN** The same known synthetic conditions are rerun on D29
+- **THEN** native oracle checks and frozen hashes precede collection, with A/B/C input parity audited
+
+#### Scenario: EVAL-010-S2
+- **WHEN** A forced-selector diagnostic or a partial budget-limited run is available
+- **THEN** it is labeled separately from model performance and missing slots remain visible
+
+#### Scenario: EVAL-010-S3
+- **WHEN** Observed results are compared with D27
+- **THEN** classes, repeated-run denominators, all wrong actions and unresolved failures are preserved

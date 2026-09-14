@@ -1,0 +1,48 @@
+{
+  "id": "apsec-d29-owner-evidence-2026-09-14-v1",
+  "model": "gpt-4o-mini",
+  "maxRequests": 432,
+  "maxCostUsd": 0.5,
+  "phases": {
+    "holdout": 432
+  },
+  "price": {
+    "version": "openai-model-page-2026-09-14",
+    "inputUsdPerMillion": 0.15,
+    "outputUsdPerMillion": 0.6
+  },
+  "config": {
+    "mode": "full",
+    "model": "gpt-4o-mini",
+    "maxTokens": 500,
+    "temperature": 0,
+    "maxAttempts": 3,
+    "actionTimeoutMs": 3000,
+    "recoveryTimeoutMs": 45000,
+    "providerTimeoutMs": 15000,
+    "domMaxChars": 8000,
+    "payloadMaxChars": 12000,
+    "maxCandidates": 30
+  },
+  "holdout": {
+    "cases": 16,
+    "applicationGroups": 2,
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "repeats": 3,
+    "slots": 144
+  },
+  "runOrder": "case blocks; rotate A/B/C by case index plus repeat; fresh context/reset before each arm",
+  "limits": [
+    "No production or private application targets",
+    "New D29 ledger; preserve D26 and D27 artifacts",
+    "Hard US$0.50 / 432-request cap; no automatic top-up",
+    "No automatic retry after unresolved billing",
+    "Known regression cases; no unseen transfer claim",
+    "Freeze source, build, harness and fixtures before collection",
+    "Three repeats are dependent measurements, not independent tasks"
+  ]
+}

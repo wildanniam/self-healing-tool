@@ -76,7 +76,7 @@ export async function collectContext(page: Page, action: Action, task: Task, con
       }));
     } finally { await nodes.dispose(); }
     const cleaned = cleanDomText(extracted.cleanedDom, omitted);
-    const context: Context = { action, task: cleanTask, method: 'candidate-corrected-d27-v1', failure: { originalSelector: failed, classification: 'missing-locator' }, candidates: selected,
+    const context: Context = { action, task: cleanTask, method: 'owner-evidence-d29-v1', failure: { originalSelector: failed, classification: 'missing-locator' }, candidates: selected,
       ...(selected.length < 5 ? { cleanedDom: cleaned.slice(0, selected.length ? Math.floor(config.domMaxChars / 2) : config.domMaxChars) } : {}),
       coverage: { scanned: extracted.scanned, ineligible: extracted.ineligible, discovered: ranked.length,
         locatorCheckedCandidates: selected.length, unaddressable: selected.filter(c => !c.suggestedLocators?.length).length,

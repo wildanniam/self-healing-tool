@@ -76,12 +76,13 @@ test('D25 positional output is not executed and provider errors remain fail-stop
 });
 
 
-test('D25 null responses retry within the thesis attempt bound without erasing abstention',async({page})=>{
+test('D29 explicitly supersedes D25 identical-null retries with one bounded observation refresh',async({page})=>{
  await page.setContent('<label>Name<input id="name"></label>');
  let calls=0;const provider:Provider={kind:'offline',async select(){calls++;return {output:JSON.stringify({selector:calls===1?null:'#name'}),usage:null};}};
- const s=createHealingSession(page,{config,provider});const e=await s.fill('#old','value',{description:'Name'});
- expect(calls).toBe(2);expect(e.attempts[0]!.failure).toBe('abstained');expect(e.actionExecuted).toBe(true);
- let nulls=0;const n=createHealingSession(page,{config,provider:{kind:'offline',async select(){nulls++;return {output:'{"selector":null}',usage:null};}}});
- await expect(n.fill('#old','other',{description:'Name'})).rejects.toBeInstanceOf(HealingFailure);
- expect(nulls).toBe(3);expect(n.snapshot().events[0]!.stopReason).toBe('abstained');
+ const session=createHealingSession(page,{config,provider});
+ await expect(session.fill('#old','value',{description:'Name'})).rejects.toBeInstanceOf(HealingFailure);
+ const event=session.snapshot().events[0]!;
+ expect(calls).toBe(1);expect(event.attempts).toHaveLength(1);expect(event.attempts[0]!.failure).toBe('abstained');
+ expect(event.attempts[0]!.observationRefresh).toMatchObject({policy:'null-refresh-once-v1',outcome:'unchanged'});
+ expect(event.stopReason).toBe('abstained');await expect(page.locator('#name')).toHaveValue('');
 });

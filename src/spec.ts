@@ -99,7 +99,9 @@ export function buildSpecContext(options: TargetSpecOptions, action: Action, omi
   const applicability: SpecContext['applicability'] = changed ? 'sanitized' : !raw ? 'missing' : raw.revision !== options.expectedRevision ? 'revision-mismatch' : raw.action !== action ? 'action-mismatch' : raw.status === 'active' ? 'applicable' : raw.status;
   return { contract, expectedRevision, applicability, policy: 'all-clauses-positive-token-phrase-v1' };
 }
-export type SpecEvidence = Partial<Record<SpecEvidenceSource, string | string[]>>;
+export type SpecEvidence = Partial<Record<SpecEvidenceSource, string | string[]>> & {
+  localActionContext?: string; ownerContext?: string; ownerStatus?: 'identified' | 'missing' | 'ambiguous'; ownerSources?: string[];
+};
 export function evaluateSpecAdmission(spec: SpecContext, evidence: SpecEvidence): SpecDecision {
   if (spec.applicability !== 'applicable') return { outcome: spec.applicability === 'retired' ? 'refused' : 'unknown', reason: `spec_${spec.applicability.replaceAll('-', '_')}`, clauses: [] };
   const contains = (value: string, phrase: string) => {

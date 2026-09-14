@@ -72,10 +72,20 @@
 
 ## 11. D27 candidate correction and authorized rerun
 
-- [ ] 11.1 Implement eligible hidden filtering, semantic context across wrappers and browser-verified originating-node locators; verify independent layout fixtures. [CTX-007]
+- [x] 11.1 Implement eligible hidden filtering, semantic context across wrappers and browser-verified originating-node locators; verify independent layout fixtures. [CTX-007]
 - [x] 11.2 Correct structural/duplicate ranking and compact bounded projection with honest stage/omission metadata; verify parity, privacy and limits. [CTX-008]
 - [x] 11.3 Normalize no-selection output and complete unit/browser/consumer regression verification before live dispatch. [HEAL-009]
 - [x] 11.4 Freeze and execute the owner-authorized repeat private and synthetic regression conditions on the corrected shared core, retaining all outcomes and provider accounting. [EVAL-009]
 - [x] 11.5 Audit complete before/after outcomes and input hashes, document limitations/traceability and deliver linked PRs and Atlas checkpoint. [EVAL-009]
 
 D27 evaluation reopened task 11.1 after h2-03 exposed a nested-semantic identity regression. The earlier engineering passes remain historical evidence; see `docs/evidence/candidate-recovery-evaluation-2026-09-14.md`. Collection and audit completion do not imply that every repair is correct.
+
+## 12. D29 audited owner evidence and observation retry
+
+- [x] 12.1 Implement owner provenance, wrapper transparency and no sibling borrowing with independent layout checks. [CTX-009]
+- [x] 12.2 Implement at-most-once observation refresh on null, exact attempt inputs and report/privacy boundaries. [HEAL-010, OBS-008]
+- [x] 12.3 Verify unit/browser/clean-consumer regressions and source/spec checks before freeze. [CTX-009, HEAL-010, OBS-008]
+- [ ] 12.4 Freeze and execute the bounded same-condition synthetic regression with native, forced-selector, payload and accounting audits. [EVAL-010]
+- [ ] 12.5 Document actual outcomes, limitations, traceability, linked PR and Atlas checkpoint. [EVAL-010]
+
+D29 re-closes task 11.1 for the audited supported wrapper/owner behavior after final regression and independent counterexample checks. The prior D27 failure record remains intact; no universal ownership or semantic-safety guarantee is implied.

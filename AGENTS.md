@@ -4,6 +4,8 @@ Reply to Wildan in Indonesian. Write specifications, code identifiers and projec
 
 ## Current state and reading order
 
+Latest active increment: D29 / 0.0.8 under issue #17 implements independently audited owner-evidence and observation-retry corrections. Read `docs/decisions/2026-09-14-owner-evidence.md` and `docs/evaluation/owner-evidence-protocol.md` before collection. Keep D27 source/results and all task/contract/oracle files unchanged. No-selection refresh is at most once and compared after identical feedback/budget fitting. Owner evidence must not borrow sibling identity; test asymmetric peer headings and missing inner identities before accepting extraction changes. A passing lexical gate is not semantic proof. D29 synthetic cases are known regression; do not call them a new holdout.
+
 Latest checkpoint: D27 on 0.0.7 completed 324 known regression slots and 372 real provider requests. Private C recovery is 36/36 with no wrong effects; synthetic C recovery is 15/24 with three wrong effects. CTX-007-S2 has a nested-semantic-container counterexample; task 11.1 is reopened, so engineering/release are not complete. Read `docs/evidence/candidate-recovery-evaluation-2026-09-14.md` before the historical checkpoints below. Preserve frozen D27 inputs/results and the read-only final ledger; do not retune and rerun the same study as unseen evidence.
 
 

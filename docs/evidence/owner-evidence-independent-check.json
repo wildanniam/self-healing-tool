@@ -1,0 +1,82 @@
+{
+  "kind": "independent-readonly-prefreeze-owner-recheck",
+  "node": "v24.18.0",
+  "providerCalls": 0,
+  "results": [
+    {
+      "name": "original-asymmetric",
+      "html": "<article aria-label=\"Customer Juniper\"><div><header><h3>Customer Cypress</h3></header><button id=\"named\">Edit address</button></div><div><button id=\"missing\">Edit address</button></div></article>",
+      "expected": {
+        "named": "Customer Cypress",
+        "missing": ""
+      },
+      "observed": [
+        {
+          "id": "named",
+          "owner": "Customer Cypress",
+          "status": "identified",
+          "sources": [
+            "heading"
+          ]
+        },
+        {
+          "id": "missing",
+          "owner": "",
+          "status": "missing",
+          "sources": []
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "different-identity-reverse-order",
+      "html": "<article aria-label=\"Account Boreal\"><div><aside><button id=\"missing\">View invoices</button></aside></div><div><header><h4><span>Account Aspen</span></h4></header><section><button id=\"named\">View invoices</button></section></div></article>",
+      "expected": {
+        "named": "Account Aspen",
+        "missing": ""
+      },
+      "observed": [
+        {
+          "id": "missing",
+          "owner": "",
+          "status": "missing",
+          "sources": []
+        },
+        {
+          "id": "named",
+          "owner": "Account Aspen",
+          "status": "identified",
+          "sources": [
+            "heading"
+          ]
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "sibling-reference-only",
+      "html": "<article aria-label=\"Account Boreal\"><div><header><h3>Account Aspen</h3></header><button id=\"named\">View invoices</button></div><div><p>Compare with Account Aspen</p><button id=\"missing\">View invoices</button></div></article>",
+      "expected": {
+        "named": "Account Aspen",
+        "missing": ""
+      },
+      "observed": [
+        {
+          "id": "named",
+          "owner": "Account Aspen",
+          "status": "identified",
+          "sources": [
+            "heading"
+          ]
+        },
+        {
+          "id": "missing",
+          "owner": "",
+          "status": "missing",
+          "sources": []
+        }
+      ],
+      "passed": true
+    }
+  ]
+}

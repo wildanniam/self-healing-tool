@@ -2203,7 +2203,8 @@
       "capability": "context-selection",
       "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
       "decisions": [
-        "D27"
+        "D27",
+        "D29"
       ],
       "scenarios": [
         "CTX-007-S1",
@@ -2211,7 +2212,7 @@
         "CTX-007-S3"
       ],
       "owner": "engineer",
-      "status": "implemented",
+      "status": "verified",
       "tasks": [
         "11.1"
       ],
@@ -2259,6 +2260,21 @@
           "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
           "date": "2026-09-14",
           "result": "fail"
+        },
+        {
+          "id": "EV-D29-CTX-007-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/owner-evidence-engineering-2026-09-14.md",
+          "scenarios": [
+            "CTX-007-S1",
+            "CTX-007-S2",
+            "CTX-007-S3"
+          ],
+          "summary": "Final engineering checks and independent diagnostics passed for supported behavior; known lexical/structural limits remain documented.",
+          "command": "TypeScript build; 42 unit tests; 83 browser tests; clean tarball consumer; 222 native preflight checks; 126 offline diagnostics; independent 3-case owner recheck",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; no model calls",
+          "date": "2026-09-14",
+          "result": "pass"
         }
       ]
     },
@@ -2378,6 +2394,154 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "CTX-009",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D29"
+      ],
+      "scenarios": [
+        "CTX-009-S1",
+        "CTX-009-S2",
+        "CTX-009-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "12.1",
+        "12.3"
+      ],
+      "verification": {
+        "id": "V-CTX-009",
+        "method": "Bounded independent browser checks and frozen regression audit",
+        "acceptance": "Owned evidence with bounded provenance"
+      },
+      "evidence": [
+        {
+          "id": "EV-D29-CTX-009-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/owner-evidence-engineering-2026-09-14.md",
+          "scenarios": [
+            "CTX-009-S1",
+            "CTX-009-S2",
+            "CTX-009-S3"
+          ],
+          "summary": "Final engineering checks and independent diagnostics passed for supported behavior; known lexical/structural limits remain documented.",
+          "command": "TypeScript build; 42 unit tests; 83 browser tests; clean tarball consumer; 222 native preflight checks; 126 offline diagnostics; independent 3-case owner recheck",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; no model calls",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "HEAL-010",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D29"
+      ],
+      "scenarios": [
+        "HEAL-010-S1",
+        "HEAL-010-S2",
+        "HEAL-010-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "12.2",
+        "12.3"
+      ],
+      "verification": {
+        "id": "V-HEAL-010",
+        "method": "Bounded independent browser checks and frozen regression audit",
+        "acceptance": "Observation-aware bounded no-selection retry"
+      },
+      "evidence": [
+        {
+          "id": "EV-D29-HEAL-010-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/owner-evidence-engineering-2026-09-14.md",
+          "scenarios": [
+            "HEAL-010-S1",
+            "HEAL-010-S2",
+            "HEAL-010-S3"
+          ],
+          "summary": "Final engineering checks and independent diagnostics passed for supported behavior; known lexical/structural limits remain documented.",
+          "command": "TypeScript build; 42 unit tests; 83 browser tests; clean tarball consumer; 222 native preflight checks; 126 offline diagnostics; independent 3-case owner recheck",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; no model calls",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "OBS-008",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D29"
+      ],
+      "scenarios": [
+        "OBS-008-S1",
+        "OBS-008-S2",
+        "OBS-008-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "12.2",
+        "12.3"
+      ],
+      "verification": {
+        "id": "V-OBS-008",
+        "method": "Bounded independent browser checks and frozen regression audit",
+        "acceptance": "Exact attempt and refresh evidence"
+      },
+      "evidence": [
+        {
+          "id": "EV-D29-OBS-008-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/owner-evidence-engineering-2026-09-14.md",
+          "scenarios": [
+            "OBS-008-S1",
+            "OBS-008-S2",
+            "OBS-008-S3"
+          ],
+          "summary": "Final engineering checks and independent diagnostics passed for supported behavior; known lexical/structural limits remain documented.",
+          "command": "TypeScript build; 42 unit tests; 83 browser tests; clean tarball consumer; 222 native preflight checks; 126 offline diagnostics; independent 3-case owner recheck",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; no model calls",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "EVAL-010",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D29"
+      ],
+      "scenarios": [
+        "EVAL-010-S1",
+        "EVAL-010-S2",
+        "EVAL-010-S3"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "12.4",
+        "12.5"
+      ],
+      "verification": {
+        "id": "V-EVAL-010",
+        "method": "Bounded independent browser checks and frozen regression audit",
+        "acceptance": "D29 known regression and independent accounting"
+      },
+      "evidence": []
     }
   ],
   "completedTasks": [
@@ -2622,6 +2786,33 @@
       "task": "11.5",
       "evidence": [
         "EV-D27-EVAL-009-LIVE"
+      ]
+    },
+    {
+      "task": "11.1",
+      "evidence": [
+        "EV-D29-CTX-007-CHECK"
+      ]
+    },
+    {
+      "task": "12.1",
+      "evidence": [
+        "EV-D29-CTX-009-CHECK"
+      ]
+    },
+    {
+      "task": "12.2",
+      "evidence": [
+        "EV-D29-HEAL-010-CHECK",
+        "EV-D29-OBS-008-CHECK"
+      ]
+    },
+    {
+      "task": "12.3",
+      "evidence": [
+        "EV-D29-CTX-009-CHECK",
+        "EV-D29-HEAL-010-CHECK",
+        "EV-D29-OBS-008-CHECK"
       ]
     }
   ]

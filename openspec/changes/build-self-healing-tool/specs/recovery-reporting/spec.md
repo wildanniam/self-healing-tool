@@ -94,3 +94,20 @@ Reports SHALL distinguish spec provenance, admission decisions, action execution
 #### Scenario: OBS-007-S2
 - **WHEN** No recovery is accepted in a group
 - **THEN** the summary does not claim zero-error effectiveness from an empty denominator
+
+
+### Requirement: OBS-008 Exact attempt and refresh evidence
+
+Local diagnostics SHALL retain sanitized exact input context for each provider attempt and refresh outcome, duration and selection-evidence hashes; normal reports MUST omit raw attempt and refresh contexts and late known fill values MUST be redacted throughout snapshots.
+
+#### Scenario: OBS-008-S1
+- **WHEN** A refreshed observation changes a later request
+- **THEN** each attempt retains its own actual input and initial context remains unchanged
+
+#### Scenario: OBS-008-S2
+- **WHEN** A later fill value was present in earlier observations
+- **THEN** all retained initial, attempt and refresh contexts redact that value
+
+#### Scenario: OBS-008-S3
+- **WHEN** A normal report is produced
+- **THEN** refresh summary is visible without raw candidate or DOM context

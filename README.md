@@ -2,7 +2,9 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: 0.0.7 D27 regression collected and audited; follow-up correction required.** See [the complete before/after evidence](docs/evidence/candidate-recovery-evaluation-2026-09-14.md). Contract-enforced recovery increased from 15/36 to 36/36 on the known private workload, with zero wrong effects there. On the known synthetic workload, recovery fell from 18/24 to 15/24 and three wrong effects occurred. The nested-group context task is reopened; passing engineering checks does not establish general safety. Owner interpretation and public release remain pending. The working name, distribution eligibility and license remain undecided; private application source and E2E tests are not distributed here.
+**Current development: 0.0.8 D29 owner-evidence correction under verification.** See [D29 scope](docs/decisions/2026-09-14-owner-evidence.md). The following D27 numbers are historical and must not be interpreted as D29 results.
+
+**Historical checkpoint: 0.0.7 D27 regression collected and audited; follow-up correction required.** See [the complete before/after evidence](docs/evidence/candidate-recovery-evaluation-2026-09-14.md). Contract-enforced recovery increased from 15/36 to 36/36 on the known private workload, with zero wrong effects there. On the known synthetic workload, recovery fell from 18/24 to 15/24 and three wrong effects occurred. The nested-group context task is reopened; passing engineering checks does not establish general safety. Owner interpretation and public release remain pending. The working name, distribution eligibility and license remain undecided; private application source and E2E tests are not distributed here.
 
 D25 corrects methodological drift: [method matrix](docs/implementation/thesis-method-alignment.md). D24 evaluated the earlier simplified variant, not an exact replay of the TA method.
 
