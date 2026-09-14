@@ -2197,6 +2197,101 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "CTX-007",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D27"
+      ],
+      "scenarios": [
+        "CTX-007-S1",
+        "CTX-007-S2",
+        "CTX-007-S3"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "11.1"
+      ],
+      "verification": {
+        "id": "V-CTX-007",
+        "method": "Generic offline regressions followed by bounded comparable D27 collection",
+        "acceptance": "Eligible and verified candidate context"
+      },
+      "evidence": []
+    },
+    {
+      "id": "CTX-008",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D27"
+      ],
+      "scenarios": [
+        "CTX-008-S1",
+        "CTX-008-S2",
+        "CTX-008-S3"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "11.2"
+      ],
+      "verification": {
+        "id": "V-CTX-008",
+        "method": "Generic offline regressions followed by bounded comparable D27 collection",
+        "acceptance": "Stable ranking and compact bounded payload"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-009",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D27"
+      ],
+      "scenarios": [
+        "HEAL-009-S1",
+        "HEAL-009-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "11.3"
+      ],
+      "verification": {
+        "id": "V-HEAL-009",
+        "method": "Generic offline regressions followed by bounded comparable D27 collection",
+        "acceptance": "Explicit no-selection normalization"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-009",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D27"
+      ],
+      "scenarios": [
+        "EVAL-009-S1",
+        "EVAL-009-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "11.4",
+        "11.5"
+      ],
+      "verification": {
+        "id": "V-EVAL-009",
+        "method": "Generic offline regressions followed by bounded comparable D27 collection",
+        "acceptance": "Audited post-correction regression"
+      },
+      "evidence": []
     }
   ],
   "completedTasks": [

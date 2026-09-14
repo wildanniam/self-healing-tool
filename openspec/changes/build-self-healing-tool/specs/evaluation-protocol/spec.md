@@ -110,3 +110,17 @@ The study SHALL preserve D24, diagnose 0.0.5 separately, compare A/B/C with equa
 #### Scenario: EVAL-008-S3
 - **WHEN** A run is technically completed
 - **THEN** its wrong-target effects and independent semantic correctness remain separately assessed
+
+
+### Requirement: EVAL-009 Audited post-correction regression
+
+The D27 rerun SHALL freeze the corrected common core and unchanged comparison tasks/configuration before collection, preserve D26, keep reused tasks labeled as known regressions, and retain complete class-specific outcomes and resource accounting.
+
+#### Scenario: EVAL-009-S1
+- **WHEN** The corrected implementation is evaluated across A/B/C
+- **THEN** all arms share the corrected core and B/C input policy, original task/oracle/mutation contracts remain unchanged, and source/input hashes are audited
+
+#### Scenario: EVAL-009-S2
+- **WHEN** Post-correction outcomes are compared with D26
+- **THEN** normal controls, correct recovery, wrong effects, refusals, operational failures and usage are reported with complete denominators and no universal or fresh-holdout claim
+

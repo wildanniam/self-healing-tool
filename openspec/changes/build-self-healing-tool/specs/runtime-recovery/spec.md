@@ -106,3 +106,17 @@ An enforced session SHALL check applicability and all consumer-declared evidence
 #### Scenario: HEAL-008-S3
 - **WHEN** The target contract is retired or revision mismatched
 - **THEN** recovery halts with a distinct refusal or unknown reason
+
+
+### Requirement: HEAL-009 Explicit no-selection normalization
+
+The runtime SHALL treat supported explicit null-selection output as a no-candidate attempt under the existing bounded abstention policy, retain its accounting, and never execute it as a literal selector or arbitrary code.
+
+#### Scenario: HEAL-009-S1
+- **WHEN** A response returns JSON null or the supported literal null selection
+- **THEN** no browser action is attempted and the bounded retry/abstention result retains the provider attempt
+
+#### Scenario: HEAL-009-S2
+- **WHEN** An output contains unsupported code or a malformed selector record
+- **THEN** the output is rejected without execution and normal validation remains required for actual selectors
+

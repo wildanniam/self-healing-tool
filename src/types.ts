@@ -48,7 +48,7 @@ export interface Context {
   action: Action; task: Task; candidates: Candidate[];
   method?: string; failure?: { originalSelector: string; classification: string }; cleanedDom?: string; feedback?: ValidationFeedback[];
   targetSpec?: SpecContext;
-  coverage: { discovered: number; included: number; omitted: number; textTruncated: boolean; domChars: number; payloadChars: number; domLimit: number; payloadLimit: number; candidateLimit: number };
+  coverage: { scanned?: number; ineligible?: number; locatorCheckedCandidates?: number; unaddressable?: number; beforeBudget?: number; budgetOmitted?: number; discovered: number; included: number; omitted: number; textTruncated: boolean; domChars: number; payloadChars: number; domLimit: number; payloadLimit: number; candidateLimit: number };
 }
 export interface Usage { inputTokens: number; outputTokens: number }
 export interface ProviderMetadata { returnedModel: string | null; finishReason: 'stop' | 'length' | 'content_filter' | 'tool_calls' | 'function_call' | null }
