@@ -1972,6 +1972,123 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "INT-006",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "INT-006-S1",
+        "INT-006-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "10.1"
+      ],
+      "verification": {
+        "id": "V-INT-006",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Explicit target contract input"
+      },
+      "evidence": []
+    },
+    {
+      "id": "CTX-006",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "CTX-006-S1",
+        "CTX-006-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "10.2"
+      ],
+      "verification": {
+        "id": "V-CTX-006",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Equal spec context across comparison arms"
+      },
+      "evidence": []
+    },
+    {
+      "id": "HEAL-008",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "HEAL-008-S1",
+        "HEAL-008-S2",
+        "HEAL-008-S3"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "10.3"
+      ],
+      "verification": {
+        "id": "V-HEAL-008",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Generic admission before recovery action"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-008",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "EVAL-008-S1",
+        "EVAL-008-S2",
+        "EVAL-008-S3"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "10.4"
+      ],
+      "verification": {
+        "id": "V-EVAL-008",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Frozen comparable live study"
+      },
+      "evidence": []
+    },
+    {
+      "id": "OBS-007",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "OBS-007-S1",
+        "OBS-007-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "10.5"
+      ],
+      "verification": {
+        "id": "V-OBS-007",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Inspect spec decisions without overstating correctness"
+      },
+      "evidence": []
     }
   ],
   "completedTasks": [

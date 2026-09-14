@@ -1,0 +1,854 @@
+{
+  "kind": "native-preflight-only",
+  "startedAt": "2026-09-14T07:55:54.747Z",
+  "finishedAt": "2026-09-14T07:56:09.759Z",
+  "node": "v24.18.0",
+  "cases": 16,
+  "groups": 2,
+  "checks": 158,
+  "passed": true,
+  "providerCalls": 0,
+  "healerRuns": 0,
+  "networkRequests": 1,
+  "fixtureBundleSha256": "247ffaf6bed577955573b21b5d7e7320695b29857a6a2387d0d3adb0adaa88a6",
+  "contractAuthorshipSha256": "4f8db35a7dcd8b2f1a6afcc79c02cb189aa42286c53b755028234a2d924e3cf9",
+  "files": [
+    {
+      "path": "cases.mjs",
+      "sha256": "87a410b29856e6405fe66ea57bd34c0e07c85f17a25a61b7b53f038da05094ff"
+    },
+    {
+      "path": "interface.mjs",
+      "sha256": "80cfe7fc440053a44858e406e8c8424a7ddd5e68a87e02c0190f494e4dff927e"
+    },
+    {
+      "path": "native-preflight.mjs",
+      "sha256": "8eb840240441f09aacc9fa97e86908b24e801b136fcb2bcc21ab68db3b8f596c"
+    },
+    {
+      "path": "products/shipment/openspec/specs/destination/previous.md",
+      "sha256": "c5d56fff882853534ec83c6c42b663774bc47592adc5d3b8e645c6182adad92b"
+    },
+    {
+      "path": "products/shipment/openspec/specs/destination/retired.md",
+      "sha256": "3ce9557f10d53bf41f3cbc4438ea31e123f10574c8dc92b2ef1fe086fcf3e551"
+    },
+    {
+      "path": "products/shipment/openspec/specs/destination/spec.md",
+      "sha256": "08222bba559c79c09a304b9b46804cb193a833a020bf0542ebb194cf914c56e6"
+    },
+    {
+      "path": "products/warehouse/openspec/specs/replenishment/retired.md",
+      "sha256": "2d630d831b7041b385214737c62623bf385a4dba1aef3529cf9dffa067006879"
+    },
+    {
+      "path": "products/warehouse/openspec/specs/replenishment/spec.md",
+      "sha256": "005153fc3186585920ab6aada521a43e418d7e472c81ed1a9f0b88077954aa6e"
+    },
+    {
+      "path": "README.md",
+      "sha256": "fe01b8f6db55b5e2b2d849d75e3828175181737b9ca1d37ef53c957829708c9c"
+    },
+    {
+      "path": "shipment-app.mjs",
+      "sha256": "6647aa79f2e5e56e629961ae71f6f5d13eea16df2c9302aa4ddc50fccf0a5a07"
+    },
+    {
+      "path": "warehouse-app.mjs",
+      "sha256": "327f535b52e78e0f550ea9772ba3956be61407331ba1ec8fcc769f7fc7cec5d6"
+    }
+  ],
+  "checkResults": [
+    {
+      "name": "sixteen conditions",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "two independent groups",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "eight conditions per group",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "eight conditions per group",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "preauthored contract unchanged",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "preauthored contract unchanged",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "preauthored contract unchanged",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "preauthored contract unchanged",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "preauthored contract unchanged",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "one data-only contract fence",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "schema version one",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "generic contract keys",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "allowlisted feature sources",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "nonempty phrase clauses",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no evaluator identifiers in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no answer selectors in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "one data-only contract fence",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "schema version one",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "generic contract keys",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "allowlisted feature sources",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "nonempty phrase clauses",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no evaluator identifiers in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no answer selectors in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "one data-only contract fence",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "schema version one",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "generic contract keys",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "allowlisted feature sources",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "nonempty phrase clauses",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no evaluator identifiers in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no answer selectors in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "one data-only contract fence",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "schema version one",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "generic contract keys",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "allowlisted feature sources",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "nonempty phrase clauses",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no evaluator identifiers in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no answer selectors in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "one data-only contract fence",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "schema version one",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "generic contract keys",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "allowlisted feature sources",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "nonempty phrase clauses",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no evaluator identifiers in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "no answer selectors in contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "unchanged requirements share one contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "unchanged requirements share one contract",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "pristine mapping reaches business outcome",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "pristine mapping reaches business outcome",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-01",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-02",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-03",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-04",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-05",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-06",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-06",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-06",
+      "passed": true
+    },
+    {
+      "name": "no action preserves state in negative condition",
+      "caseId": "h1-06",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-06",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-06",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-07",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-07",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-07",
+      "passed": true
+    },
+    {
+      "name": "no action preserves state in negative condition",
+      "caseId": "h1-07",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-07",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-07",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h1-08",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-01",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-02",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-03",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-04",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-05",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-06",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-06",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-06",
+      "passed": true
+    },
+    {
+      "name": "no action preserves state in negative condition",
+      "caseId": "h2-06",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-06",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-06",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-07",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-07",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-07",
+      "passed": true
+    },
+    {
+      "name": "no action preserves state in negative condition",
+      "caseId": "h2-07",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-07",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-07",
+      "passed": true
+    },
+    {
+      "name": "original locator control or zero-match mutation",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "setup has no prior wrong effects",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "native target presence matches requirement condition",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "native action reaches independent business outcome",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "deliberate wrong action is detected",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "later success retains previous wrong effect",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "reset is independent and complete",
+      "caseId": "h2-08",
+      "passed": true
+    },
+    {
+      "name": "fixtures request no resources after local bootstrap",
+      "caseId": null,
+      "passed": true
+    },
+    {
+      "name": "application scripts do not raise browser errors",
+      "caseId": null,
+      "passed": true
+    }
+  ],
+  "failure": null
+}

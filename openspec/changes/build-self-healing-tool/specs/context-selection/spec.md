@@ -65,3 +65,16 @@ The supported click/fill context SHALL preserve sanitized original-locator signa
 #### Scenario: CTX-005-S2
 - **WHEN** Candidates are sparse or the page contains large noisy/sensitive content
 - **THEN** bounded cleaned supplement/fallback excludes disallowed data and every actual serialized request respects configured limits
+
+
+### Requirement: CTX-006 Equal spec context across comparison arms
+
+Context-only and enforced sessions SHALL provide the same sanitized requirement, applicability and evidence-policy information to the provider; sessions without a target spec MUST preserve the 0.0.5 request contract.
+
+#### Scenario: CTX-006-S1
+- **WHEN** B and C receive the same state and contract
+- **THEN** their first serialized provider requests are identical
+
+#### Scenario: CTX-006-S2
+- **WHEN** Spec metadata exceeds the payload budget or contains sensitive omitted values
+- **THEN** the request is bounded/sanitized or fails without dispatch

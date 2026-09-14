@@ -1,0 +1,27 @@
+{
+  "stage": "contracts-authored-before-fixture-implementation",
+  "at": "2026-09-14T07:49:53.576Z",
+  "scope": "Synthetic benchmark intent; not a production owner-approved requirement",
+  "files": [
+    {
+      "path": "evaluation/holdout/products/shipment/openspec/specs/destination/previous.md",
+      "sha256": "c5d56fff882853534ec83c6c42b663774bc47592adc5d3b8e645c6182adad92b"
+    },
+    {
+      "path": "evaluation/holdout/products/shipment/openspec/specs/destination/retired.md",
+      "sha256": "3ce9557f10d53bf41f3cbc4438ea31e123f10574c8dc92b2ef1fe086fcf3e551"
+    },
+    {
+      "path": "evaluation/holdout/products/shipment/openspec/specs/destination/spec.md",
+      "sha256": "08222bba559c79c09a304b9b46804cb193a833a020bf0542ebb194cf914c56e6"
+    },
+    {
+      "path": "evaluation/holdout/products/warehouse/openspec/specs/replenishment/retired.md",
+      "sha256": "2d630d831b7041b385214737c62623bf385a4dba1aef3529cf9dffa067006879"
+    },
+    {
+      "path": "evaluation/holdout/products/warehouse/openspec/specs/replenishment/spec.md",
+      "sha256": "005153fc3186585920ab6aada521a43e418d7e472c81ed1a9f0b88077954aa6e"
+    }
+  ]
+}

@@ -96,3 +96,43 @@ Attempt `providerMetadata` records allowlisted `returnedModel` and `finishReason
 `summary.wrongEffects` now means distinct events with any wrong-effect assessment. `wrongEffectAttempts` counts distinct explicitly assessed attempts, and `wrongEffectAssessments` counts raw wrong-assessment records. The last number can be larger when event/attempt assessments describe the same action; it is not a count of separate effects. All assessment records remain intact and later correctness never erases an earlier wrong effect. Historical 0.0.3 summaries used assessment-row counts under `wrongEffects`; do not pool these fields across versions without normalization.
 
 These changes affect observability only. Frozen D24 results use private package 0.0.3 and per-slot independent correctness; 0.0.4 has offline engineering evidence, no new live effectiveness measurement.
+
+
+## Version 0.0.6: optional target contract prototype
+
+The default path retains 0.0.5 recovery behavior. Spec-aware use is explicit and needs a consumer-authored, versioned contract for the target application. The library reads one selected Markdown file; it does not need or crawl application source code. A repository's development OpenSpec is not automatically a target application's runtime contract.
+
+```ts
+import { createHealingSession, loadTargetSpec } from 'self-healing-tool';
+const contract = await loadTargetSpec('./target-specs/settings.md');
+const healing = createHealingSession(page, {
+  config, provider,
+  targetSpec: { mode: 'enforce', contract, expectedRevision: 'settings-v1' },
+});
+```
+
+Put exactly one `self-healing-contract` JSON fence in the selected Markdown:
+
+````md
+```self-healing-contract
+{
+  "schemaVersion": 1,
+  "requirementId": "SETTINGS-01",
+  "revision": "settings-v1",
+  "intent": "Edit the workspace display title",
+  "action": "fill",
+  "status": "active",
+  "allOf": [
+    { "sources": ["label", "nearestLabel", "ariaLabel"], "anyOf": ["workspace title"] }
+  ]
+}
+```
+````
+
+The loader validates bounded data, records the file basename and SHA-256, and rejects executable/unknown fields. `allOf` requires every clause; within a clause, one complete case-insensitive normalized token phrase must appear in one named observable source. It is a lexical rule, not an LLM judge or executable assertion. See the exported `SpecEvidenceSource` type for available observations. Link/form action observations retain pathname only.
+
+`context` and `enforce` send the same contract and prompt to the provider. `context` leaves recovery admission to the ordinary structural checks; `enforce` additionally checks current evidence on the resolved node before acting on that same node. A rejected or uncertain gate ends recovery; it does not search until a convenient candidate passes. Evidence mismatch produces `spec-unknown`, not a proof that the application contains a bug. Missing, stale, sanitized, retired and action-incompatible contracts are explicitly distinguished in reports.
+
+The gate applies only to recovery. A working original locator is executed normally and remains subject to consumer assertions. Labels/containers can be misleading, so admitted actions still need independent business-outcome checks. Narrow clauses can reject valid paraphrases; broad clauses can admit wrong targets. Writing and maintaining these clauses is a measured integration cost, and the D26 study does not claim automatic OpenSpec compilation or universal prevention of false healing.
+
+Use [the frozen comparison protocol](evaluation/spec-aware-protocol.md) for empirical claims. Unit and mocked browser checks verify execution mechanics only.

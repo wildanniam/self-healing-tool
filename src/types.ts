@@ -2,6 +2,29 @@ export type Action = 'click' | 'fill';
 export type Mode = 'ranker-only' | 'full';
 export type SemanticOutcome = 'unassessed' | 'correct' | 'incorrect';
 export interface Task { description: string; scope?: string }
+export type SpecEvidenceSource = 'label' | 'text' | 'nearestLabel' | 'placeholder' | 'ariaLabel' | 'name' | 'title' | 'role' | 'tag' | 'type' | 'id' | 'dataTestId' | 'dataTest' | 'dataCy' | 'classes' | 'rowContext' | 'parentContext' | 'containerContext' | 'container' | 'href' | 'formAction';
+export interface TargetContract {
+  schemaVersion: 1; requirementId: string; revision: string; intent: string; action: Action;
+  status: 'active' | 'retired' | 'unknown';
+  allOf: { sources: SpecEvidenceSource[]; anyOf: string[] }[];
+  provenance?: { fileName: string; sha256: string };
+}
+export interface TargetSpecOptions { mode: 'context' | 'enforce'; contract: TargetContract | null; expectedRevision: string }
+export interface SpecContext {
+  contract: TargetContract | null; expectedRevision: string;
+  applicability: 'applicable' | 'retired' | 'unknown' | 'missing' | 'revision-mismatch' | 'action-mismatch' | 'sanitized';
+  policy: 'all-clauses-positive-token-phrase-v1';
+}
+export interface SpecDecision {
+  outcome: 'accepted' | 'refused' | 'unknown'; reason: string;
+  clauses: { index: number; matched: boolean; source: SpecEvidenceSource | null }[];
+  observed?: Partial<Record<SpecEvidenceSource, string | string[]>>;
+}
+export interface SpecEvent {
+  mode: TargetSpecOptions['mode']; requirementId: string | null; revision: string | null;
+  expectedRevision: string; provenance?: TargetContract['provenance']; applicability: SpecContext['applicability'];
+  decision: SpecDecision | null;
+}
 export interface Config {
   mode: Mode; model: 'gpt-4o-mini' | 'gpt-4o-mini-2024-07-18';
   maxTokens: number; temperature: number; maxAttempts: number;
@@ -13,6 +36,7 @@ export interface CandidateFeatures {
   dataTestId?: string; dataTest?: string; dataCy?: string; title?: string; classes?: string[];
   text?: string; nearestLabel?: string; rowContext?: string; parentContext?: string; containerContext?: string;
   visible?: boolean; disabled?: boolean;
+  href?: string; formAction?: string;
 }
 export interface ValidationFeedback { selector: string; count: number; reason: string }
 export interface Candidate {
@@ -23,6 +47,7 @@ export interface Candidate {
 export interface Context {
   action: Action; task: Task; candidates: Candidate[];
   method?: string; failure?: { originalSelector: string; classification: string }; cleanedDom?: string; feedback?: ValidationFeedback[];
+  targetSpec?: SpecContext;
   coverage: { discovered: number; included: number; omitted: number; textTruncated: boolean; domChars: number; payloadChars: number; domLimit: number; payloadLimit: number; candidateLimit: number };
 }
 export interface Usage { inputTokens: number; outputTokens: number }
@@ -33,12 +58,13 @@ export interface Provider {
   readonly configuration?: Readonly<Config>;
   select(context: Readonly<Context>, signal: AbortSignal): Promise<ProviderResponse>;
 }
-export type FailureKind = 'none' | 'original' | 'context' | 'provider' | 'parse' | 'validation' | 'action' | 'budget' | 'abstained';
+export type FailureKind = 'none' | 'original' | 'context' | 'provider' | 'parse' | 'validation' | 'action' | 'budget' | 'abstained' | 'spec';
 export interface Attempt {
   id: string; number: number; selector: string | null;
   candidateAccepted: boolean; actionExecuted: boolean;
   failure: FailureKind; reason: string; usage: Usage | null;
   providerMetadata?: ProviderMetadata | null;
+  specDecision?: SpecDecision;
   proposedSelector?: string | null; validations?: ValidationFeedback[]; inputSha256?: string; inputCoverage?: Context['coverage'];
   providerCalled: boolean; transportAttempted: boolean | null; durationMs: number; providerMs: number; actionMs: number;
 }
@@ -50,9 +76,10 @@ export interface Event {
   id: string; action: Action; originalSelector: string; task: Task;
   originalFailure: { name: string; classification: string } | null;
   recoveryTriggered: boolean; actionExecuted: boolean;
-  stopReason: 'original-success' | 'nonrecoverable' | 'recovered' | 'attempt-limit' | 'time-limit' | 'abstained' | 'context-failure' | 'provider-failure';
+  stopReason: 'original-success' | 'nonrecoverable' | 'recovered' | 'attempt-limit' | 'time-limit' | 'abstained' | 'context-failure' | 'provider-failure' | 'spec-refused' | 'spec-unknown';
   failure: FailureKind; originalMs: number; internalMs: number; retryMs: number; totalMs: number;
   context: Context | null; attempts: Attempt[]; semantic: SemanticOutcome;
+  targetSpec?: SpecEvent;
 }
 export interface Run {
   schemaVersion: 1; id: string; repeatOf: string | null; createdAt: string;

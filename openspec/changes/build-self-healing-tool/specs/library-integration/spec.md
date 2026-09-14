@@ -65,3 +65,16 @@ Each component proposed for distribution SHALL have a recorded origin and distri
 #### Scenario: INT-005-S2
 - **WHEN** The extraction inventory is reviewed
 - **THEN** it records included and excluded categories without copying restricted raw artifacts
+
+
+### Requirement: INT-006 Explicit target contract input
+
+The library SHALL accept an optional bounded data-only target contract with requirement provenance, revision, action, status and observable evidence clauses; it MUST reject executable predicates and invalid records and MUST preserve no-contract compatibility.
+
+#### Scenario: INT-006-S1
+- **WHEN** An explicit requirement file is loaded
+- **THEN** only its declared structured contract and safe provenance are returned without reading application source
+
+#### Scenario: INT-006-S2
+- **WHEN** A malformed or executable contract is supplied
+- **THEN** configuration fails before candidate actions

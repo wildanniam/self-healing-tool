@@ -1,11 +1,12 @@
 import { randomUUID, createHash } from 'node:crypto';
-import type { Page } from 'playwright';
+import type { Page, ElementHandle } from 'playwright';
 import { ConfigurationError, validateConfig } from './config.js';
-import { collectContext, rankerSelection, fitContext } from './context.js';
+import { collectContext, collectSpecEvidence, rankerSelection, fitContext } from './context.js';
+import { buildSpecContext, evaluateSpecAdmission, validateTargetSpecOptions } from './spec.js';
 import { cleanContextText, redact } from './privacy.js';
 import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata, serializeRequest } from './provider.js';
 import { normalizeSelectors } from './selectors.js';
-import type { Action, Assessment, Config, Event, Provider, Run, Task } from './types.js';
+import type { Action, Assessment, Config, Event, Provider, Run, Task, TargetSpecOptions } from './types.js';
 
 export class HealingFailure extends Error {
   constructor(readonly eventId: string, cause: unknown) { super(`Locator recovery failed; inspect event ${eventId}`, { cause }); this.name = 'HealingFailure'; }
@@ -18,9 +19,10 @@ async function within<T>(operation: (signal: AbortSignal) => Promise<T>, ms: num
   finally { clearTimeout(timer!); controller.abort(); }
 }
 export function createHealingSession(page: Page, options: {
-  config?: Partial<Config>; provider?: Provider; repeatOf?: string; omitValues?: readonly string[];
+  config?: Partial<Config>; provider?: Provider; repeatOf?: string; omitValues?: readonly string[]; targetSpec?: TargetSpecOptions;
 } = {}) {
   const config = validateConfig(options.config);
+  const targetSpec = options.targetSpec === undefined ? undefined : validateTargetSpecOptions(options.targetSpec);
   if (config.mode === 'full' && !options.provider) throw new ConfigurationError('full mode requires an explicit provider');
   if (options.provider && !['offline', 'openai'].includes(options.provider.kind)) throw new ConfigurationError('provider');
   if (config.mode === 'full' && options.provider?.kind === 'openai') {
@@ -39,6 +41,25 @@ export function createHealingSession(page: Page, options: {
     for (const event of copy.events) {
       event.originalSelector = redact(event.originalSelector, omitted);
       event.task = { description: cleanContextText(event.task.description, omitted), ...(event.task.scope ? { scope: cleanContextText(event.task.scope, omitted) } : {}) };
+      if(event.targetSpec){
+        // Values supplied by a later fill must also be omitted from earlier spec evidence.
+        const clean=(value:string)=>cleanContextText(value,omitted);
+        const cleanDecision=(decision:NonNullable<Event['targetSpec']>['decision'])=>{
+          if(decision?.observed)decision.observed=Object.fromEntries(Object.entries(decision.observed).map(([key,value])=>[key,Array.isArray(value)?value.map(clean):clean(value)]));
+        };
+        if(event.targetSpec.requirementId)event.targetSpec.requirementId=clean(event.targetSpec.requirementId);
+        if(event.targetSpec.revision)event.targetSpec.revision=clean(event.targetSpec.revision);
+        event.targetSpec.expectedRevision=clean(event.targetSpec.expectedRevision);
+        if(event.targetSpec.provenance)event.targetSpec.provenance.fileName=clean(event.targetSpec.provenance.fileName);
+        cleanDecision(event.targetSpec.decision);
+        const context=event.context?.targetSpec;
+        if(context){
+          context.expectedRevision=clean(context.expectedRevision);
+          const c=context.contract;
+          if(c){c.requirementId=clean(c.requirementId);c.revision=clean(c.revision);c.intent=clean(c.intent);c.allOf.forEach(clause=>{clause.anyOf=clause.anyOf.map(clean);});if(c.provenance)c.provenance.fileName=clean(c.provenance.fileName);}
+        }
+        for(const attempt of event.attempts)if(attempt.specDecision)cleanDecision(attempt.specDecision);
+      }
       for (const attempt of event.attempts) {
         if (attempt.selector) attempt.selector = redact(attempt.selector, omitted);
         if (attempt.proposedSelector) attempt.proposedSelector = redact(attempt.proposedSelector, omitted);
@@ -58,6 +79,9 @@ export function createHealingSession(page: Page, options: {
     const started = performance.now();
     const event: Event = { id: randomUUID(), action, originalSelector: selector, task: { description: task.description, scope: task.scope },
       originalFailure: null, recoveryTriggered: false, actionExecuted: false, stopReason: 'nonrecoverable', failure: 'none', originalMs: 0, internalMs: 0, retryMs: 0, totalMs: 0, context: null, attempts: [], semantic: 'unassessed' };
+    const specContext=targetSpec?buildSpecContext(targetSpec,action,omitted):undefined;
+    if(specContext)event.targetSpec={mode:targetSpec!.mode,requirementId:specContext.contract?.requirementId??null,revision:specContext.contract?.revision??null,
+      expectedRevision:specContext.expectedRevision,...(specContext.contract?.provenance?{provenance:specContext.contract.provenance}:{}),applicability:specContext.applicability,decision:null};
     run.events.push(event);
     let originalError: unknown; let initialCount: number | null = null;
     const invoke = (s: string, timeout: number) => action === 'fill' ? page.locator(s).fill(value!, { timeout }) : page.locator(s).click({ timeout });
@@ -86,7 +110,7 @@ export function createHealingSession(page: Page, options: {
       const remaining = () => deadline - performance.now();
       const rejected = new Set<string>();
       try {
-        event.context = await within(() => collectContext(page, action, task, config, omitted, selector), remaining());
+        event.context = await within(() => collectContext(page, action, task, config, omitted, selector, specContext), remaining());
       } catch {
         event.failure = remaining() <= 0 ? 'budget' : 'context';
         event.stopReason = remaining() <= 0 ? 'time-limit' : 'context-failure';
@@ -166,12 +190,43 @@ export function createHealingSession(page: Page, options: {
           const s = chosen; attempt.selector = s; rejected.add(s);
           attempt.candidateAccepted = true;
           if (remaining() <= 0) { attempt.failure = 'budget'; attempt.reason = 'recovery_time_exhausted'; break; }
+          let admittedHandle: ElementHandle<Element> | null = null;
+          if(targetSpec?.mode==='enforce'){
+            try {
+              const admitted=await within(async signal => {
+                const locator=page.locator(s);
+                if(await locator.count()!==1)throw new Error('target_changed');
+                const handle=await locator.elementHandle({timeout:Math.max(1,Math.floor(remaining()))}) as ElementHandle<Element>|null;
+                try {
+                  if(!handle||!await handle.isVisible()||!await handle.isEnabled()||action==='fill'&&!await handle.isEditable())throw new Error('target_changed');
+                  const evidence=await collectSpecEvidence(handle,omitted);
+                  if(signal.aborted)throw new Error('time_budget_exhausted');
+                  return {handle,decision:evaluateSpecAdmission(specContext!,evidence)};
+                } catch(error){if(handle)await handle.dispose().catch(()=>{});throw error;}
+              },remaining());
+              admittedHandle=admitted.handle;attempt.specDecision=admitted.decision;
+            } catch {
+              attempt.specDecision={outcome:'unknown',reason:'spec_target_unavailable',clauses:[]};
+            }
+            event.targetSpec!.decision=attempt.specDecision!;
+            if(attempt.specDecision!.outcome!=='accepted'){
+              if(admittedHandle)await (admittedHandle as ElementHandle<Element>).dispose().catch(()=>{});
+              attempt.failure='spec';attempt.reason=attempt.specDecision!.reason;
+              event.stopReason=attempt.specDecision!.outcome==='refused'?'spec-refused':'spec-unknown';
+              break;
+            }
+          }
           const retryStarted = performance.now();
           try {
-            await invoke(s, Math.max(1, Math.min(config.actionTimeoutMs, Math.floor(remaining()))));
+            const timeout=Math.max(1, Math.min(config.actionTimeoutMs, Math.floor(remaining())));
+            if(targetSpec?.mode==='enforce'){
+              if(remaining()<=0)throw new Error('time_budget_exhausted');
+              // Act on the admitted handle: a selector re-resolution could target a replacement node.
+              if(action==='fill')await admittedHandle!.fill(value!,{timeout});else await admittedHandle!.click({timeout});
+            } else await invoke(s, timeout);
             attempt.actionExecuted = true; event.actionExecuted = true; event.failure = 'none'; event.stopReason = 'recovered';
           } catch { attempt.failure = 'action'; attempt.reason = 'retry_action_failed'; }
-          finally { attempt.actionMs = performance.now() - retryStarted; event.retryMs += attempt.actionMs; }
+          finally { attempt.actionMs = performance.now() - retryStarted; event.retryMs += attempt.actionMs;if(admittedHandle)await admittedHandle.dispose().catch(()=>{}); }
           if (attempt.actionExecuted) break;
         } finally { attempt.durationMs = performance.now() - attemptStarted; }
       }

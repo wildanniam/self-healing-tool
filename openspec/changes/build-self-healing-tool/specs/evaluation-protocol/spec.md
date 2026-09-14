@@ -93,3 +93,20 @@ Reports and paper artifacts SHALL distinguish new evaluation data from historica
 #### Scenario: EVAL-007-S2
 - **WHEN** A study is planned but no participants or runs exist
 - **THEN** its methods are described as a plan without fabricated scores, speedups, or success counts
+
+
+### Requirement: EVAL-008 Frozen comparable live study
+
+The study SHALL preserve D24, diagnose 0.0.5 separately, compare A/B/C with equal shared inputs and budgets, and run independently authored held-out task groups only after code/protocol freeze; all failures, unknowns, refusals and denominators MUST remain in evidence.
+
+#### Scenario: EVAL-008-S1
+- **WHEN** A new D26 batch runs
+- **THEN** its fresh ledger and outputs cannot overwrite historical evidence and total spending remains bounded
+
+#### Scenario: EVAL-008-S2
+- **WHEN** Held-out outcomes are opened
+- **THEN** the frozen implementation/protocol hashes precede collection and no post-result tuning is applied to that reported batch
+
+#### Scenario: EVAL-008-S3
+- **WHEN** A run is technically completed
+- **THEN** its wrong-target effects and independent semantic correctness remain separately assessed
