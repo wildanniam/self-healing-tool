@@ -2,7 +2,7 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: D26 method evaluation completed with 324 live test executions; spec-aware prototype 0.0.6 remains experimental.** See [the four-stage results and limitations](docs/evidence/spec-aware-evaluation-2026-09-14.md). The enforced contract prevented observed wrong effects in this sample, but private verified recovery remained 15/36 and six valid holdout repair opportunities were stopped. Owner interpretation and public release remain pending. This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: 0.0.7 candidate-recovery corrections are undergoing D27 regression verification.** The following numbers describe the completed D26 experiment on 0.0.6, not the new build. See [the four-stage results and limitations](docs/evidence/spec-aware-evaluation-2026-09-14.md). The enforced contract prevented observed wrong effects in this sample, but private verified recovery remained 15/36 and six valid holdout repair opportunities were stopped. Owner interpretation and public release remain pending. This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
 
 D25 corrects methodological drift: [method matrix](docs/implementation/thesis-method-alignment.md). D24 evaluated the earlier simplified variant, not an exact replay of the TA method.
 

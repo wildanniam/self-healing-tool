@@ -138,3 +138,11 @@ The gate applies only to recovery. A working original locator is executed normal
 Use [the frozen comparison protocol](evaluation/spec-aware-protocol.md) for empirical claims. Unit and mocked browser checks verify execution mechanics only.
 
 Operational failure during admission remains separate from a contract decision: an expired recovery deadline yields budget/time-limit, and page closure or failed observation yields context/context-failure. Neither produces a semantic refusal or a spec decision. Only an observed target change can produce spec-target-unavailable/unknown.
+
+## Version 0.0.7: corrected candidate context
+
+Version0.0.7 changes the common extraction/ranking/request representation for all modes. Unavailable action targets are filtered before ranking; accessible labels and scrollable offscreen controls are retained. Generic semantic groups survive layout wrappers. Suggested locators are verified with Playwright against the exact originating node, not only checked for unique counts. A retained unaddressable descriptor has an empty selector and no suggestions; ranker-only skips it. Full mode may compose another locator, subject to ordinary runtime validation and optional contract admission.
+
+The wire payload drops empty fields and redundant audit metadata. `coverage.domChars` measures projected candidate JSON plus any cleaned HTML; `payloadChars` measures the complete request. Additional coverage fields distinguish scanned nodes, unavailable controls, ranked eligible candidates, checked shortlist, unaddressable descriptors and budget omissions. These counters report separate stages; `omitted` remains eligible candidates minus included candidates. Neither uniqueness nor contract admission proves the intended business outcome.
+
+Historical D25/D26 behavior and results above remain versioned references. D27 reuses known cases for regression and does not establish unseen generalization.

@@ -41,3 +41,13 @@ Offline synthetic checks establish restoration of selected mechanisms, not equiv
 4. A future paired study must compare methods on equal input information; separate method restoration from optional further abstention changes. If causal context benefit is claimed, use an ablation. Do not add cases or repeats merely to obtain a favorable score.
 
 No additional paid batch, publication or merge is authorized by this engineering completion.
+
+## D27 / 0.0.7 correction, superseding affected D25 behavior
+
+Decision [D27](../decisions/2026-09-14-candidate-recovery.md) retains the documented additive signals while removing repeated structural locator tokens and bare-parent-tag overlap. Every meaningful token contributes once; all exact stable-attribute matches can contribute once per attribute. Duplicate penalties use stable identity or meaningful labels; a shared CSS class does not make a unique control a duplicate. Distinct same-label entities remain separate candidates.
+
+Unlike the historical soft visibility penalty, unavailable click/fill targets are excluded before ranking, including closed dialogs, hidden inputs, hidden ancestors, disabled and readonly controls for the relevant action. Referenced accessible labels can remain evidence even when visually hidden. Offscreen controls that can be scrolled into view remain eligible. Semantic ancestor/label evidence survives layout wrappers and is shared between candidate extraction and fresh admission.
+
+Suggestions use stable attributes and generic host-text/container scopes, then Playwright checks both uniqueness and originating-node identity. A descriptor without a verified suggestion remains explicit with an empty selector; ranker-only cannot select an invented fallback. The provider may still compose another locator, so business-oracle checks remain necessary.
+
+The new request projects away empty fields and redundant metadata while retaining nonempty evidence source names, explicit false state values and separate entity candidates. Budgets measure this actual projection, not the larger audit object. Both JSON null and the literal string `null` mean no selection. These are an engineering bundle, not proof of a new research contribution or an isolated explanation of future live outcomes. See the [D27 protocol](../evaluation/candidate-recovery-protocol.md).
