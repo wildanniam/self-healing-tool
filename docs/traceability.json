@@ -2531,7 +2531,7 @@
         "EVAL-010-S3"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "12.4",
         "12.5"
@@ -2541,7 +2541,23 @@
         "method": "Bounded independent browser checks and frozen regression audit",
         "acceptance": "D29 known regression and independent accounting"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D29-EVAL-010-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/owner-evidence-evaluation-2026-09-14.md",
+          "scenarios": [
+            "EVAL-010-S1",
+            "EVAL-010-S2",
+            "EVAL-010-S3"
+          ],
+          "summary": "All 144 known synthetic slots and 126 model requests completed. Exact inputs, baseline comparison, every wrong effect, remaining failures and cost mapping are retained. Pass denotes auditable evaluation, not an overall improvement: C correct recovery remains 15/24 and wrong effects rise from 3 to 6.",
+          "command": "Frozen run-d29-synthetic.mjs; analyze-d29-synthetic.mjs; native and offline checks; independent per-condition/accounting audit",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2813,6 +2829,18 @@
         "EV-D29-CTX-009-CHECK",
         "EV-D29-HEAL-010-CHECK",
         "EV-D29-OBS-008-CHECK"
+      ]
+    },
+    {
+      "task": "12.4",
+      "evidence": [
+        "EV-D29-EVAL-010-LIVE"
+      ]
+    },
+    {
+      "task": "12.5",
+      "evidence": [
+        "EV-D29-EVAL-010-LIVE"
       ]
     }
   ]

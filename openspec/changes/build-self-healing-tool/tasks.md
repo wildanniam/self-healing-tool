@@ -85,7 +85,9 @@ D27 evaluation reopened task 11.1 after h2-03 exposed a nested-semantic identity
 - [x] 12.1 Implement owner provenance, wrapper transparency and no sibling borrowing with independent layout checks. [CTX-009]
 - [x] 12.2 Implement at-most-once observation refresh on null, exact attempt inputs and report/privacy boundaries. [HEAL-010, OBS-008]
 - [x] 12.3 Verify unit/browser/clean-consumer regressions and source/spec checks before freeze. [CTX-009, HEAL-010, OBS-008]
-- [ ] 12.4 Freeze and execute the bounded same-condition synthetic regression with native, forced-selector, payload and accounting audits. [EVAL-010]
-- [ ] 12.5 Document actual outcomes, limitations, traceability, linked PR and Atlas checkpoint. [EVAL-010]
+- [x] 12.4 Freeze and execute the bounded same-condition synthetic regression with native, forced-selector, payload and accounting audits. [EVAL-010]
+- [x] 12.5 Document actual outcomes, limitations, traceability, linked PR and Atlas checkpoint. [EVAL-010]
 
 D29 re-closes task 11.1 for the audited supported wrapper/owner behavior after final regression and independent counterexample checks. The prior D27 failure record remains intact; no universal ownership or semantic-safety guarantee is implied.
+
+D29 collection completed: 144 slots, 126 actual requests. C correct recovery remains 15/24; wrong effects rise from 3 to 6. Completed evaluation tasks do not resolve those method limitations or authorize release. See `docs/evidence/owner-evidence-evaluation-2026-09-14.md`.
