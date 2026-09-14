@@ -72,8 +72,10 @@
 
 ## 11. D27 candidate correction and authorized rerun
 
-- [x] 11.1 Implement eligible hidden filtering, semantic context across wrappers and browser-verified originating-node locators; verify independent layout fixtures. [CTX-007]
+- [ ] 11.1 Implement eligible hidden filtering, semantic context across wrappers and browser-verified originating-node locators; verify independent layout fixtures. [CTX-007]
 - [x] 11.2 Correct structural/duplicate ranking and compact bounded projection with honest stage/omission metadata; verify parity, privacy and limits. [CTX-008]
 - [x] 11.3 Normalize no-selection output and complete unit/browser/consumer regression verification before live dispatch. [HEAL-009]
-- [ ] 11.4 Freeze and execute the owner-authorized repeat private and synthetic regression conditions on the corrected shared core, retaining all outcomes and provider accounting. [EVAL-009]
-- [ ] 11.5 Audit complete before/after outcomes and input hashes, document limitations/traceability and deliver linked PRs and Atlas checkpoint. [EVAL-009]
+- [x] 11.4 Freeze and execute the owner-authorized repeat private and synthetic regression conditions on the corrected shared core, retaining all outcomes and provider accounting. [EVAL-009]
+- [x] 11.5 Audit complete before/after outcomes and input hashes, document limitations/traceability and deliver linked PRs and Atlas checkpoint. [EVAL-009]
+
+D27 evaluation reopened task 11.1 after h2-03 exposed a nested-semantic identity regression. The earlier engineering passes remain historical evidence; see `docs/evidence/candidate-recovery-evaluation-2026-09-14.md`. Collection and audit completion do not imply that every repair is correct.

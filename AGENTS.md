@@ -4,6 +4,9 @@ Reply to Wildan in Indonesian. Write specifications, code identifiers and projec
 
 ## Current state and reading order
 
+Latest checkpoint: D27 on 0.0.7 completed 324 known regression slots and 372 real provider requests. Private C recovery is 36/36 with no wrong effects; synthetic C recovery is 15/24 with three wrong effects. CTX-007-S2 has a nested-semantic-container counterexample; task 11.1 is reopened, so engineering/release are not complete. Read `docs/evidence/candidate-recovery-evaluation-2026-09-14.md` before the historical checkpoints below. Preserve frozen D27 inputs/results and the read-only final ledger; do not retune and rerun the same study as unseen evidence.
+
+
 This repository has a verified library and an audited five-case private live pilot; D24 final evaluation completed all 120 slots; owner interpretation/release are pending. Package 0.0.3 remains the frozen measurement; 0.0.5 is a separate offline-verified thesis-method restoration after 0.0.4 reporting fixes. Do not rerun the fixed batch. Consult dated evidence and D24. Read `README.md`, `docs/decisions/2026-09-07-foundation.md`, `docs/audit-workflow.md`, current `openspec/specs/`, and the active `build-self-healing-tool` proposal/specs/design/tasks before implementation. Read the relevant Atlas Vault project hub/latest decision note for research context when available.
 
 The audit workflow is established. Runtime/demo task completion is recorded only where acceptance evidence exists; use the register and dated evidence for exact coverage. Do not infer implementation from an OpenSpec artifact marked done.

@@ -2211,7 +2211,7 @@
         "CTX-007-S3"
       ],
       "owner": "engineer",
-      "status": "verified",
+      "status": "implemented",
       "tasks": [
         "11.1"
       ],
@@ -2235,6 +2235,30 @@
           "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
           "date": "2026-09-14",
           "result": "pass"
+        },
+        {
+          "id": "EV-D27-CTX-007-IMPL",
+          "kind": "implementation",
+          "ref": "src/dom-context.ts",
+          "scenarios": [
+            "CTX-007-S1",
+            "CTX-007-S2",
+            "CTX-007-S3"
+          ],
+          "summary": "Shared eligible-node extraction and browser-verified locators are implemented; the complete regression reveals remaining nested-semantic identity loss."
+        },
+        {
+          "id": "EV-D27-CTX-007-COUNTEREXAMPLE",
+          "kind": "verification",
+          "ref": "docs/evidence/candidate-recovery-evaluation-2026-09-14.md",
+          "scenarios": [
+            "CTX-007-S2"
+          ],
+          "summary": "h2-03 C rejects the correct locator in all three repeats because aside.actions truncates outer shipment identity. Historical fixture passes do not cover this case; task 11.1 reopened.",
+          "command": "Frozen D27 synthetic collection; retained specDecision and read-only diagnostic replay",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "fail"
         }
       ]
     },
@@ -2328,7 +2352,7 @@
         "EVAL-009-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "11.4",
         "11.5"
@@ -2338,7 +2362,22 @@
         "method": "Generic offline regressions followed by bounded comparable D27 collection",
         "acceptance": "Audited post-correction regression"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D27-EVAL-009-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/candidate-recovery-evaluation-2026-09-14.md",
+          "scenarios": [
+            "EVAL-009-S1",
+            "EVAL-009-S2"
+          ],
+          "summary": "All 324 slots and 372 provider requests completed; input hashes, primary outcomes, wrong effects, unnecessary stops and accounting audited. Pass denotes complete auditable evaluation, not universally successful healing.",
+          "command": "Frozen D27 runners; evaluation/analyze-d27-synthetic.mjs; private audit and D26 comparison; post-collection input SHA-256 verification",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2562,12 +2601,6 @@
       ]
     },
     {
-      "task": "11.1",
-      "evidence": [
-        "EV-D27-CTX-007-CHECK"
-      ]
-    },
-    {
       "task": "11.2",
       "evidence": [
         "EV-D27-CTX-008-CHECK"
@@ -2577,6 +2610,18 @@
       "task": "11.3",
       "evidence": [
         "EV-D27-HEAL-009-CHECK"
+      ]
+    },
+    {
+      "task": "11.4",
+      "evidence": [
+        "EV-D27-EVAL-009-LIVE"
+      ]
+    },
+    {
+      "task": "11.5",
+      "evidence": [
+        "EV-D27-EVAL-009-LIVE"
       ]
     }
   ]
