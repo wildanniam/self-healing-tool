@@ -29,3 +29,9 @@ For enforced C on h2-03, forcing the correct destination control was previously 
 No fixture, contract, oracle, original ranker weights or model prompt was edited. The new representation can nevertheless change rankings and model choice. All 62 archived D27 inputs, 16 fixture files and four historical artifacts match their retained hashes. Reused conditions are known regression, not unseen validation. Row identity and named-group interpretation remain bounded structural heuristics, not universal business semantics.
 
 The first-payload reservation estimate for 126 noncontrol calls is US$0.17072595; mechanically repeating each three times projects US$0.51217785, exceeding the US$0.50 cap. This is not an actual-cost forecast. The fresh ledger enforces the cap per dispatch and will preserve partial results if exhausted. Static nulls now stop after one call; no budget top-up is planned.
+
+## Subsequent CI fixture stabilization
+
+One push CI run failed two new observation tests with native `TimeoutError2`; the corresponding PR CI run passed all checks on the same commit. A controlled six-condition probe reproduced that exact outcome by delaying either pre-action or post-action zero-count observation by 160 ms against the test's 100 ms action timeout. With a 1000 ms fixture timeout the same delays reached recovery, made one provider invocation and abstained correctly. The CI failures overlapped the large 300-entity test, but the actual CI count-probe durations were not logged, so runner contention remains an inference rather than a measured cause.
+
+Only the observation test fixture's original-action timeout is changed to 1000 ms; assertions, recovery/provider deadlines, runtime source and the empirical 3000 ms action timeout remain unchanged. The 74 frozen experiment input hashes are unchanged. This test-only correction does not justify replacing or rerunning empirical results.

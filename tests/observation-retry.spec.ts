@@ -5,7 +5,9 @@ import { createHealingSession, HealingFailure, validateConfig } from '../dist/in
 import { serializeRequest } from '../dist/provider.js';
 import type { Context, Provider } from '../dist/index.js';
 
-const config = validateConfig({ mode: 'full', actionTimeoutMs: 100, recoveryTimeoutMs: 5000, providerTimeoutMs: 1000 });
+// These tests exercise recovery policy, not sub-second browser IPC latency. The
+// original-action/count probes need scheduling headroom on concurrent CI workers.
+const config = validateConfig({ mode: 'full', actionTimeoutMs: 1000, recoveryTimeoutMs: 5000, providerTimeoutMs: 1000 });
 const response = (selector: string | null) => ({ output: JSON.stringify({ selector }), usage: { inputTokens: 11, outputTokens: 3 } });
 function observeCollections(page: Page, before: (number: number) => Promise<void>): Page {
   let count = 0;
