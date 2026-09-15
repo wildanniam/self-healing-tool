@@ -68,3 +68,7 @@ Issue #15 implements the candidate/locator defects demonstrated by the D26 audit
 ## D29 independently audited correction
 
 [Issue #17](https://github.com/wildanniam/self-healing-tool/issues/17) implements [D29](../../../docs/decisions/2026-09-14-owner-evidence.md): preserve owning identity without unrelated subtree borrowing, and refresh once after no-selection when observations actually change. Keep contracts/oracles and earlier results unchanged; repeat only the bounded known synthetic regression. Lexical admission remains limited, so completion is evidence of implemented mechanics, not guaranteed semantic correctness.
+
+## D30 scoped evaluation
+
+The owner approved ordinary-DOM-change evaluation with preserved stress results. Execute [D30](../../../docs/decisions/2026-09-15-scoped-evaluation.md), keeping the 0.0.8 core unchanged and recording new same-application variants separately. GitHub issue/PR publication is blocked by automatic review; complete local evidence first.

@@ -91,3 +91,12 @@ D27 evaluation reopened task 11.1 after h2-03 exposed a nested-semantic identity
 D29 re-closes task 11.1 for the audited supported wrapper/owner behavior after final regression and independent counterexample checks. The prior D27 failure record remains intact; no universal ownership or semantic-safety guarantee is implied.
 
 D29 collection completed: 144 slots, 126 actual requests. C correct recovery remains 15/24; wrong effects rise from 3 to 6. Completed evaluation tasks do not resolve those method limitations or authorize release. See `docs/evidence/owner-evidence-evaluation-2026-09-14.md`.
+
+## 13. D30 ordinary-change scope evaluation
+
+- [x] 13.1 Engineer freezes scope classification, six ordinary variants, configuration and source identities before AI outcomes. Verify historical inputs are unchanged. [EVAL-011]
+- [x] 13.2 Engineer verifies native effects, wrong-action detection, payload privacy and shared-core preflight before dispatch. [EVAL-011]
+- [x] 13.3 Engineer runs bounded private/synthetic A/B/C collection and audits every slot, request and ledger entry. Preserve all failures and category denominators. [EVAL-011]
+- [x] 13.4 Engineer diagnoses unexpected outcomes, archives evidence, updates Atlas and prepares review artifacts without unsupported claims. [EVAL-011]
+
+D30 completed 378 scoped regression slots with full accounting and retained failures. Evaluation completion does not resolve wording/stress limitations or authorize publication. See `docs/evidence/scoped-evaluation-2026-09-15.md`.

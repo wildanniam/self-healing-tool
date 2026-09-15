@@ -1,0 +1,59 @@
+{
+  "id": "apsec-d30-scoped-drift-2026-09-15-v1",
+  "model": "gpt-4o-mini",
+  "maxRequests": 980,
+  "maxCostUsd": 2,
+  "phases": {
+    "baseline": 180,
+    "development": 360,
+    "holdout": 540
+  },
+  "price": {
+    "version": "openai-model-page-2026-09-14",
+    "inputUsdPerMillion": 0.15,
+    "outputUsdPerMillion": 0.6
+  },
+  "config": {
+    "mode": "full",
+    "model": "gpt-4o-mini",
+    "maxTokens": 500,
+    "temperature": 0,
+    "maxAttempts": 3,
+    "actionTimeoutMs": 3000,
+    "recoveryTimeoutMs": 45000,
+    "providerTimeoutMs": 15000,
+    "domMaxChars": 8000,
+    "payloadMaxChars": 12000,
+    "maxCandidates": 30
+  },
+  "holdout": {
+    "cases": 22,
+    "applicationGroups": 2,
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "repeats": 3,
+    "slots": 198
+  },
+  "runOrder": "case blocks; rotate A/B/C by case index plus repeat; fresh context/reset before each arm",
+  "limits": [
+    "Local synthetic and separately authorized private loopback only",
+    "Preserve D26-D29 ledgers and outcomes",
+    "One fresh US$2/980-request cap; unknown usage halts",
+    "Six new variants of existing apps; not independent new application evidence",
+    "Ordinary wording remains in scope even if it fails",
+    "Freeze before outcomes; no core/contract/oracle retuning"
+  ],
+  "private": {
+    "cases": 20,
+    "slots": 180,
+    "repeats": 3,
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ]
+  }
+}

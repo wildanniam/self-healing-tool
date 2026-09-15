@@ -2558,6 +2558,49 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "EVAL-011",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D30"
+      ],
+      "scenarios": [
+        "EVAL-011-S1",
+        "EVAL-011-S2",
+        "EVAL-011-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "13.1",
+        "13.2",
+        "13.3",
+        "13.4"
+      ],
+      "verification": {
+        "id": "V-EVAL-011",
+        "method": "Frozen scoped collection, native/oracle preflight and full outcome/accounting audit",
+        "acceptance": "Transparent scope and complete bounded evidence"
+      },
+      "evidence": [
+        {
+          "id": "EV-D30-EVAL-011-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/scoped-evaluation-2026-09-15.md",
+          "scenarios": [
+            "EVAL-011-S1",
+            "EVAL-011-S2",
+            "EVAL-011-S3"
+          ],
+          "summary": "All 378 scoped regression slots completed with unchanged runtime and full input/state/request accounting. Known/new ordinary, stress, negative and contract-quality denominators are retained. Pass denotes auditable evaluation, not removal of the remaining failures.",
+          "command": "Native/offline D30 preflights; private and synthetic collectors; independent workload analyses; final accounting audit; forced-selector diagnosis",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1; actual gpt-4o-mini",
+          "date": "2026-09-15",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2841,6 +2884,30 @@
       "task": "12.5",
       "evidence": [
         "EV-D29-EVAL-010-LIVE"
+      ]
+    },
+    {
+      "task": "13.1",
+      "evidence": [
+        "EV-D30-EVAL-011-LIVE"
+      ]
+    },
+    {
+      "task": "13.2",
+      "evidence": [
+        "EV-D30-EVAL-011-LIVE"
+      ]
+    },
+    {
+      "task": "13.3",
+      "evidence": [
+        "EV-D30-EVAL-011-LIVE"
+      ]
+    },
+    {
+      "task": "13.4",
+      "evidence": [
+        "EV-D30-EVAL-011-LIVE"
       ]
     }
   ]
