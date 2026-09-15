@@ -1,6 +1,6 @@
 schema: spec-driven
 context: |
-  D30 completed the owner-authorized 378-slot scoped evaluation on unchanged D29 core; preserve its frozen evidence and report ordinary wording/stress limitations. Read docs/evidence/scoped-evaluation-2026-09-15.md first. Further paid experiments are separate. GitHub publication is blocked pending specific owner permission after automatic review rejection.
+  D30 completed the owner-authorized 378-slot scoped evaluation on unchanged D29 core; preserve its frozen evidence and report ordinary wording/stress limitations. Read docs/evidence/scoped-evaluation-2026-09-15.md first. Further paid experiments are separate. Wildan authorized issue/branch/draft-PR publication on 15 September 2026; review is in issue19/PR20 and private issue184/PR185. Merge, release, submission and additional paid batches remain separate.
   Write repository artifacts in English; explain decisions to Wildan in Indonesian.
   This is a specification-first TypeScript/Playwright library project. Initial runtime code is newly implemented; read dated evidence and task status for verified scope.
   Read docs/decisions/2026-09-07-foundation.md, docs/decisions/2026-09-08-local-api.md, and docs/audit-workflow.md.

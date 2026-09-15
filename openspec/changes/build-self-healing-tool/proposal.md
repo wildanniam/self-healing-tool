@@ -71,4 +71,4 @@ Issue #15 implements the candidate/locator defects demonstrated by the D26 audit
 
 ## D30 scoped evaluation
 
-The owner approved ordinary-DOM-change evaluation with preserved stress results. Execute [D30](../../../docs/decisions/2026-09-15-scoped-evaluation.md), keeping the 0.0.8 core unchanged and recording new same-application variants separately. GitHub issue/PR publication is blocked by automatic review; complete local evidence first.
+The owner approved ordinary-DOM-change evaluation with preserved stress results. Execute [D30](../../../docs/decisions/2026-09-15-scoped-evaluation.md), keeping the 0.0.8 core unchanged and recording new same-application variants separately. Local evidence is complete. Wildan subsequently authorized GitHub publication on 15 September 2026: [issue #19](https://github.com/wildanniam/self-healing-tool/issues/19) and [draft PR #20](https://github.com/wildanniam/self-healing-tool/pull/20). Frozen collection inputs and archived reports retain their original pre-publication status.

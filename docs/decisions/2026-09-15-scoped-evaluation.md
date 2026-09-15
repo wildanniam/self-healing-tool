@@ -13,3 +13,7 @@ Report controls, ordinary recovery, unavailable/retired refusal, misleading-labe
 Private source/raw outputs remain in their own repository. Synthetic observations only in this repository. No production, merge, release, external email or conference submission. No universal accuracy claim or score target is guaranteed.
 
 Precollection correction: the initial draft request ceiling 1,134 exceeded the unchanged library maximum of 1,000 and ledger creation was rejected before any dispatch. The corrected ceiling is 980: at most 324 non-control slots × three attempts = 972. The core limit is retained.
+
+## Publication authorization — 15 September 2026
+
+After reviewing the completed evaluation, Wildan explicitly approved creating issues, pushing the two D30 branches and opening two draft PRs. This supersedes the earlier publication block only: tool issue #19 / draft PR #20 and private Koderea issue #184 / draft PR #185 now track review. No merge, release, production change, submission or additional paid experiment is included. Frozen protocols and archives remain unchanged.
