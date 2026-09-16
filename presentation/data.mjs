@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { createHash } from 'node:crypto';
+import {buildAudit} from './audit.mjs';
 
 export const ARMS = {
   A: { title: 'Tanpa aturan requirement', short: 'LLM', description: 'DOM dan tujuan tes diberikan ke model. Kandidat diperiksa secara struktural.' },
@@ -20,7 +21,8 @@ export function usageOf(event) {
     output: unknown ? null : called.reduce((n,a) => n + (a.usage?.outputTokens ?? 0),0) };
 }
 function detailOf(event, privateHost) {
-  // Private host payloads, locators, DOM, task text, field values and state are never copied.
+  // Summary fields never copy private payloads, locators, task text or state.
+  // Authorized local diagnostics are separate, opt-in audit objects.
   return { original: privateHost ? null : event?.originalSelector ?? null,
     action: event?.action ?? null, stop: event?.stopReason ?? 'unavailable',
     applicability: event?.targetSpec?.applicability ?? null,
@@ -73,24 +75,25 @@ export function summarize(rows) {
     input:usageUnknown?null:rows.reduce((n,r)=>n+(r.usage.input??0),0), output:usageUnknown?null:rows.reduce((n,r)=>n+(r.usage.output??0),0),
     seconds:complete.length && complete.every(r=>r.totalMs!==null) ? complete.reduce((n,r)=>n+r.totalMs,0)/complete.length/1000 : null };
 }
-export async function loadEvidence({synthetic, privateDirectory, snapshot}) {
+export async function loadEvidence({synthetic, privateDirectory, snapshot, includePrivateAudit=false}) {
   const sources=[]; let rows=[];
   if(snapshot) {
     const raw=await readFile(snapshot,'utf8'), saved=JSON.parse(raw);
     if(saved.schemaVersion!==1 || saved.evidenceKind!=='historical-d30') throw new Error('Unsupported snapshot');
     rows=saved.rows; sources.push(...saved.sources);
   } else if(synthetic) {
-    const raw=await readFile(synthetic,'utf8'); rows=JSON.parse(raw).map(normalizeSynthetic);
+    const raw=await readFile(synthetic,'utf8'); rows=JSON.parse(raw).map(r=>({...normalizeSynthetic(r),audit:buildAudit(r,{source:{file:basename(synthetic),sha256:hash(raw)}})}));
     sources.push({name:basename(synthetic),kind:'independent-apps',sha256:hash(raw),slots:rows.length});
   }
   if(privateDirectory) {
     const files=(await readdir(privateDirectory)).filter(f=>/^F-[CRN]\d+-[ABC]-r\d+\.json$/.test(f)).sort();
     if(!files.length) throw new Error('Configured private source has no run records');
     const hashes=[];
-    for(const file of files) {const raw=await readFile(join(privateDirectory,file),'utf8');rows.push(normalizePrivate(JSON.parse(raw)));hashes.push({file,sha256:hash(raw)});}
-    sources.push({name:'Private host · selected outcome fields only',kind:'private-host',sha256:hash(JSON.stringify(hashes)),slots:files.length});
+    for(const file of files) {const raw=await readFile(join(privateDirectory,file),'utf8');const record=JSON.parse(raw);rows.push({...normalizePrivate(record),...(includePrivateAudit?{audit:buildAudit(record,{privateHost:true,source:{file,sha256:hash(raw)}})}:{})});hashes.push({file,sha256:hash(raw)});}
+    sources.push({name:includePrivateAudit?'Private host · local diagnostics enabled':'Private host · selected outcome fields only',kind:'private-host',sha256:hash(JSON.stringify(hashes)),slots:files.length});
   }
   validateRows(rows);
+  if(!includePrivateAudit)rows=rows.map(row=>{if(!row.audit?.privateHost)return row;const {audit,...safe}=row;return safe;});
   const privateLoaded=rows.some(r=>r.group==='platform');
   const coverage=[];
   for(const [name,expected,selection] of [['independent-apps',198,rows.filter(r=>r.group!=='platform')],['private-host',180,rows.filter(r=>r.group==='platform')]]) {
@@ -100,5 +103,5 @@ export async function loadEvidence({synthetic, privateDirectory, snapshot}) {
     for(const id of new Set(selection.map(r=>r.caseId))) for(const arm of ['A','B','C']) for(let repeat=1;repeat<=3;repeat++) if(!keys.has(`${id}/${arm}/${repeat}`)) coverage.push(`Slot tidak tersedia: ${id}/${arm}/${repeat}`);
   }
   return {schemaVersion:1,evidenceKind:'historical-d30',createdAt:new Date().toISOString(),evaluationDate:'2026-09-15',
-    title:'Perbandingan self-healing', privateLoaded,sources,coverage,rows,price:{inputUsdPerMillion:0.15,outputUsdPerMillion:0.6,version:'D30 retained price assumption'}};
+    title:'Perbandingan self-healing', privateLoaded,privateAudit:includePrivateAudit&&privateLoaded,sources,coverage,rows,price:{inputUsdPerMillion:0.15,outputUsdPerMillion:0.6,version:'D30 retained price assumption'}};
 }

@@ -16,6 +16,8 @@ export function parseArgs(args) {
     else if(a==='--live')result.live=true;
     else if(a==='--walkthrough')result.walkthrough=true;
     else if(a==='--step')result.step=true;
+    else if(a==='--private-audit')result.privateAudit=true;
+    else if(a==='--summary-only')result.privateAudit=false;
     else if(a==='--help')result.help=true;
     else if(values[a]){if(!args[i+1]||args[i+1].startsWith('--'))throw new Error(`Missing value for ${a}`);result[values[a]]=args[++i];}
     else throw new Error(`Unknown option: ${a}`);
@@ -42,14 +44,14 @@ export async function saveReport(data,directory,{open=false}={}) {
 }
 export async function main(args=process.argv.slice(2)) {
   const options=parseArgs(args);
-  if(options.help){console.log('npm run demo [-- --no-open | --private DIRECTORY | --snapshot FILE]\nnpm run demo:walkthrough [-- --step | --headless --no-open --pause 0]\nnpm run demo:live:compare -- --env-file /absolute/path/to/.env\nDefault: historical report. Walkthrough: recorded model decisions. Live: explicit fresh API calls, maximum 27 requests / US$0.10 per invocation.');return;}
+  if(options.help){console.log('npm run demo [-- --no-open | --private DIRECTORY | --snapshot FILE]\nLocal private inspection: --private-audit (or privateAudit: true in ignored local config); --summary-only omits private diagnostics.\nnpm run demo:walkthrough [-- --step | --headless --no-open --pause 0]\nnpm run demo:live:compare -- --env-file /absolute/path/to/.env\nDefault: historical report. Walkthrough: recorded model decisions. Live: explicit fresh API calls, maximum 27 requests / US$0.10 per invocation.');return;}
   const root=resolve(import.meta.dirname,'..');
   let local={};
   try{await access(join(root,'.presentation.local.json'));local=JSON.parse(await readFile(join(root,'.presentation.local.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
   const directory=resolve(options.out??join(root,'output/presentation',`${options.walkthrough?options.live?'live':'replay':'historical'}-${new Date().toISOString().replaceAll(':','-')}-${randomUUID().slice(0,8)}`));
   if(options.walkthrough){const {walkthrough}=await import('./walkthrough.mjs');const data=await walkthrough({...options,directory,root});const files=await saveReport(data,directory,options);console.log(JSON.stringify({mode:data.evidenceKind,slots:data.rows.length,mismatches:data.replayMismatches??[],...files}));if(data.replayMismatches?.length||data.rows.some(r=>r.operational))process.exitCode=1;return;}
   const explicitSource=options.synthetic||options.snapshot;
-  const data=await loadEvidence({synthetic:options.synthetic??(!explicitSource?local.synthetic:undefined),snapshot:options.snapshot??(!explicitSource&&!local.synthetic?join(root,'presentation/data/d30-synthetic.json'):undefined),privateDirectory:options.privateDirectory??local.privateDirectory});
+  const data=await loadEvidence({synthetic:options.synthetic??(!explicitSource?local.synthetic:undefined),snapshot:options.snapshot??(!explicitSource&&!local.synthetic?join(root,'presentation/data/d30-synthetic.json'):undefined),privateDirectory:options.privateDirectory??local.privateDirectory,includePrivateAudit:options.privateAudit??local.privateAudit??false});
   const files=await saveReport(data,directory,options);
   console.log(JSON.stringify({mode:data.evidenceKind,slots:data.rows.length,coverage:data.coverage,...files}));
 }

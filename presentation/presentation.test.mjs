@@ -76,10 +76,10 @@ test('offline report renders, filters, opens detail, downloads and escapes hosti
     await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));assert.equal(await page.locator('#case-rows tr').count(),22);
     await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));assert.equal(await page.locator('#case-rows tr').count(),12);
     await page.locator('#search').fill('h1-06');assert.equal(await page.locator('#case-rows tr').count(),1);
-    await page.getByRole('button',{name:'Detail ↗'}).click();assert.equal(await page.locator('dialog[open]').count(),1);
-    assert.match(await page.locator('#detail-body').innerText(),/Salah sasaran/);
-    assert.match(await page.locator('#detail-body').innerText(),/Berhenti tepat/);
-    await page.getByRole('button',{name:'Tutup ×'}).click();
+    await page.getByRole('button',{name:'Inspeksi ↗'}).click();assert.equal(await page.locator('#inspector-root').isVisible(),true);
+    assert.match(await page.locator('.run-verdict').innerText(),/Berhenti dengan tepat/);
+    await page.locator('#audit-arm-A').click();assert.match(await page.locator('.run-verdict').innerText(),/Efek salah/);
+    await page.locator('#audit-back').click();
     const download=page.waitForEvent('download');await page.locator('#download').click();assert.equal((await download).suggestedFilename(),'self-healing-results.json');
     await page.locator('#search').fill('');await page.locator('#category').selectOption('stress');assert.equal(await page.locator('#case-rows tr').count(),2);
     assert.equal(await page.evaluate(()=>window.__injected),undefined);assert.deepEqual(errors,[]);

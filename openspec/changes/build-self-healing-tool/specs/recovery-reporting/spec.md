@@ -128,3 +128,32 @@ The presentation report SHALL retain every loaded condition, arm and repetition,
 #### Scenario: OBS-009-S3
 - **WHEN** the report is opened offline or contains untrusted page labels
 - **THEN** comparison filters, condition details, downloads and print remain usable, and labels render as text without executing markup
+
+
+### Requirement: OBS-010 Stage-by-stage execution inspection
+
+Reports SHALL support readable inspection of one case, arm, repetition and attempt at a time, with source-backed input, transformation, response, decision and outcome evidence. Private diagnostics MUST be explicitly local and excluded from ordinary exports and committed fixtures.
+
+#### Scenario: OBS-010-S1
+- **WHEN** an original action succeeds without recovery
+- **THEN** the inspector shows the recorded independent checks and marks DOM recovery, AI and admission stages skipped, without invented requests
+
+#### Scenario: OBS-010-S2
+- **WHEN** a retained recovery request or multiple attempts are inspected
+- **THEN** exact messages and hash status, attempt-specific observed candidates/coverage, available output and retry feedback remain separate and navigable
+
+#### Scenario: OBS-010-S3
+- **WHEN** a candidate is admitted, rejected, abstained or executed wrongly
+- **THEN** readable reasons link to recorded validation/rule clauses and independent effects, without inferring business correctness from locator acceptance or inventing model reasoning
+
+#### Scenario: OBS-010-S4
+- **WHEN** evidence is missing or a source contains hostile markup or sensitive extra fields
+- **THEN** missing/skipped/redacted states are explicit, only supported diagnostic fields are retained, markup is inert and ordinary exports exclude private diagnostics
+
+#### Scenario: OBS-010-S5
+- **WHEN** the owner navigates the inspector on desktop or mobile
+- **THEN** case, arm, repetition, attempt and stage controls are keyboard usable, readable and preserve the overview result counts
+
+#### Scenario: OBS-010-S6
+- **WHEN** a subsequent replay or live demonstration is recorded
+- **THEN** request/response capture is available to the same inspector with accurate evidence mode and without altering method inputs or historical results

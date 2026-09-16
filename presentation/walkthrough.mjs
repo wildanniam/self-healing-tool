@@ -7,6 +7,7 @@ import { chromium } from 'playwright';
 import { createHealingSession, validateConfig, loadTargetSpec, createLiveBudget, createBudgetedOpenAIProvider, readLiveBudget, serializeRequest } from '../dist/index.js';
 import { createCases } from '../evaluation/d30-cases.mjs';
 import { normalizeSynthetic } from './data.mjs';
+import {buildAudit} from './audit.mjs';
 
 export function replayProvider(record,config) {
   let cursor=0;
@@ -44,13 +45,21 @@ export async function walkthrough({root,directory,headless=false,live=false,envF
       await context.routeWebSocket('**/*',socket=>socket.close());
       await context.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
       let session;
-      const record={caseId,arm,repeat:1,group:c.group,kind:c.kind,scope:c.scope,fresh:false,status:'complete',operational:null};
+      const record={caseId,arm,repeat:1,group:c.group,kind:c.kind,scope:c.scope,fresh:false,status:'complete',operational:null,expectation:c.expectation,requestPayloads:[]};
       try {
         const page=await context.newPage();await page.goto(origin);await c.setup(page);
         await page.evaluate(({arm,caseId,live})=>{document.title=`${arm} · ${caseId} · ${live?'LIVE':'REPLAY — recorded AI decision'}`;},{arm,caseId,live});
         if(terminal)await terminal.question('Tekan Enter untuk menjalankan konfigurasi ini… ');
         else if(pause)await page.waitForTimeout(pause);
-        const provider=liveProvider??replayProvider(stored,config);
+        const underlying=liveProvider??replayProvider(stored,config);
+        const provider={kind:underlying.kind,configuration:underlying.configuration,async select(input,signal){
+          const payload=serializeRequest(input,config);
+          const packet={ordinal:record.requestPayloads.length+1,payload,sha256:createHash('sha256').update(payload).digest('hex')};
+          record.requestPayloads.push(packet);
+          const result=await underlying.select(input,signal);
+          packet.output=result.output;
+          return result;
+        }};
         const options={config,provider,omitValues:c.value?[c.value]:[]};
         if(arm!=='A')options.targetSpec={mode:arm==='B'?'context':'enforce',contract:c.contractPath?await loadTargetSpec(c.contractPath):null,expectedRevision:c.expectedRevision};
         session=createHealingSession(page,options);
@@ -78,7 +87,7 @@ export async function walkthrough({root,directory,headless=false,live=false,envF
         if(!live){const actual={correct:record.assessment.semantic==='correct',wrong:record.assessment.wrongEffect,executed:event.actionExecuted};if(JSON.stringify(actual)!==JSON.stringify(stored.expected)||record.operational)mismatches.push(`${caseId}/${arm}`);}
       }catch(error){record.status='failed';record.operational=error.message;record.run=session?.snapshot()??null;mismatches.push(`${caseId}/${arm}: ${error.message}`);}
       finally{await context.close();}
-      rows.push(normalizeSynthetic(record));
+      rows.push({...normalizeSynthetic(record),audit:buildAudit(record,{mode:live?'live-demo':'replay',source:{file:'walkthrough-progress.json',historicalSourceSha256:archive.sourceSha256}})});
       await writeFile(join(directory,'walkthrough-progress.json'),JSON.stringify({evidenceKind:live?'live-demo':'replay',rows},null,2),{mode:0o600});
     }
   }finally{terminal?.close();await browser?.close();await new Promise(ok=>server.close(ok));}

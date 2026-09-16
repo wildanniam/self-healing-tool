@@ -2683,6 +2683,54 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "OBS-010",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D32"
+      ],
+      "scenarios": [
+        "OBS-010-S1",
+        "OBS-010-S2",
+        "OBS-010-S3",
+        "OBS-010-S4",
+        "OBS-010-S5",
+        "OBS-010-S6"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "15.1",
+        "15.2",
+        "15.3"
+      ],
+      "verification": {
+        "id": "V-OBS-010",
+        "method": "Archive adapter assertions, request integrity, real-browser navigation and replay capture checks",
+        "acceptance": "Source-backed inspectable execution evidence with truthful missing/skipped and privacy boundaries"
+      },
+      "evidence": [
+        {
+          "id": "EV-D32-OBS-010-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/inspectable-report-2026-09-16.md",
+          "scenarios": [
+            "OBS-010-S1",
+            "OBS-010-S2",
+            "OBS-010-S3",
+            "OBS-010-S4",
+            "OBS-010-S5",
+            "OBS-010-S6"
+          ],
+          "summary": "Exact input integrity, truthful response gaps, per-attempt stage UI and privacy boundaries verified against all retained inputs and offline browser replay.",
+          "command": "npm run test:presentation; npm run demo; npm run demo:walkthrough -- --headless --no-open --pause 0; retained archive SHA-256 audits",
+          "environment": "macOS arm64; Node25.8.2; Playwright1.62.1 / Chromium",
+          "date": "2026-09-16",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -3009,6 +3057,24 @@
       "evidence": [
         "EV-D31-OBS-009-CHECK",
         "EV-D31-DEMO-006-CHECK"
+      ]
+    },
+    {
+      "task": "15.1",
+      "evidence": [
+        "EV-D32-OBS-010-CHECK"
+      ]
+    },
+    {
+      "task": "15.2",
+      "evidence": [
+        "EV-D32-OBS-010-CHECK"
+      ]
+    },
+    {
+      "task": "15.3",
+      "evidence": [
+        "EV-D32-OBS-010-CHECK"
       ]
     }
   ]

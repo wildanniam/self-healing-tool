@@ -7,7 +7,7 @@ npm run demo                         # open retained results; no API calls
 npm run demo:walkthrough -- --step   # visible browser; recorded AI decisions
 ```
 
-The standalone report includes category-specific results, per-case evidence, filters and exports. The walkthrough pauses for discussion and saves a separate report. Read the [presentation guide](docs/presentation.md) for setup, the optional fresh-inference command and evidence boundaries. [D31 verification](docs/evidence/presentation-demo-2026-09-16.md) covers this presentation layer; the research results below remain unchanged.
+The standalone report includes category-specific results, filters and an **Inspeksi** view for each case, A/B/C arm, repeat and recovery attempt. Follow the recorded DOM context and ranking, exact system/user request, available model output, locator validation, requirement clauses and independently assessed effects. Skipped and unrecorded stages are explicit. Private diagnostics require local opt-in and stay out of ordinary exports. The walkthrough pauses for discussion and saves a separate report. Read the [presentation guide](docs/presentation.md) and [D32 verification](docs/evidence/inspectable-report-2026-09-16.md); the research results below remain unchanged.
 
 **Current checkpoint: D30 scoped evaluation complete on unchanged 0.0.8.** See [results, diagnosis and boundaries](docs/evidence/scoped-evaluation-2026-09-15.md). All 378 slots are retained; ordinary wording failures and six misleading-label wrong effects remain. The D29 paragraph below describes its earlier collection. No release or general-safety claim is made.
 
