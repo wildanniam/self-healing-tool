@@ -111,3 +111,20 @@ Local diagnostics SHALL retain sanitized exact input context for each provider a
 #### Scenario: OBS-008-S3
 - **WHEN** A normal report is produced
 - **THEN** refresh summary is visible without raw candidate or DOM context
+
+
+### Requirement: OBS-009 Presentation comparison from retained evidence
+
+The presentation report SHALL retain every loaded condition, arm and repetition, separate controls, ordinary recovery, negative cases, stress cases and contract-quality cases, and expose source fingerprints and evidence type. Private raw context MUST remain outside committed assets.
+
+#### Scenario: OBS-009-S1
+- **WHEN** complete D30 private and independent sources are supplied
+- **THEN** 378 slots are represented with class-specific denominators, wrong actions, independent correctness and known limitations
+
+#### Scenario: OBS-009-S2
+- **WHEN** sources are missing, duplicated, malformed or incomplete
+- **THEN** the report refuses inconsistent data or explicitly reports missing coverage without fabricated rows or zero-valued unknown usage
+
+#### Scenario: OBS-009-S3
+- **WHEN** the report is opened offline or contains untrusted page labels
+- **THEN** comparison filters, condition details, downloads and print remain usable, and labels render as text without executing markup

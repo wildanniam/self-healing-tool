@@ -72,3 +72,10 @@ Issue #15 implements the candidate/locator defects demonstrated by the D26 audit
 ## D30 scoped evaluation
 
 The owner approved ordinary-DOM-change evaluation with preserved stress results. Execute [D30](../../../docs/decisions/2026-09-15-scoped-evaluation.md), keeping the 0.0.8 core unchanged and recording new same-application variants separately. Local evidence is complete. Wildan subsequently authorized GitHub publication on 15 September 2026: [issue #19](https://github.com/wildanniam/self-healing-tool/issues/19) and [draft PR #20](https://github.com/wildanniam/self-healing-tool/pull/20). Frozen collection inputs and archived reports retain their original pre-publication status.
+
+
+## D31 presentation workflow (issue #21)
+
+Wildan requests a presentation-ready A/B/C report and simple commands for the supervisor demo. Add an offline, standalone comparison generated from retained D30 evidence, plus a separate headed walkthrough on the existing independent fixtures. Read historical archives without mutation. Normalize only allowlisted results; never commit private-host raw context. Keep all categories and failures visible, with per-condition detail and actual usage when known. Distinguish historical model evidence, replayed model decisions, and fresh API calls. Default commands do not read credentials or spend API budget. Replay invokes the real current runtime with stored proposals but is not new model-performance evidence. Optional live demonstration creates a separate bounded ledger and is never started implicitly. No changes to core healing, old freezes, or approved study scores.
+
+The report is a self-contained HTML file with embedded sanitized JSON, no CDN or remote scripts. A projector-friendly editorial layout uses navy/teal and plain Indonesian explanations, clear A/B/C definitions, category comparisons, a searchable condition table, paired details and download/print actions. Report generation and walkthrough write to new output directories. Private inputs are selected through an ignored local configuration or CLI arguments; absence is explicit and never substituted with manufactured results.

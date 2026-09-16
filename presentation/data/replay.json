@@ -1,0 +1,146 @@
+{
+  "sourceSha256": "a72f96723a61655e4cdfef7db4acf411f766b85da43a4741842f2e899c48c480",
+  "source": "D30 independent-app results · repeat 1 only",
+  "caseIds": [
+    "h1-02",
+    "h1-06",
+    "h1-05"
+  ],
+  "records": [
+    {
+      "caseId": "h1-02",
+      "arm": "B",
+      "decisions": [
+        {
+          "selector": "#stock-limit-editor",
+          "inputSha256": "b9d5268197021fbd9949e263a37588c1c02d518afcc124606017fe093415b982"
+        }
+      ],
+      "expected": {
+        "correct": true,
+        "wrong": false,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-02",
+      "arm": "C",
+      "decisions": [
+        {
+          "selector": "#stock-limit-editor",
+          "inputSha256": "b9d5268197021fbd9949e263a37588c1c02d518afcc124606017fe093415b982"
+        }
+      ],
+      "expected": {
+        "correct": true,
+        "wrong": false,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-02",
+      "arm": "A",
+      "decisions": [
+        {
+          "selector": "#stock-limit-editor",
+          "inputSha256": "d59b982055a656dfbb350b633a3e4fe0beb61699513f5696930311bf1102de14"
+        }
+      ],
+      "expected": {
+        "correct": true,
+        "wrong": false,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-05",
+      "arm": "B",
+      "decisions": [
+        {
+          "selector": "#harbor-target-stock",
+          "inputSha256": "94c79f6d42c7ca7481d2344a0d49f2d4ddfd5acc1dffc5a3a50306cda3f5c7ea"
+        }
+      ],
+      "expected": {
+        "correct": false,
+        "wrong": true,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-05",
+      "arm": "C",
+      "decisions": [
+        {
+          "selector": "#harbor-target-stock",
+          "inputSha256": "94c79f6d42c7ca7481d2344a0d49f2d4ddfd5acc1dffc5a3a50306cda3f5c7ea"
+        }
+      ],
+      "expected": {
+        "correct": false,
+        "wrong": true,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-05",
+      "arm": "A",
+      "decisions": [
+        {
+          "selector": "#harbor-target-stock",
+          "inputSha256": "605eea87074351e7b1b7d74ef2ed845eca691203d83dce6ac075c7fa44e23a09"
+        }
+      ],
+      "expected": {
+        "correct": false,
+        "wrong": true,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-06",
+      "arm": "C",
+      "decisions": [
+        {
+          "selector": "#harbor-target-stock",
+          "inputSha256": "20e4bbffbe2911a0003377298c78e92ad5027a9bc67c4a26edf04e5ec271f204"
+        }
+      ],
+      "expected": {
+        "correct": true,
+        "wrong": false,
+        "executed": false
+      }
+    },
+    {
+      "caseId": "h1-06",
+      "arm": "A",
+      "decisions": [
+        {
+          "selector": "#harbor-target-stock",
+          "inputSha256": "088d2b2ada511ec446552998e87a9189b93a64abc4fb56e2e59855ff3e7a3655"
+        }
+      ],
+      "expected": {
+        "correct": false,
+        "wrong": true,
+        "executed": true
+      }
+    },
+    {
+      "caseId": "h1-06",
+      "arm": "B",
+      "decisions": [
+        {
+          "selector": "#harbor-target-stock",
+          "inputSha256": "20e4bbffbe2911a0003377298c78e92ad5027a9bc67c4a26edf04e5ec271f204"
+        }
+      ],
+      "expected": {
+        "correct": false,
+        "wrong": true,
+        "executed": true
+      }
+    }
+  ]
+}

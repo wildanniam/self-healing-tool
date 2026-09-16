@@ -100,3 +100,12 @@ D29 collection completed: 144 slots, 126 actual requests. C correct recovery rem
 - [x] 13.4 Engineer diagnoses unexpected outcomes, archives evidence, updates Atlas and prepares review artifacts without unsupported claims. [EVAL-011]
 
 D30 completed 378 scoped regression slots with full accounting and retained failures. Evaluation completion does not resolve wording/stress limitations or authorize publication. See `docs/evidence/scoped-evaluation-2026-09-15.md`.
+
+
+## 14. D31 supervisor presentation workflow
+
+- [x] 14.1 Implement retained-result adapters and a self-contained interactive comparison preserving all categories and unknowns. [OBS-009]
+- [x] 14.2 Implement report/open commands and headed A/B/C replay with explicit evidence labels and optional bounded live mode. [DEMO-006]
+- [x] 14.3 Verify actual archived totals, browser interactions, escaping, replay outcomes and unchanged archive fingerprints; document commands and evidence. [OBS-009, DEMO-006]
+
+D31 presentation verification is complete; retained D30 results and research/release limitations remain unchanged. See `docs/evidence/presentation-demo-2026-09-16.md`. No paid live comparison was run.
