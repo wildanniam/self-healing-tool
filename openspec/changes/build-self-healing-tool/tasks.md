@@ -105,9 +105,11 @@ D30 completed 378 scoped regression slots with full accounting and retained fail
 
 - [x] 14.1 Implement equivalent ranking interventions, score-free metering/projection, and observational context audit; verify default parity and refresh behavior. [CTX-010]
 - [x] 14.2 Implement and independently verify fixtures, native effect oracles, exact coverage/payload accounting, and balanced bounded runner. [EVAL-012]
-- [ ] 14.3 Freeze and run the separate pilot and main collection under the authorized351-request/US$3 cap, retaining all slots. [EVAL-012]
-- [ ] 14.4 Independently audit requests/frozen inputs/outcomes and report paired descriptive results, limitations, review artifacts and Atlas checkpoint. [EVAL-012]
+- [x] 14.3 Freeze and run the separate pilot and main collection under the authorized351-request/US$3 cap, retaining all slots. [EVAL-012]
+- [x] 14.4 Independently audit requests/frozen inputs/outcomes and report paired descriptive results, limitations, review artifacts and Atlas checkpoint. [EVAL-012]
 
-D33 live collection is interrupted after one provider transport failure with unknown usage. Tasks14.3/14.4 remain open: no main runs or completed effectiveness analysis. Native/offline results and the preserved failure are documented in `docs/evidence/rm1-ranking-2026-09-18.md`.
+Historical checkpoint: D33 live collection is interrupted after one provider transport failure with unknown usage. Tasks14.3/14.4 remain open: no main runs or completed effectiveness analysis. Native/offline results and the preserved failure are documented in `docs/evidence/rm1-ranking-2026-09-18.md`.
 
-D33 continuation is explicitly owner-authorized on18September2026 after the follow-up explanation. Apply `docs/evaluation/rm1-continuation-protocol.md`: retain original failure/unknown accounting, verify companion controls, complete separate pilot and main, and report historical billing limits. Tasks14.3/14.4 remain open until genuine collection and audit evidence exists.
+Historical authorization checkpoint: D33 continuation is explicitly owner-authorized on18September2026 after the follow-up explanation. Apply `docs/evaluation/rm1-continuation-protocol.md`: retain original failure/unknown accounting, verify companion controls, complete separate pilot and main, and report historical billing limits. Tasks14.3/14.4 remain open until genuine collection and audit evidence exists.
+
+D33 continuation now completed 9 pilot + 108 main with primary and independent audits passing. Tasks14.3/14.4 are complete under the explicit amendment; historical unknown billing remains null and all failures retained. See `docs/evidence/rm1-continuation-results-2026-09-18.md`. Earlier interruption checkpoints above are historical, not current collection status.

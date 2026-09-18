@@ -1,5 +1,7 @@
 # RM1 DOM ranking experiment (D33)
 
+**Collection is complete and closed.** See [the final result](../../docs/evidence/rm1-continuation-results-2026-09-18.md). The original halted run and separately authorized companion continuation are preserved. `continuation/` adds fixed lineage, joint reduced budget, explicit verified organization, complete pilot admission and null-safe analysis without changing the original fifty inputs. All 9 pilot/108 main records passed primary and independent audits. Do not rerun collection or regenerate pinned pilot artifacts; commands below describe the historical original workflow.
+
 This study compares **ranking only** on two known synthetic flow families. Read [the frozen protocol](../../docs/evaluation/rm1-dom-ranking-protocol.md) before interpreting results. R0 is lexical Jaccard, R1 is the thesis score without relational scoring, R2 is the full thesis score. All three retain relational evidence in their score-free model inputs. The optional configuration does not change the default library behavior.
 
 The repository contains synthetic inputs and runners; raw runs live in an ignored local archive. No command reads a credential file automatically. Offline checks do not contact a model. Paid collection requires a separately authorized fresh ledger; do not reuse a historical ledger or started phase.

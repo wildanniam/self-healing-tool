@@ -2663,7 +2663,7 @@
         "EVAL-012-S3"
       ],
       "owner": "engineer",
-      "status": "implemented",
+      "status": "verified",
       "tasks": [
         "14.2",
         "14.3",
@@ -2711,6 +2711,21 @@
           "command": "node evaluation/rm1/run.mjs --pilot --live; node evaluation/rm1/analyze.mjs --pilot",
           "environment": "same frozen local runtime; one explicit OpenAI request",
           "result": "fail",
+          "date": "2026-09-18"
+        },
+        {
+          "id": "EV-D33-EVAL-012-CONTINUATION",
+          "kind": "verification",
+          "ref": "docs/evidence/rm1-continuation-results-2026-09-18.md",
+          "summary": "18companion tests and isolated mock integration pass;9pilot/108main completed, all117new requests accounted; primary and standalone independent full-record audits pass. Historical failed usage remainsnull under explicit joint-accounting amendment.",
+          "scenarios": [
+            "EVAL-012-S1",
+            "EVAL-012-S2",
+            "EVAL-012-S3"
+          ],
+          "command": "node --test evaluation/rm1/continuation/*.test.mjs; node evaluation/rm1/continuation/preflight.mjs; node evaluation/rm1/continuation/run.mjs --pilot --live; node evaluation/rm1/continuation/analyze.mjs --pilot; node evaluation/rm1/continuation/run.mjs --main --live; node evaluation/rm1/continuation/analyze.mjs --main; standalone independent main audit",
+          "environment": "macOS Node25.8.2 Playwright1.62.1 Chromium; frozen gpt-4o-mini-2024-07-18 and explicit verified organization",
+          "result": "pass",
           "date": "2026-09-18"
         }
       ]
@@ -3033,6 +3048,18 @@
       "task": "14.2",
       "evidence": [
         "EV-D33-EVAL-012-NATIVE"
+      ]
+    },
+    {
+      "task": "14.3",
+      "evidence": [
+        "EV-D33-EVAL-012-CONTINUATION"
+      ]
+    },
+    {
+      "task": "14.4",
+      "evidence": [
+        "EV-D33-EVAL-012-CONTINUATION"
       ]
     }
   ]

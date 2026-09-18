@@ -1,6 +1,6 @@
 # Self-healing tool
 
-**D33 RM1 checkpoint: offline ranking study verified; live pilot interrupted.** [Results and remaining work](docs/evidence/rm1-ranking-2026-09-18.md) separate deterministic target retention from unmeasured model recovery. One transport failure has unknown usage; the ledger is halted and the main study has not started. [Experiment instructions](evaluation/rm1/README.md).
+**D33 RM1 completed: 9 pilot and 108 main executions audited.** [Results and limitations](docs/evidence/rm1-continuation-results-2026-09-18.md): full thesis ranking and lexical baseline each 36/36 correct; ablation 30/36 with 3 wrong effects and 3 refusals. Original failed-request cost remains unknown. [Experiment instructions](evaluation/rm1/README.md).
 
 **Current checkpoint: D30 scoped evaluation complete on unchanged 0.0.8.** See [results, diagnosis and boundaries](docs/evidence/scoped-evaluation-2026-09-15.md). All 378 slots are retained; ordinary wording failures and six misleading-label wrong effects remain. The D29 paragraph below describes its earlier collection. No release or general-safety claim is made.
 
