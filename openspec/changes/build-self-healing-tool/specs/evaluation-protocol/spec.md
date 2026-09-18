@@ -168,8 +168,8 @@ The RM1 study SHALL execute the owner-authorized bounded protocol with independe
 
 #### Scenario: EVAL-012-S2
 - **WHEN** Pilot or main collection starts
-- **THEN** its preflight and frozen input identities precede dispatch, every planned slot and request remains and the shared fresh ledger respects351 requests/US$3
+- **THEN** its preflight and frozen input identities precede dispatch, every planned slot and request remains and joint study accounting respects351 requests/US$3; an owner-authorized continuation preserves original halted evidence and reservations with unique trial lineage and a reduced companion allowance
 
 #### Scenario: EVAL-012-S3
 - **WHEN** Collection completes or stops
-- **THEN** frozen hashes, payloads and ledger are reconciled and all outcomes including wrong actions/failures are reported with condition-level denominators and scope limits
+- **THEN** frozen hashes, payloads and available ledger usage are audited and all outcomes including wrong actions/failures are reported with condition-level denominators and scope limits; historical unknown billing remains explicitly null and separate from continuation integrity, and new unknown usage halts collection

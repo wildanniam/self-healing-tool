@@ -76,3 +76,7 @@ The owner approved ordinary-DOM-change evaluation with preserved stress results.
 ## D33 RM1 ranking evaluation
 
 Implement the owner-authorized controlled ranking comparison in [D33](../../../docs/decisions/2026-09-18-rm1-dom-ranking.md), issue25. Preserve default behavior and D30. A score-free common experimental projection isolates ranking; same-application pilot/main evidence remains separate.
+
+## D33 interrupted-pilot continuation
+
+The owner explicitly authorized analysis and execution of the explained continuation on18September2026. Follow the [continuation amendment](../../../docs/evaluation/rm1-continuation-protocol.md), preserve the original50frozen files and halted ledger, retain the historical unknown charge and diagnostic in joint351-request/US$3 accounting, then complete the separately identified pilot and main. This is declared continuation, not claimed billing reconciliation or a new method.
