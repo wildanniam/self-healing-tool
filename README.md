@@ -1,5 +1,7 @@
 # Self-healing tool
 
+**D33 RM1 checkpoint: offline ranking study verified; live pilot interrupted.** [Results and remaining work](docs/evidence/rm1-ranking-2026-09-18.md) separate deterministic target retention from unmeasured model recovery. One transport failure has unknown usage; the ledger is halted and the main study has not started. [Experiment instructions](evaluation/rm1/README.md).
+
 **Current checkpoint: D30 scoped evaluation complete on unchanged 0.0.8.** See [results, diagnosis and boundaries](docs/evidence/scoped-evaluation-2026-09-15.md). All 378 slots are retained; ordinary wording failures and six misleading-label wrong effects remain. The D29 paragraph below describes its earlier collection. No release or general-safety claim is made.
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.

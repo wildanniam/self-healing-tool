@@ -103,7 +103,9 @@ D30 completed 378 scoped regression slots with full accounting and retained fail
 
 ## 14. D33 authorized RM1 experiment
 
-- [ ] 14.1 Implement equivalent ranking interventions, score-free metering/projection, and observational context audit; verify default parity and refresh behavior. [CTX-010]
-- [ ] 14.2 Implement and independently verify fixtures, native effect oracles, exact coverage/payload accounting, and balanced bounded runner. [EVAL-012]
+- [x] 14.1 Implement equivalent ranking interventions, score-free metering/projection, and observational context audit; verify default parity and refresh behavior. [CTX-010]
+- [x] 14.2 Implement and independently verify fixtures, native effect oracles, exact coverage/payload accounting, and balanced bounded runner. [EVAL-012]
 - [ ] 14.3 Freeze and run the separate pilot and main collection under the authorized351-request/US$3 cap, retaining all slots. [EVAL-012]
 - [ ] 14.4 Independently audit requests/frozen inputs/outcomes and report paired descriptive results, limitations, review artifacts and Atlas checkpoint. [EVAL-012]
+
+D33 live collection is interrupted after one provider transport failure with unknown usage. Tasks14.3/14.4 remain open: no main runs or completed effectiveness analysis. Native/offline results and the preserved failure are documented in `docs/evidence/rm1-ranking-2026-09-18.md`.

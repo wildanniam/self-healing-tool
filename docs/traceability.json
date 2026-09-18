@@ -2614,7 +2614,7 @@
         "CTX-010-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "14.1"
       ],
@@ -2623,7 +2623,32 @@
         "method": "Offline regression, native oracle/payload checks, frozen collection and independent audit",
         "acceptance": "Ranking intervention preserves all shared inputs; Score-free serialization and refresh remain consistent"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D33-CTX-010-IMPL",
+          "kind": "implementation",
+          "ref": "src/ranking.ts",
+          "summary": "Opt-in ranking interventions, common score-free wire policy and detached stage audit. Default D30 parity retained.",
+          "scenarios": [
+            "CTX-010-S1",
+            "CTX-010-S2"
+          ]
+        },
+        {
+          "id": "EV-D33-CTX-010-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/rm1-ranking-2026-09-18.md",
+          "summary": "Default1536-record parity; relation ablation, projection/meter, initial/refresh and detached audit checks pass.",
+          "scenarios": [
+            "CTX-010-S1",
+            "CTX-010-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; node evaluation/rm1/offline.mjs",
+          "environment": "macOS, Node25.8.2, Playwright1.62.1 Chromium; offline only",
+          "result": "pass",
+          "date": "2026-09-18"
+        }
+      ]
     },
     {
       "id": "EVAL-012",
@@ -2638,7 +2663,7 @@
         "EVAL-012-S3"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "14.2",
         "14.3",
@@ -2649,7 +2674,46 @@
         "method": "Offline regression, native oracle/payload checks, frozen collection and independent audit",
         "acceptance": "Independent native effects and target coverage are verified before dispatch; Frozen pilot and main phases preserve full accounting; Paired analysis retains every outcome and limits claims"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D33-EVAL-012-IMPL",
+          "kind": "implementation",
+          "ref": "evaluation/rm1/run.mjs",
+          "summary": "Frozen bounded balanced runner, independent effect oracle and exact request accounting; paid pilot interrupted and main unstarted.",
+          "scenarios": [
+            "EVAL-012-S1",
+            "EVAL-012-S2",
+            "EVAL-012-S3"
+          ]
+        },
+        {
+          "id": "EV-D33-EVAL-012-NATIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/rm1-ranking-2026-09-18.md",
+          "summary": "359native checks,45offline contexts, explicit target mapping/no oracle input and same-arm candidate parity pass.",
+          "scenarios": [
+            "EVAL-012-S1"
+          ],
+          "command": "node evaluation/rm1/native-preflight.mjs; node evaluation/rm1/offline.mjs",
+          "environment": "macOS Node25.8.2 Playwright1.62.1 Chromium; no paid calls",
+          "result": "pass",
+          "date": "2026-09-18"
+        },
+        {
+          "id": "EV-D33-EVAL-012-PARTIAL",
+          "kind": "verification",
+          "ref": "docs/evidence/rm1-ranking-2026-09-18.md",
+          "summary": "Pilot1 infrastructure failure with unknown usage;8pilot and108main slots unstarted. Ledger halted, no effectiveness claim; actual cost remains null.",
+          "scenarios": [
+            "EVAL-012-S2",
+            "EVAL-012-S3"
+          ],
+          "command": "node evaluation/rm1/run.mjs --pilot --live; node evaluation/rm1/analyze.mjs --pilot",
+          "environment": "same frozen local runtime; one explicit OpenAI request",
+          "result": "fail",
+          "date": "2026-09-18"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2957,6 +3021,18 @@
       "task": "13.4",
       "evidence": [
         "EV-D30-EVAL-011-LIVE"
+      ]
+    },
+    {
+      "task": "14.1",
+      "evidence": [
+        "EV-D33-CTX-010-CHECK"
+      ]
+    },
+    {
+      "task": "14.2",
+      "evidence": [
+        "EV-D33-EVAL-012-NATIVE"
       ]
     }
   ]
