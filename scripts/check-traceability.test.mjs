@@ -10,7 +10,7 @@ const source = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'spec-audit-test-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  for (const path of ['README.md', 'AGENTS.md', '.env.example', 'docs', 'openspec', '.github', 'src', 'tests', 'examples', 'scripts', 'package.json', 'tsconfig.json', 'playwright.config.ts']) cpSync(join(source, path), join(root, path), { recursive: true });
+  for (const path of ['README.md', 'AGENTS.md', '.env.example', 'docs', 'openspec', '.github', 'src', 'tests', 'examples', 'evaluation', 'scripts', 'package.json', 'tsconfig.json', 'playwright.config.ts']) cpSync(join(source, path), join(root, path), { recursive: true });
   return root;
 }
 function editRegister(root, mutate) {
