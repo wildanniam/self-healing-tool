@@ -57,3 +57,9 @@ D27 retains one verified primary suggestion per descriptor, stopping once Playwr
 ## D29 / 0.0.8 bounded deviation
 
 [D29](../decisions/2026-09-14-owner-evidence.md) changes owner evidence extraction and null retry. Identity-only legacy owner fields can change rank scores despite unchanged ranking weights. Local action context is separate and has provenance. Unlike thesis/D25 repeated calls on a fixed null context, D29 refreshes observations at most once and requires changed selection evidence for another call. This is a declared method deviation, not a restoration of the original thesis. Contract phrase matching remains unchanged and is not semantic understanding.
+
+## D33 RM1 experimental interventions (0.0.8 plus opt-in study hooks)
+
+D30 commit12f6b2e is the verified base. Default scoring and wire format are preserved; new `rankingExperiment` selects R0 lexical Jaccard, R1 full thesis formula minus pooled and dedicated row/parent/container scoring, or R2 unchanged full scoring. Every experimental arm retains relational candidate fields, owner/suggested locators and duplicate metadata, but omits numeric scores from the common model projection and matching budget meter. Thus R2 is full ranking under the declared experimental input policy, not byte-identical D30 requests. Initial and refreshed observations share this strategy. The observational audit callback exposes detached sanitized stage records without evaluator inputs.
+
+This ranking-only ablation cannot establish a cleansing benefit, absence of relational information in R1, or LLM necessity. Source/prompt/configuration hashes and actual parity checks are retained with the new freeze. Historical D30 evidence is not reused as any experimental arm. See [the RM1 protocol](../evaluation/rm1-dom-ranking-protocol.md).

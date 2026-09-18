@@ -72,3 +72,7 @@ Issue #15 implements the candidate/locator defects demonstrated by the D26 audit
 ## D30 scoped evaluation
 
 The owner approved ordinary-DOM-change evaluation with preserved stress results. Execute [D30](../../../docs/decisions/2026-09-15-scoped-evaluation.md), keeping the 0.0.8 core unchanged and recording new same-application variants separately. Local evidence is complete. Wildan subsequently authorized GitHub publication on 15 September 2026: [issue #19](https://github.com/wildanniam/self-healing-tool/issues/19) and [draft PR #20](https://github.com/wildanniam/self-healing-tool/pull/20). Frozen collection inputs and archived reports retain their original pre-publication status.
+
+## D33 RM1 ranking evaluation
+
+Implement the owner-authorized controlled ranking comparison in [D33](../../../docs/decisions/2026-09-18-rm1-dom-ranking.md), issue25. Preserve default behavior and D30. A score-free common experimental projection isolates ranking; same-application pilot/main evidence remains separate.

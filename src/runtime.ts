@@ -6,7 +6,7 @@ import { buildSpecContext, evaluateSpecAdmission, validateTargetSpecOptions } fr
 import { cleanContextText, redact } from './privacy.js';
 import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata, serializeRequest, projectCandidates } from './provider.js';
 import { normalizeSelectors } from './selectors.js';
-import type { Action, Assessment, Config, Event, Provider, Run, Task, TargetSpecOptions, Context } from './types.js';
+import type { Action, Assessment, Config, Event, Provider, Run, Task, TargetSpecOptions, Context, ContextCollectionAudit } from './types.js';
 
 export class HealingFailure extends Error {
   constructor(readonly eventId: string, cause: unknown) { super(`Locator recovery failed; inspect event ${eventId}`, { cause }); this.name = 'HealingFailure'; }
@@ -22,13 +22,15 @@ async function within<T>(operation: (signal: AbortSignal) => Promise<T>, ms: num
 }
 export function createHealingSession(page: Page, options: {
   config?: Partial<Config>; provider?: Provider; repeatOf?: string; omitValues?: readonly string[]; targetSpec?: TargetSpecOptions;
+  /** Synchronous, out-of-band audit observer; errors fail context collection. */
+  onContextAudit?: (record: ContextCollectionAudit) => void;
 } = {}) {
   const config = validateConfig(options.config);
   const targetSpec = options.targetSpec === undefined ? undefined : validateTargetSpecOptions(options.targetSpec);
   if (config.mode === 'full' && !options.provider) throw new ConfigurationError('full mode requires an explicit provider');
   if (options.provider && !['offline', 'openai'].includes(options.provider.kind)) throw new ConfigurationError('provider');
   if (config.mode === 'full' && options.provider?.kind === 'openai') {
-    for (const field of ['model', 'maxTokens', 'temperature', 'payloadMaxChars'] as const) {
+    for (const field of ['model', 'maxTokens', 'temperature', 'payloadMaxChars', 'rankingExperiment'] as const) {
       if (options.provider.configuration?.[field] !== config[field]) throw new ConfigurationError(`provider/session ${field} mismatch`);
     }
   }
@@ -139,7 +141,7 @@ export function createHealingSession(page: Page, options: {
       const remaining = () => deadline - performance.now();
       const rejected = new Set<string>();
       try {
-        event.context = await within(() => collectContext(page, action, task, config, omitted, selector, specContext), remaining());
+        event.context = await within(() => collectContext(page, action, task, config, omitted, selector, specContext, options.onContextAudit), remaining());
       } catch {
         event.failure = remaining() <= 0 ? 'budget' : 'context';
         event.stopReason = remaining() <= 0 ? 'time-limit' : 'context-failure';
@@ -153,7 +155,7 @@ export function createHealingSession(page: Page, options: {
         const { coverage: _coverage, feedback: _feedback, ...evidence } = context;
         // Coverage describes measurement, not selection evidence. Candidate uniqueness,
         // visibility and disabled state still matter; projectCandidates omits only order.
-        return createHash('sha256').update(JSON.stringify({ ...evidence, candidates: projectCandidates(context.candidates) })).digest('hex');
+        return createHash('sha256').update(JSON.stringify({ ...evidence, candidates: projectCandidates(context.candidates, config) })).digest('hex');
       };
       for (let number = 1; number <= config.maxAttempts && remaining() > 0; number++) {
         event.stopReason = 'attempt-limit';
@@ -210,7 +212,7 @@ export function createHealingSession(page: Page, options: {
             };
             attempt.observationRefresh = refresh;
             try {
-              const observed = await within(() => collectContext(page, action, task, config, omitted, selector, specContext), remaining());
+              const observed = await within(() => collectContext(page, action, task, config, omitted, selector, specContext, options.onContextAudit), remaining());
               if (remaining() <= 0) throw new Error('time_budget_exhausted');
               // Compare what the next call can actually see under the same existing
               // feedback and payload cap, not changes that fitting would omit again.

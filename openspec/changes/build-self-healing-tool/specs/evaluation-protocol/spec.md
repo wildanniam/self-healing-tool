@@ -157,3 +157,19 @@ Evaluation SHALL preserve historical outcomes, freeze criteria and new ordinary 
 #### Scenario: EVAL-011-S3
 - **WHEN** Collection or diagnosis produces an unexpected outcome
 - **THEN** every planned slot and wrong effect remains, exact input/accounting is audited, and confirmed mechanisms are separated from hypotheses
+
+### Requirement: EVAL-012 Frozen RM1 ranking evaluation
+
+The RM1 study SHALL execute the owner-authorized bounded protocol with independent effect truth, frozen inputs, exact target coverage and request accounting, separate pilot/main outcomes and descriptive paired analysis.
+
+#### Scenario: EVAL-012-S1
+- **WHEN** A fixture is admitted
+- **THEN** pristine and mutated old-locator checks, correct and wrong effects, clean reset, target mapping and common input parity pass without oracle leakage
+
+#### Scenario: EVAL-012-S2
+- **WHEN** Pilot or main collection starts
+- **THEN** its preflight and frozen input identities precede dispatch, every planned slot and request remains and the shared fresh ledger respects351 requests/US$3
+
+#### Scenario: EVAL-012-S3
+- **WHEN** Collection completes or stops
+- **THEN** frozen hashes, payloads and ledger are reconciled and all outcomes including wrong actions/failures are reported with condition-level denominators and scope limits

@@ -175,3 +175,7 @@ D29 pre-freeze independent correction: same-tag structural peer families also qu
 ## D30 evaluation design
 
 Use the unchanged D29 core. Scope stratification is declared after exploration and before new outcomes. Preserve 20 private and 16 synthetic conditions, add six prespecified ordinary variants, and retain all business-effect oracles. Use [the D30 protocol](../../../docs/evaluation/scoped-d30-protocol.md) for native checks, freeze, one central capped ledger, per-attempt records and diagnosis. No semantic-gate redesign, fixture answer leakage, contract relaxation or retuning during collection.
+
+## D33 ranking intervention and experiment audit
+
+Follow the [RM1 protocol](../../../docs/evaluation/rm1-dom-ranking-protocol.md). Optional experiment config selects lexical Jaccard, thesis without relational scoring, or full thesis ranking before top-k/budget on initial and refreshed observations. All use a score-free projection for both metering and wire payload; duplicate and relational fields stay common. An observational deep-cloned audit callback exposes sanitized pre-rank/ranked/final contexts and stage timing without feeding evaluator truth into selection. Native effects and target-node mapping stay in the harness. Freeze inputs before the main study and reconcile all requests and slots. Default library behavior remains compatible; this experiment does not establish generalization.

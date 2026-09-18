@@ -100,3 +100,10 @@ D29 collection completed: 144 slots, 126 actual requests. C correct recovery rem
 - [x] 13.4 Engineer diagnoses unexpected outcomes, archives evidence, updates Atlas and prepares review artifacts without unsupported claims. [EVAL-011]
 
 D30 completed 378 scoped regression slots with full accounting and retained failures. Evaluation completion does not resolve wording/stress limitations or authorize publication. See `docs/evidence/scoped-evaluation-2026-09-15.md`.
+
+## 14. D33 authorized RM1 experiment
+
+- [ ] 14.1 Implement equivalent ranking interventions, score-free metering/projection, and observational context audit; verify default parity and refresh behavior. [CTX-010]
+- [ ] 14.2 Implement and independently verify fixtures, native effect oracles, exact coverage/payload accounting, and balanced bounded runner. [EVAL-012]
+- [ ] 14.3 Freeze and run the separate pilot and main collection under the authorized351-request/US$3 cap, retaining all slots. [EVAL-012]
+- [ ] 14.4 Independently audit requests/frozen inputs/outcomes and report paired descriptive results, limitations, review artifacts and Atlas checkpoint. [EVAL-012]

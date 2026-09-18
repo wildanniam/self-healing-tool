@@ -2601,6 +2601,55 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "CTX-010",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D33"
+      ],
+      "scenarios": [
+        "CTX-010-S1",
+        "CTX-010-S2"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "14.1"
+      ],
+      "verification": {
+        "id": "V-CTX-010",
+        "method": "Offline regression, native oracle/payload checks, frozen collection and independent audit",
+        "acceptance": "Ranking intervention preserves all shared inputs; Score-free serialization and refresh remain consistent"
+      },
+      "evidence": []
+    },
+    {
+      "id": "EVAL-012",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D33"
+      ],
+      "scenarios": [
+        "EVAL-012-S1",
+        "EVAL-012-S2",
+        "EVAL-012-S3"
+      ],
+      "owner": "engineer",
+      "status": "planned",
+      "tasks": [
+        "14.2",
+        "14.3",
+        "14.4"
+      ],
+      "verification": {
+        "id": "V-EVAL-012",
+        "method": "Offline regression, native oracle/payload checks, frozen collection and independent audit",
+        "acceptance": "Independent native effects and target coverage are verified before dispatch; Frozen pilot and main phases preserve full accounting; Paired analysis retains every outcome and limits claims"
+      },
+      "evidence": []
     }
   ],
   "completedTasks": [
