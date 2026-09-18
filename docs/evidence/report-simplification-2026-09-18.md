@@ -19,6 +19,7 @@ Environment: macOS arm64; Node 25.8.2; Playwright 1.62.1 / Chromium. Browser/con
 |---|---|
 | `npm run test:presentation` | 19/19 passed: D33 source mapping, missing/pilot handling, separate snapshots, selected identity, paired multi-attempt input/output/feedback, raw request download equality, filters/export metadata, private stripping, escaped evidence, controls, missing raw output, wrong effects, keyboard return, mobile and generic unassessed states |
 | `npm run typecheck`, `npm run test:unit` | Passed; 42/42 library unit tests |
+| `npm run test:browser` | 83/83 passed, including provider failure remaining distinct from a parsed-null abstention |
 | `npm run check`, `npm run test:audit` | Passed; strict specification and traceability checks, 7/7 traceability tests |
 | `npm run test:consumer` | Clean package import, normal fill, ranker recovery and contract gate passed; no presentation/private evidence in package |
 | Read-only complete archive adapter | RM1 108 main rows, RM2 378 rows; known counts and RM1 usage below preserved; 108/108 D33 request fingerprints verify with recorded raw output |
@@ -26,6 +27,8 @@ Environment: macOS arm64; Node 25.8.2; Playwright 1.62.1 / Chromium. Browser/con
 | Explicit CLI snapshot roundtrip | RM1 108 and RM2 198 synthetic rows retained as two studies, without injecting private or extra archive rows |
 | `npm run demo:walkthrough -- --headless --no-open --pause 0` | Nine local browser replay slots, zero request/outcome mismatches, no fresh model inference |
 | Visual inspection | Desktop 1440×900 and mobile 390×844: overview, DOM, AI, stress outcome, comparison and generic library screenshots inspected; zero page errors/document overflow. Mobile case identity stays visible during table scrolling |
+
+The first CI run exposed a legacy browser assertion expecting the old `no selector` copy. It now asserts `No parsed locator recorded` and explicitly rejects `No candidate selected` for provider failures; all original runtime/dispatch/usage assertions remain. The complete 83-test browser suite then passed locally. No runtime or data changes were needed.
 
 Final presentation tests were updated to open the intentionally collapsed message before checking its contents. Assertions still verify the exact attempt's unique input, response and feedback. An initial local audit-script assertion used `response.kind`; the adapter schema uses `response.status`. Correcting that inspection assertion required no research-data change.
 
@@ -47,4 +50,4 @@ The portable checkout includes 198 D30 synthetic rows. RM1 uses `--ranking` or a
 
 D30 raw DOM and per-feature contributions were not retained; its 180 independent requests are parsed-only, whereas 144 private requests have raw output. D33 has raw DOM and 108 recorded provider bodies/outputs, but lacks individual feature-score contributions. Hash agreement demonstrates internal archive consistency, not independent provider attestation. No usability study or new model benchmark was performed. Optional live mode was not executed.
 
-Implementation: `presentation/ranking-data.mjs`, `snapshot.mjs`, `report.mjs`, `report-style.mjs`, `inspector.mjs`, `cli.mjs`, and `src/report.ts`. Regression checks live in `presentation/*.test.mjs`. The local full archive check and source hash manifest are retained in ignored `output/playwright/archive-check.json` and `archive-fingerprints.json`; nine visual captures are `output/playwright/d34-*.png`. See [presentation guide](../presentation.md), [D34 decision](../decisions/2026-09-18-report-simplification.md) and [design](../../DESIGN.md). Atlas worklist item 2 records this implementation separately from paper visual production and writing.
+Implementation: `presentation/ranking-data.mjs`, `snapshot.mjs`, `report.mjs`, `report-style.mjs`, `inspector.mjs`, `cli.mjs`, and `src/report.ts`. Regression checks live in `presentation/*.test.mjs`. The local full archive check and source hash manifest are retained in ignored `output/playwright/archive-check.json` and `archive-fingerprints.json`; nine visual captures are `output/playwright/d34-*.png`. See [presentation guide](../presentation.md), [D34 decision](../decisions/2026-09-18-report-simplification.md) and [design](../../DESIGN.md). The prepared full local report was also opened through the browser: RM1 108, RM2 378, exact F-C01/C/repeat-2 selection and AI-skipped state passed without page errors. Atlas worklist item 2 records this implementation separately from paper visual production and writing.

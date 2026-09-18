@@ -2771,7 +2771,7 @@
             "OBS-011-S5"
           ],
           "summary": "Separate D33/D30 reports, four-group inspection, exact run/attempt identity, filtered safe exports and safe generic reports verified with retained archives and browser checks.",
-          "command": "npm run test:presentation; npm run typecheck; npm run test:unit; npm run test:consumer; npm run check; npm run test:audit; npm run demo:walkthrough -- --headless --no-open --pause 0; retained archive read-only parity check",
+          "command": "npm run test:presentation; npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run check; npm run test:audit; npm run demo:walkthrough -- --headless --no-open --pause 0; retained archive read-only parity check",
           "environment": "macOS arm64; Node25.8.2; Playwright1.62.1 / Chromium",
           "date": "2026-09-18",
           "result": "pass"
