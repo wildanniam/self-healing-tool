@@ -52,11 +52,11 @@ export function normalizePrivate(r) {
     executed:r.event?.actionExecuted === true, recovery:r.event?.recoveryTriggered === true,
     totalMs:safeNumber(r.event?.totalMs), usage:usageOf(r.event), detail:detailOf(r.event,true) };
 }
-export function validateRows(rows) {
+export function validateRows(rows, arms=ARMS) {
   if (!Array.isArray(rows) || !rows.length) throw new Error('No evaluation records supplied');
   const ids = new Set();
   for (const r of rows) {
-    if (!ARMS[r.arm] || !CATEGORIES[r.category] || !GROUPS[r.group] || !Number.isInteger(r.repeat) || r.repeat < 1 || typeof r.caseId !== 'string') throw new Error('Invalid evaluation identity');
+    if (!arms[r.arm] || !CATEGORIES[r.category] || !GROUPS[r.group] || !Number.isInteger(r.repeat) || r.repeat < 1 || typeof r.caseId !== 'string') throw new Error('Invalid evaluation identity');
     const key = `${r.group}/${r.caseId}/${r.arm}/${r.repeat}`;
     if(ids.has(key)) throw new Error(`Duplicate evaluation slot: ${key}`); ids.add(key);
     if(['correct','wrong','operational','executed','recovery'].some(k=>typeof r[k] !== 'boolean')) throw new Error('Invalid evaluation outcome');

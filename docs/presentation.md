@@ -1,57 +1,51 @@
 # Supervisor presentation
 
-The presentation workflow compares A (LLM without requirement rules), B (rules supplied as model context), and C (the B input plus checks before recovery actions). It uses the unchanged D30 / 0.0.8 core. The Indonesian HTML report is standalone and works offline.
+The standalone offline report starts with execution outcomes. Historical evidence has separate RM1 (DOM ranking, D33) and RM2 (target rules, D30) studies. Their denominators, model input settings and conclusions are not pooled. Presentation and generic library reports use the D34 four-group hierarchy; the recovery core remains D30 / 0.0.8.
 
 ## Show the existing evaluation
-
-From this repository:
 
 ```sh
 npm run demo
 ```
 
-This creates a new `output/presentation/historical-*/results.json` and `report.html`, then opens the HTML in the default browser. It does not rerun the study, load `.env`, or call an AI provider. A new directory is created each time; existing files are never overwritten. `-- --no-open` disables the browser opener.
+This creates a new `output/presentation/historical-*/results.json` and `report.html`, then opens the HTML in the default browser. It does not rerun research, load `.env`, or call an AI provider. Output refuses overwrite. Add `-- --no-open` to suppress the browser opener.
 
-The report includes:
-
-- A/B/C comparison, separate recovery and wrong-action denominators;
-- controls, ordinary changes, unavailable/retired targets, misleading-label stress, and insufficient requirements;
-- application/category/search filters and a wrong-action filter;
-- an Inspeksi view with one case, A/B/C arm, repeat and attempt at a time;
-- stage-by-stage DOM context/ranking, exact AI messages, available output, validator decisions, requirement clauses and independent effects;
-- request counts, recorded token usage, and cost estimates using the retained D30 rate assumption;
-- JSON/CSV export, printing of all filtered conditions, and source fingerprints.
-
-The bundled snapshot contains all 198 independent-app executions. On the owner's prepared workstation, ignored `.presentation.local.json` connects the original independent archive and the separate private-host archive, yielding all 378 executions. A clone without the private archive explicitly reports its absence. It never invents the other 180 rows or fetches the private application.
-
-For a different local setup:
+The default portable snapshot contains 198 independent D30 executions. The owner's ignored local configuration adds 180 private-host D30 executions and the 108 archived D33 main executions. Missing sources are stated explicitly; a configured but unreadable source fails instead of silently replacing it. D33 pilot records are excluded.
 
 ```sh
-npm run demo -- --synthetic /path/to/synthetic/results.json --private /path/to/private/run-directory
+npm run demo -- --ranking /path/to/d33/main/records --synthetic /path/to/d30/results.json --private /path/to/private/run-directory
 ```
 
-Alternatively, put `synthetic` and `privateDirectory` paths in ignored `.presentation.local.json`. For the independent data alone, omit the private source. Existing normalized report JSON can be reopened directly through its sibling HTML or loaded with `--snapshot` when no duplicate private source is configured.
+The ignored `.presentation.local.json` accepts `rankingDirectory`, `synthetic`, `privateDirectory` and `privateAudit`. Ranking is a read-only adapter over existing D33 main files, not a new experiment or a migration of the D33 research runtime. A clone without that archive displays a missing RM1 notice; it does not fabricate a portable copy.
 
-By default, the private adapter copies outcome/accounting fields only. For authorized local diagnosis, add `--private-audit` or set `"privateAudit": true` in ignored `.presentation.local.json`. This includes allowlisted private task/context, selectors, recorded request/response bodies, rules and observed effects. It never loads browser sessions or provider credentials. `--summary-only` overrides the setting and omits private diagnostics. Generated diagnostic HTML/JSON and explicit per-run downloads are private local artifacts; do not share them as public examples. Packaging the library excludes presentation and private evaluation assets.
+The **Hasil eksekusi** view shows one button for each available arm/repeat. Search, application, category and wrong-action filters affect both JSON and CSV export. The wrong-action filter retains all arms of matching cases for comparison. Pagination affects only the screen; printing and exports include all filtered cases. JSON also records source count, selection, source fingerprints, evaluation date and price assumptions. A filtered snapshot is labeled when reopened.
 
-## Inspect a case
+**Perbandingan studi** is secondary and uses all loaded rows of the selected study, independent of case-list filters. RM1 shows target coverage, correct recovery, wrong actions and stopping. RM2 separates controls, ordinary recovery, negative cases, misleading-label stress and missing/stale requirements. Recorded tokens, time and cost assumptions are collapsed. Repeated executions are not independent cases; do not describe a combined RM1/RM2 success rate.
 
-Click **Inspeksi** beside a condition. Select A, B or C, a repetition and (if available) a healing attempt. The left navigation shows eight stages:
+Reopen either a complete schema-2 report bundle or a filtered schema-1 export without injecting locally configured source rows:
 
-1. **Aksi awal**: intended task, action, original locator and failure classification.
-2. **DOM & ranking**: recorded attempt context, coverage counts, ranked candidates, features and any cleaned DOM supplement.
-3. **Input ke AI**: the stored system prompt and user message, model settings, byte count and SHA-256 checks. Download the original body for independent comparison.
-4. **Output AI**: recorded provider text when available and the separately recorded parsed locator.
-5. **Validasi locator**: technical admission, rejected variants and feedback sent to that attempt.
-6. **Aturan requirement**: B supplies context; C additionally checks declared clauses before action. Each available clause result shows evidence and its matched source.
-7. **Bukti hasil**: independent outcome assessment and observed effects, separate from the AI's choice or the validator's admission.
-8. **Sumber & batas**: source identity, stored configuration and gaps in capture.
+```sh
+npm run demo -- --snapshot /path/to/results.json --no-open
+```
 
-Start with **F-C01 → Aksi awal**: the original locator succeeds, so AI and candidate-check stages are explicitly skipped. **F-R01 → Input ke AI** demonstrates an actual platform recovery request. **h1-06 → C → Aturan requirement** shows a rejected candidate; compare B on the same condition. **h1-05 → Bukti hasil** retains the misleading-label failure.
+Private diagnostics require explicit local opt-in: `--private-audit` or `"privateAudit": true` in local configuration. `--summary-only` overrides that setting. Snapshot reopening ignores the local opt-in unless `--private-audit` is explicitly passed. Generated diagnostic HTML/JSON and explicit run downloads remain private local artifacts. Ordinary JSON export strips private audit objects; CSV uses outcome fields only. The library package excludes presentation/evaluation assets.
 
-Some older data cannot support a complete trace: raw DOM before cleansing, discarded nodes and per-feature score contributions were not recorded. The 180 independent historical requests retain only parsed responses; the 144 private-host requests also retain raw output. These gaps are labeled, never reconstructed as original evidence. New replay/live presentation captures store the provider input and returned text; replay text remains labeled replay. Successful request hash verification confirms agreement with retained fingerprints, not independent attestation by the provider.
+## Inspect the selected execution
 
-**Unduh ringkasan JSON** omits private diagnostic objects; **Unduh bukti run** explicitly includes the selected run's locally loaded audit. Both retain source/evidence labels. JSON details expand on demand. Keyboard navigation and Escape/back return to the overview; the layout adapts to mobile.
+Click a specific result, for example **S-S-L / R1 / repeat 2**. The inspector opens that exact identity, not an arbitrary default C run. Switch arm, repeat or attempt to compare related evidence. The original locator and that attempt's replacement appear next to the outcome. Four groups organize the process:
+
+1. **Konteks DOM**: initial action/failure, retained coverage and candidate order, selected DOM fields, and available raw/cleaned DOM. D33 target rank, top-30 and post-budget annotations are evaluator evidence, not AI inputs.
+2. **Input dan jawaban AI**: paired request/response from one attempt. Expand system/user messages or download/copy the stored request. Model, limits, hashes and response metadata are collapsed; raw response and parsed locator remain distinct.
+3. **Pemeriksaan**: basic locator admission, rejected variants, feedback and optional target-rule decisions. Contract checks are disabled for all RM1 strategies. In RM2, B supplies context and C also enforces declared clauses before action.
+4. **Hasil aksi**: independently assessed effects. Successful execution alone does not establish correctness; native controls, unassessed actions, rejected candidates and wrong effects have separate labels.
+
+Source identity, configuration and capture limitations are available in a separate collapsed disclosure. Escape returns focus to the result that opened the inspector. Keyboard operation and mobile layouts are supported; mobile tables scroll locally while keeping the case identity visible.
+
+Useful examples: **F-C01** is a native control with no AI call; **S-A-L/R1** loses its target after the character budget; **S-S-L/R1** loses it outside top-30 and returns null. In RM2, **h1-06/C** stops after rule rejection, while **h1-05/C** retains the misleading-label failure.
+
+Capture limits are preserved. D30 lacks pre-cleansing raw DOM and per-feature score contributions. Its 180 independent requests retain parsed responses only; 144 private-host requests retain raw output. D33 main retains all 108 original request bodies and raw outputs plus raw DOM, but not individual feature-score contributions. Byte/hash agreement verifies consistency with the retained fingerprint, not provider attestation. No missing response or internal AI reasoning is reconstructed. Replay stays explicitly labeled.
+
+Generic reports produced by `writeReport()` also show outcome and four collapsed groups, using the existing safe `reportView`. They intentionally do not gain archived full provider bodies or raw DOM just for presentation parity; these absences are stated. Their safe JSON projection and normal download files remain available.
 
 ## Walk through browser actions
 
@@ -87,7 +81,7 @@ No paid live comparison was executed while implementing this workflow. Its missi
 
 ## Suggested five-minute sequence
 
-1. Open `npm run demo`. Explain A/B/C and that 378 means repeated executions of 42 conditions, not 378 independent cases.
+1. Open `npm run demo`. Show RM1 target coverage, then switch to RM2. Explain R0/R1/R2 and A/B/C separately: 108 and 378 are repeated executions, not independent cases.
 2. Show ordinary C recovery: 36/36 platform and 30/36 independent apps. Keep their denominators separate.
 3. Show negative wrong actions: 15/24, 9/24, 0/24. Open the risk example to explain why executing an action is different from hitting the intended target.
 4. Run the step walkthrough if time allows. State that the model decisions are replayed while the browser and checks run now.
@@ -103,4 +97,4 @@ No paid live comparison was executed while implementing this workflow. Its missi
 - A replay mismatch means the recorded input no longer matches this checkout. Do not edit the expected result to force a pass; use the matching D30 core/fixtures or record a separately authorized new demonstration.
 - Press Ctrl-C to stop. Intermediate progress is retained; an interrupted sequence is not a complete report.
 
-See [D32 inspection verification](evidence/inspectable-report-2026-09-16.md), [D32 decision](decisions/2026-09-16-inspector.md), and historical [D31 verification](evidence/presentation-demo-2026-09-16.md).
+See [D34 simplification verification](evidence/report-simplification-2026-09-18.md), [D34 decision](decisions/2026-09-18-report-simplification.md), historical [D32 inspection verification](evidence/inspectable-report-2026-09-16.md), [D32 decision](decisions/2026-09-16-inspector.md), and historical [D31 verification](evidence/presentation-demo-2026-09-16.md).

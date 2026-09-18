@@ -65,25 +65,25 @@ test('inspector explains controls, B context, C decisions and real input with ac
   const browser=await chromium.launch();try{
     const page=await browser.newPage({viewport:{width:1440,height:1050}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.route('http**://**/*',r=>r.abort());await page.goto(pathToFileURL(file).href);
-    await page.locator('#search').fill('h1-01');await page.getByRole('button',{name:'Inspeksi ↗'}).click();
+    await page.locator('#search').fill('h1-01');await page.getByRole('button',{name:/ C ulangan 1:/}).click();
     assert.match(await page.locator('.run-verdict').innerText(),/Tidak ada DOM recovery/);
-    await page.locator('#stage-request').click();assert.match(await page.locator('.stage-panel').innerText(),/Tahap ini dilewati/);
+    await page.locator('#stage-ai').click();assert.match(await page.locator('.stage-panel').innerText(),/Tahap ini dilewati/);
     assert.equal(await page.locator('#audit-attempt').isDisabled(),true);
     await page.locator('#stage-outcome').click();assert.match(await page.locator('.stage-panel').innerText(),/penilaian sesudah aksi|evaluator menilai/);
     await page.locator('#audit-case').selectOption('warehouse/h1-02');
     await page.locator('#stage-context').click();assert.ok(await page.locator('.candidate-list>details').count()>0);
-    await page.locator('#stage-request').click();assert.match(await page.locator('.stage-panel').innerText(),/SHA-256 body cocok/);
+    await page.locator('#stage-ai').click();assert.match(await page.locator('.stage-panel').innerText(),/SHA-256 cocok/);
     const original=data.rows.find(r=>r.caseId==='h1-02'&&r.arm==='C'&&r.repeat===1).audit.attempts[0].request.body;
     const download=page.waitForEvent('download');await page.locator('#audit-request-download').click();const dl=await download;
     assert.equal(await readFile(await dl.path(),'utf8'),original);
-    await page.locator('#audit-arm-B').click();await page.locator('#stage-rules').click();assert.match(await page.locator('.stage-panel').innerText(),/Tidak ada keputusan pemeriksa kode/);
+    await page.locator('#audit-arm-B').click();await page.locator('#stage-checks').click();assert.match(await page.locator('.stage-panel').innerText(),/Tidak ada keputusan pemeriksa kode/);
     await page.locator('#audit-arm-C').click();assert.match(await page.locator('.rule-list').innerText(),/Cocok/);
     await page.locator('#audit-case').selectOption('warehouse/h1-06');assert.match(await page.locator('.rule-list').innerText(),/Belum cocok/);
     await page.locator('#audit-repeat').selectOption('2');assert.equal(await page.locator('#audit-repeat').inputValue(),'2');
-    await page.locator('#stage-response').click();assert.match(await page.locator('.stage-panel').innerText(),/Respons mentah tidak direkam/);
+    await page.locator('#stage-ai').click();assert.match(await page.locator('.stage-panel').innerText(),/Respons mentah tidak direkam/);
     await page.locator('#audit-case').selectOption('warehouse/h1-05');await page.locator('#stage-outcome').click();assert.match(await page.locator('.stage-panel').innerText(),/Evaluator mencatat efek yang salah/);
     await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-    await page.locator('#stage-start').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('#stage-start').getAttribute('aria-current'),'step');
+    await page.locator('#stage-context').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('#stage-context').getAttribute('aria-current'),'step');
     await page.screenshot({path:join(dir,'mobile-inspector.png'),fullPage:true});
     await page.keyboard.press('Escape');assert.equal(await page.locator('#overview-view').isVisible(),true);
     assert.equal(await page.locator('#stats strong').first().textContent(),'198');
@@ -95,13 +95,18 @@ test('multiple attempts stay separate and changing an attempt selects its own in
   const a=structuredClone(row.audit.attempts[0]);a.number=2;a.inputContext.feedback=[{selector:'#first',reason:'ambiguous',count:2}];
   a.request.body=JSON.stringify({model:'offline-fixture',messages:[{role:'user',content:JSON.stringify({feedback:a.inputContext.feedback,task:{description:'SECOND_ATTEMPT_ONLY'}})}]});
   a.request.sha256=hash(a.request.body);a.request.declaredSha256=a.request.sha256;a.request.attemptSha256=a.request.sha256;
+  a.response={status:'recorded',text:'SECOND_ATTEMPT_RESPONSE'};
   row.audit.attempts.push(a);
   const dir=await mkdtemp(join(tmpdir(),'attempt-browser-')),file=join(dir,'report.html');await writeFile(file,renderReport(data));
   const browser=await chromium.launch();try{
     const page=await browser.newPage();await page.goto(pathToFileURL(file).href);
-    await page.locator('#search').fill('h1-02');await page.getByRole('button',{name:'Inspeksi ↗'}).click();await page.locator('#stage-request').click();
+    await page.locator('#search').fill('h1-02');await page.getByRole('button',{name:/ C ulangan 1:/}).click();await page.locator('#stage-ai').click();
     assert.doesNotMatch(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_ONLY/);
-    await page.locator('#audit-attempt').selectOption('2');assert.match(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_ONLY/);
-    await page.locator('#audit-repeat').selectOption('2');assert.equal(await page.locator('#audit-attempt option').count(),1);
+    await page.locator('#audit-attempt').selectOption('2');
+    await page.getByText('user · pesan 1 lengkap',{exact:true}).click();
+    assert.match(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_ONLY/);
+    assert.match(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_RESPONSE/);
+    assert.match(await page.locator('.stage-panel').innerText(),/ambiguous/);
+    await page.locator('#audit-repeat').selectOption('2');assert.equal(await page.locator('#audit-attempt option').count(),1);assert.doesNotMatch(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_RESPONSE/);
   }finally{await browser.close();}
 });
