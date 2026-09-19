@@ -18,7 +18,7 @@ npm run demo -- --ranking /path/to/d33/main/records --synthetic /path/to/d30/res
 
 The ignored `.presentation.local.json` accepts `rankingDirectory`, `synthetic`, `privateDirectory` and `privateAudit`. Ranking is a read-only adapter over existing D33 main files, not a new experiment or a migration of the D33 research runtime. A clone without that archive displays a missing RM1 notice; it does not fabricate a portable copy.
 
-The **Hasil eksekusi** view shows one button for each available arm/repeat. Search, application, category and wrong-action filters affect both JSON and CSV export. The wrong-action filter retains all arms of matching cases for comparison. Pagination affects only the screen; printing and exports include all filtered cases. JSON also records source count, selection, source fingerprints, evaluation date and price assumptions. A filtered snapshot is labeled when reopened.
+The **Execution results / Hasil eksekusi** view shows one button for each available arm/repeat. Search, application, category and wrong-action filters affect both JSON and CSV export. The wrong-action filter retains all arms of matching cases for comparison. Pagination affects only the screen; printing and exports include all filtered cases. JSON also records source count, selection, source fingerprints, evaluation date and price assumptions. A filtered snapshot is labeled when reopened.
 
 **Perbandingan studi** is secondary and uses all loaded rows of the selected study, independent of case-list filters. RM1 shows target coverage, correct recovery, wrong actions and stopping. RM2 separates controls, ordinary recovery, negative cases, misleading-label stress and missing/stale requirements. Recorded tokens, time and cost assumptions are collapsed. Repeated executions are not independent cases; do not describe a combined RM1/RM2 success rate.
 
@@ -45,7 +45,7 @@ Useful examples: **F-C01** is a native control with no AI call; **S-A-L/R1** los
 
 Capture limits are preserved. D30 lacks pre-cleansing raw DOM and per-feature score contributions. Its 180 independent requests retain parsed responses only; 144 private-host requests retain raw output. D33 main retains all 108 original request bodies and raw outputs plus raw DOM, but not individual feature-score contributions. Byte/hash agreement verifies consistency with the retained fingerprint, not provider attestation. No missing response or internal AI reasoning is reconstructed. Replay stays explicitly labeled.
 
-Generic reports produced by `writeReport()` also show outcome and four collapsed groups, using the existing safe `reportView`. They intentionally do not gain archived full provider bodies or raw DOM just for presentation parity; these absences are stated. Their safe JSON projection and normal download files remain available.
+Library reports produced by `writeReport()` use the same packaged four-stage inspector. With explicit session capture and supplied local audit, consumers can inspect recorded requests/outputs and retained candidate context. Normal summary JSON remains safe. Library reports have action/attempt navigation without research controls. See [local audit setup](integration.md#local-action-audit-reports). Both interfaces default to English and support Bahasa Indonesia; original evidence remains unchanged.
 
 ## Walk through browser actions
 

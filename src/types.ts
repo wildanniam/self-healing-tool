@@ -54,10 +54,15 @@ export interface Context {
 export interface Usage { inputTokens: number; outputTokens: number }
 export interface ProviderMetadata { returnedModel: string | null; finishReason: 'stop' | 'length' | 'content_filter' | 'tool_calls' | 'function_call' | null }
 export interface ProviderResponse { output: string; usage: Usage | null; transportAttempted?: boolean; metadata?: ProviderMetadata | null }
+/** Optional diagnostic sink. An adapter calls this with the body it actually dispatches. */
+export interface ProviderAuditSink { request(body: string): void }
+export interface AuditText { status: 'recorded' | 'redacted' | 'missing' | 'withheld'; text: string | null; sha256: string | null; reason?: string }
+export interface AttemptAudit { eventId: string; attemptId: string; request: AuditText; response: AuditText }
+export interface RunAudit { schemaVersion: 1; runId: string; entries: AttemptAudit[] }
 export interface Provider {
   readonly kind: 'offline' | 'openai';
   readonly configuration?: Readonly<Config>;
-  select(context: Readonly<Context>, signal: AbortSignal): Promise<ProviderResponse>;
+  select(context: Readonly<Context>, signal: AbortSignal, audit?: ProviderAuditSink): Promise<ProviderResponse>;
 }
 export type FailureKind = 'none' | 'original' | 'context' | 'provider' | 'parse' | 'validation' | 'action' | 'budget' | 'abstained' | 'spec';
 export interface Attempt {

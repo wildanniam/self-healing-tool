@@ -4,7 +4,7 @@ export { createOpenAIProvider, ProviderError, serializeRequest } from './provide
 export { reportView, renderReport, summarize, writeReport } from './report.js';
 export { loadTargetSpec, validateTargetContract } from './spec.js';
 export type { TargetContract, TargetSpecOptions, SpecContext, SpecDecision, SpecEvent, SpecEvidenceSource } from './types.js';
-export type { PriceAssumption } from './report.js';
-export type { Action, Assessment, Attempt, Candidate, CandidateFeatures, ValidationFeedback, Config, Context, Event, Mode, Provider, ProviderMetadata, ProviderResponse, Run, SemanticOutcome, Task, Usage } from './types.js';
+export type { PriceAssumption, ReportOptions } from './report.js';
+export type { ProviderAuditSink, AuditText, AttemptAudit, RunAudit, Action, Assessment, Attempt, Candidate, CandidateFeatures, ValidationFeedback, Config, Context, Event, Mode, Provider, ProviderMetadata, ProviderResponse, Run, SemanticOutcome, Task, Usage } from './types.js';
 export { createLiveBudget, readLiveBudget, createBudgetedOpenAIProvider } from './budget.js';
 export type { LiveBudgetPlan, LiveBudgetLedger } from './budget.js';

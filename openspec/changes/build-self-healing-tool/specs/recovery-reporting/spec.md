@@ -182,3 +182,23 @@ Reports SHALL lead with observed outcomes, expose four process groups with paire
 #### Scenario: OBS-011-S5
 - **WHEN** the report is used with keyboard at desktop or mobile sizes
 - **THEN** navigation, four-group inspection, focus return and readable evidence work without page overflow
+
+### Requirement: OBS-012 Packaged bilingual action audit
+
+The library SHALL provide the same per-action inspector as the research report, with optional local captured evidence and English/Indonesian UI, while preserving safe summary exports and historical gaps.
+
+#### Scenario: OBS-012-S1
+- **WHEN** local audit capture is enabled before recovery
+- **THEN** actual provider request and returned text are paired by event and attempt, missing/failed/late results stay explicit, and capture does not change selection
+
+#### Scenario: OBS-012-S2
+- **WHEN** audit is disabled or normal JSON is exported
+- **THEN** full request, returned text and candidate diagnostics are excluded; explicit local diagnostics are isolated and omissions are respected
+
+#### Scenario: OBS-012-S3
+- **WHEN** a library consumer opens the report and changes language or attempt
+- **THEN** DOM, AI input/output, checks and outcomes remain readable with exact selected identity, unchanged recorded evidence and no experiment-only controls
+
+#### Scenario: OBS-012-S4
+- **WHEN** an installed package or historical presentation renders reports
+- **THEN** the shared inspector works offline on desktop/mobile and with keyboard input, preserves historical results and labels unavailable, unassessed, original-success and replay states truthfully

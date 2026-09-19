@@ -21,6 +21,10 @@ D25 corrects methodological drift: [method matrix](docs/implementation/thesis-me
 
 Historical D24 [findings and limits](docs/evidence/final-evaluation-2026-09-09.md): the earlier full and ranker-only variants both achieved 33/36 recoverable cases; absent-target refusal 0/12 vs 3/12. These are different versions/protocols from D26 and must not be pooled or presented as current 0.0.6 performance. No LLM superiority or reliable unattended healing is established.
 
+## Inspect a library run
+
+Enable `audit: true` on `createHealingSession`, then call `writeReport(healing.snapshot(), { directory: './output/healing', audit: healing.audit() })`. Open the generated `report.html`: choose an action and inspect DOM context, AI input/output, checks and outcome. English and Bahasa Indonesia are available; source evidence is unchanged. Detailed capture is local and explicit; summary exports omit request/output payloads. See the [integration guide](docs/integration.md#local-action-audit-reports).
+
 ## Start here
 
 1. [Proposal](openspec/changes/build-self-healing-tool/proposal.md) — what the tool will do and why.

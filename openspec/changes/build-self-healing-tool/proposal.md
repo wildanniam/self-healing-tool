@@ -91,3 +91,7 @@ Retained source adapters and future demonstration capture supply audit data with
 ## D34 results-first reports (issue #27)
 
 Implement the owner-approved four-group inspection hierarchy and separate D33/RM1 and D30/RM2 views. Read archived ranking records through a separate adapter. Lead run reports with outcomes and paired per-attempt evidence; keep sources and raw data collapsed, unavailable evidence explicit, and generic library projections private by default. Preserve exact source identities, denominators, historical outcomes and mode labels. Filters govern exports. No recovery-method changes or paid calls. See DESIGN.md and docs/decisions/2026-09-18-report-simplification.md; OBS-011 and tasks16.1–16.3.
+
+## D35 library audit reports (issue #29)
+
+Extend recovery-reporting with optional local audit capture and a shared packaged EN/ID action inspector. Preserve safe summaries, exact per-attempt identity, original evidence language, missing states and separate research comparisons. No research or recovery-method changes.

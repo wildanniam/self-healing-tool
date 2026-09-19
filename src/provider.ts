@@ -1,4 +1,4 @@
-import type { Candidate, CandidateFeatures, Config, Context, Provider, ProviderResponse, ProviderMetadata, Usage } from './types.js';
+import type { Candidate, CandidateFeatures, Config, Context, Provider, ProviderResponse, ProviderMetadata, Usage, ProviderAuditSink } from './types.js';
 import { ConfigurationError, validateConfig } from './config.js';
 
 export class ProviderError extends Error {
@@ -75,13 +75,15 @@ export function createOpenAIProvider(options: { apiKey: string; config: Readonly
   const maxRequests = options.maxRequests;
   let requests = 0;
   return Object.freeze({ kind: 'openai' as const, configuration: config,
-    async select(context: Readonly<Context>, signal: AbortSignal): Promise<ProviderResponse> {
+    async select(context: Readonly<Context>, signal: AbortSignal, audit?: ProviderAuditSink): Promise<ProviderResponse> {
       if (signal.aborted) throw new ProviderError('provider_aborted', null, false);
       if (requests >= maxRequests) throw new ProviderError('request_limit_exhausted', null, false);
       const payload = serializeRequest(context, config);
       if (payload.length > config.payloadMaxChars) throw new ProviderError('provider_payload_limit', null, false);
       requests++;
       try {
+        // Diagnostics are observational: a consumer sink cannot prevent dispatch.
+        try { audit?.request(payload); } catch { /* Ignore diagnostic sink failures. */ }
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', redirect: 'error', signal,
           headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },

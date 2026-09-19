@@ -13,3 +13,7 @@ States: native control (AI skipped); model null (recorded abstention); parsed-on
 Desktop 1440×900: restrained max width, four-stage rail, flexible evidence panel. Mobile 390×844: stacked heading/controls, horizontal stage navigation, locally scrollable tables/code without document overflow. Long input/output is vertical, never two giant JSON columns. Use scrollable raw evidence only inside disclosures. Preserve text labels for color meanings and minimum 44px touch controls.
 
 Generic library reports follow the same hierarchy using English and the existing safe reportView. They do not acquire full raw requests merely for layout parity. Recordings are data, never executable HTML. Paper screenshots and public export use synthetic evidence only.
+
+## D35 accepted extension
+
+Library users inspect one action and attempt through the same shared inspector. Hide study/arm/repeat controls in this mode. English defaults with a visible English/Bahasa Indonesia switch; evidence text remains original. Rich local evidence requires capture enabled before execution and explicit audit supplied to reporting; safe JSON stays a whitelist. Keep summary-first layout, source details collapsed, touch controls and keyboard focus. This replaces the earlier English-only/generic-summary-only UI restriction.

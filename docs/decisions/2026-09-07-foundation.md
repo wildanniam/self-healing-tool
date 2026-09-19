@@ -80,3 +80,7 @@ Record meaningful decisions and progress in Atlas Vault proactively. The reposit
 - [OpenSpec project configuration](https://openspec.dev/docs/project-config)
 - [APSEC Tool Demonstration call](https://conf.researchr.org/track/apsec-2026/apsec-2026-tool-demonstration)
 - Owner-approved discussion dated 2026-09-07, captured in the private Atlas Vault decision lock. This source is intentionally not copied as an application artifact or claimed to be publicly accessible.
+
+### D35 — Packaged bilingual action inspection (20 September 2026)
+
+The owner authorizes issue #29: implement shared per-action evidence inspection for library and research reports, English/Indonesian UI and concise layout. Capture actual request/returned output prospectively via an explicit local audit option. Preserve ordinary safe projections and missing historical evidence. Share presentation components in the package; study aggregates remain separate. No recovery-method, research-data, manuscript, paid-run, merge or release change. Paper will describe final capabilities only, without migration history. This supersedes D34’s prohibition on optional rich library reports, not the safe default or private-evidence boundaries.

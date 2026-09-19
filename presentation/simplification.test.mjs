@@ -49,7 +49,7 @@ test('four-group UI preserves selected identity, filtered exports, study isolati
   await writeFile(file,renderReport({schemaVersion:2,createdAt:'2026-09-18',studies:[rm1,{...d30,studyId:'rm2'}]}));
   const browser=await chromium.launch();try{
     const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-    await page.route('http**://**/*',r=>r.abort());await page.goto(pathToFileURL(file).href);
+    await page.route('http**://**/*',r=>r.abort());await page.goto(pathToFileURL(file).href);assert.equal(await page.locator('html').getAttribute('lang'),'en');await page.locator('#report-language').selectOption('id');
     assert.equal(await page.locator('#stats strong').first().textContent(),'1');
     const opener=page.getByRole('button',{name:/S-S-L R1 ulangan 2:/});await opener.click();
     assert.equal(await page.locator('#audit-repeat').inputValue(),'2');assert.equal(await page.locator('#audit-arm-R1').getAttribute('aria-pressed'),'true');
@@ -73,11 +73,11 @@ test('generic library report stays collapsed, private-safe and honest about unas
     id:'event',action:'click',originalSelector:'#old',task:{description:'<img src=x onerror="window.__bad=1">'},recoveryTriggered:true,
     originalFailure:null,actionExecuted:true,stopReason:'recovered',semantic:'unassessed',failure:'none',originalMs:1,internalMs:2,retryMs:3,totalMs:6,
     context:{cleanedDom:'PRIVATE_RAW'},attempts:[]}]};
-  const html=libraryReport(run);assert.doesNotMatch(html,/PRIVATE_RAW/);assert.match(html,/correctness unassessed/);assert.match(html,/&lt;img/);
+  const html=libraryReport(run);assert.doesNotMatch(html,/PRIVATE_RAW/);assert.match(html,/correctness unassessed/);assert.ok(html.includes('\\u003cimg'));
   const browser=await chromium.launch();try{
     const page=await browser.newPage({viewport:{width:390,height:844}});await page.setContent(html);
-    assert.equal(await page.locator('details[open]').count(),0);assert.equal(await page.locator('.process').count(),4);
-    await page.getByText('2 · AI input and output',{exact:true}).click();assert.match(await page.locator('.process').nth(1).innerText(),/AI not called/);
+    assert.equal(await page.locator('details[open]').count(),0);await page.getByRole('button',{name:'Inspect action'}).click();assert.equal(await page.locator('.stage-nav button').count(),4);
+    await page.locator('#stage-ai').click();assert.match(await page.locator('.stage-panel').innerText(),/provider was not called/i);assert.equal(await page.locator('img').count(),0);
     assert.equal(await page.evaluate(()=>window.__bad),undefined);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   }finally{await browser.close();}
 });

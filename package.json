@@ -21,7 +21,7 @@
     "demo:offline": "npm run build && node examples/local-demo/run.mjs",
     "demo:live": "npm run build && node --env-file=.env examples/local-demo/run.mjs --live",
     "prepack": "npm run build",
-    "demo": "node presentation/cli.mjs",
+    "demo": "npm run build && node presentation/cli.mjs",
     "demo:report": "node presentation/cli.mjs",
     "demo:walkthrough": "npm run build && node presentation/cli.mjs --walkthrough",
     "demo:live:compare": "npm run build && node presentation/cli.mjs --walkthrough --live",

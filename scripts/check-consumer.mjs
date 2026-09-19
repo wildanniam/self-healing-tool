@@ -19,6 +19,10 @@ try {
   writeFileSync(join(consumer, 'smoke.mjs'), `import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import * as api from 'self-healing-tool';
+import {mkdtemp,readFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
 assert.deepEqual(Object.keys(api).sort(), ['ConfigurationError','DEFAULT_CONFIG','HealingFailure','ProviderError','configFromEnv','createHealingSession','createOpenAIProvider','createBudgetedOpenAIProvider','createLiveBudget','readLiveBudget','serializeRequest','renderReport','reportView','summarize','validateConfig','writeReport','loadTargetSpec','validateTargetContract'].sort());
 const browser = await chromium.launch();
 try {
@@ -36,6 +40,18 @@ try {
  assert.equal(await page.locator('#current').inputValue(),'guarded');
  assert.equal(guarded.snapshot().events[0].targetSpec.decision.outcome,'accepted');
  assert.equal(typeof api.loadTargetSpec,'function');
+ const config=api.validateConfig({mode:'full',actionTimeoutMs:100});
+ const provider={kind:'offline',async select(context,signal,audit){audit?.request(api.serializeRequest(context,config));return {output:JSON.stringify({selector:'#current'}),usage:null};}};
+ const audited=api.createHealingSession(page,{config,provider,audit:true});
+ await audited.fill('#outdated','new value',{description:'Display name'});
+ const output=await api.writeReport(audited.snapshot(),{directory:await mkdtemp(join(tmpdir(),'installed-report-')),audit:audited.audit()});
+ const summary=await readFile(join(output,'report.json'),'utf8');assert(!summary.includes('messages'));
+ await page.goto(pathToFileURL(join(output,'report.html')).href);
+ await page.getByRole('button',{name:'Inspect action'}).click();await page.locator('#stage-ai').click();
+ assert((await page.locator('.stage-panel').innerText()).includes('SHA-256 matches'));
+ await page.locator('#report-language').selectOption('id');assert.equal(await page.locator('#stage-title').innerText(),'Input dan jawaban AI');
+ assert.equal(await page.locator('.method-switch').isVisible(),false);
+ console.log('Packaged local audit: recorded request/output, English/Indonesian, no study controls passed');
  console.log('Clean tarball consumer: import, normal fill, ranker recovery and target-contract gate passed');
 } finally { await browser.close(); }
 `);

@@ -3,7 +3,7 @@ import { dirname, isAbsolute } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { ConfigurationError, validateConfig } from './config.js';
 import { createOpenAIProvider, normalizeUsage, ProviderError, serializeRequest } from './provider.js';
-import type { Config, Context, Provider, Usage } from './types.js';
+import type { ProviderAuditSink, Config, Context, Provider, Usage } from './types.js';
 
 export interface LiveBudgetPlan {
   id: string; model: Config['model']; maxRequests: number; maxCostUsd: number;
@@ -59,7 +59,7 @@ export function createBudgetedOpenAIProvider(options: { apiKey: string; config: 
   const originalPlan = JSON.stringify(initial.plan);
   const provider = createOpenAIProvider({ apiKey: options.apiKey, config, maxRequests: initial.plan.maxRequests });
   return Object.freeze({ kind: 'openai' as const, configuration: config,
-    async select(context: Readonly<Context>, signal: AbortSignal) {
+    async select(context: Readonly<Context>, signal: AbortSignal, audit?: ProviderAuditSink) {
       if (signal.aborted) throw new ProviderError('provider_aborted', null, false);
       const payload = serializeRequest(context, config);
       if (payload.length > config.payloadMaxChars) throw new ProviderError('provider_payload_limit', null, false);
@@ -77,7 +77,7 @@ export function createBudgetedOpenAIProvider(options: { apiKey: string; config: 
         return id;
       });
       let response;
-      try { response = await provider.select(context, signal); }
+      try { response = await provider.select(context, signal, audit); }
       catch (error) {
         update(ledgerPath, ledger => {
           const r = ledger.requests.find(r => r.id === id)!;
