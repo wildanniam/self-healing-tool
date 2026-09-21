@@ -8,8 +8,9 @@ const directory = mkdtempSync(join(tmpdir(), 'healing-consumer-'));
 const env = Object.fromEntries(['PATH', 'HOME', 'TMPDIR', 'CI', 'PLAYWRIGHT_BROWSERS_PATH', 'npm_config_cache'].filter(k => process.env[k]).map(k => [k, process.env[k]]));
 try {
   const packed = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', directory], { cwd: root, env, encoding: 'utf8' }))[0];
-  const allowed = /^(dist\/[a-z-]+\.(?:js|d\.ts)|README\.md|package\.json|docs\/(?:integration|playwright)\.md|docs\/implementation\/(?:component-inventory|thesis-method-alignment)\.md)$/;
+  const allowed = /^(dist\/[a-z-]+\.(?:js|d\.ts)|README\.md|LICENSE|THIRD_PARTY_NOTICES\.md|LICENSES\/OpenSpec-MIT\.txt|package\.json|docs\/(?:integration|playwright)\.md|docs\/implementation\/(?:component-inventory|thesis-method-alignment)\.md)$/;
   for (const file of packed.files) assert.match(file.path, allowed, `Unexpected package asset: ${file.path}`);
+  for (const required of ['LICENSE', 'THIRD_PARTY_NOTICES.md', 'LICENSES/OpenSpec-MIT.txt']) assert(packed.files.some(f => f.path === required), `Missing distribution notice: ${required}`);
   assert(packed.files.some(f => f.path === 'dist/index.js'));
   assert(packed.files.some(f => f.path === 'docs/integration.md'));
   assert(packed.files.some(f => f.path === 'docs/implementation/thesis-method-alignment.md'));
@@ -58,5 +59,9 @@ try {
   execFileSync(process.execPath, ['smoke.mjs'], { cwd: consumer, env, stdio: 'inherit' });
   const packageJson = JSON.parse(readFileSync(join(consumer, 'node_modules/self-healing-tool/package.json'), 'utf8'));
   assert.equal(packageJson.peerDependencies.playwright, '1.62.1');
+  assert.equal(packageJson.license, 'MIT');
+  assert.equal(packageJson.private, true); // GitHub source release does not publish to npm.
+  assert.equal(packageJson.version, JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version);
+  assert.match(readFileSync(join(consumer, 'node_modules/self-healing-tool/LICENSE'), 'utf8'), /Copyright \(c\) 2026 Wildan Syukri Niam/);
   console.log(JSON.stringify({ node: process.version, playwright: '1.62.1', packageFiles: packed.files.map(f => f.path), result: 'pass' }));
 } finally { rmSync(directory, { recursive: true, force: true }); }

@@ -10,7 +10,7 @@ const source = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'spec-audit-test-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  for (const path of ['README.md', 'DEVELOPMENT.md', 'AGENTS.md', 'DESIGN.md', '.env.example', 'docs', 'openspec', '.github', 'src', 'tests', 'examples', 'evaluation', 'scripts', 'package.json', 'tsconfig.json', 'playwright.config.ts']) cpSync(join(source, path), join(root, path), { recursive: true });
+  for (const path of ['README.md', 'LICENSE', 'LICENSES', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md', 'DEVELOPMENT.md', 'AGENTS.md', 'DESIGN.md', '.env.example', 'docs', 'openspec', '.github', 'src', 'tests', 'examples', 'evaluation', 'scripts', 'package.json', 'tsconfig.json', 'playwright.config.ts']) cpSync(join(source, path), join(root, path), { recursive: true });
   return root;
 }
 function editRegister(root, mutate) {
@@ -66,7 +66,8 @@ test('a real-shaped evidence record can support a completed task', (t) => {
   editRegister(root, (data) => {
     const req = data.requirements.find((r) => r.id === 'INT-005');
     req.status = 'verified';
-    req.evidence = [{ id: 'EV-TEST-ONLY', kind: 'verification', ref: 'docs/verification-plan.md', summary: 'Synthetic checker fixture; never a project evidence record', scenarios: req.scenarios, command: 'fixture', environment: 'test', date: '2026-09-07', result: 'pass' }];
+    // Other completed tasks may reference existing evidence for this requirement.
+    req.evidence.push({ id: 'EV-TEST-ONLY', kind: 'verification', ref: 'docs/verification-plan.md', summary: 'Synthetic checker fixture; never a project evidence record', scenarios: req.scenarios, command: 'fixture', environment: 'test', date: '2026-09-07', result: 'pass' });
     data.completedTasks = [...data.completedTasks.filter(t => t.task !== '1.1'), { task: '1.1', evidence: ['EV-TEST-ONLY'] }];
   });
   assert.deepEqual(checkTraceability(root).errors, []);

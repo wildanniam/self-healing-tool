@@ -89,3 +89,8 @@ The owner authorizes issue #29: implement shared per-action evidence inspection 
 ### D36 — Automatic Playwright consumer reports (21 September 2026)
 
 Owner-authorized lifecycle/report improvements in issue33. See [scope and verification contract](2026-09-21-consumer-reporting.md). Optional fixture/reporter, explicit audit setting, separate test and action outcomes, bounded local browser opening, no method or study changes.
+
+
+### D37 — Owner-authorized public GitHub release
+
+See [D37](2026-09-21-public-release.md): audit and cleanup, MIT selected by the owner, version0.1.0, integration of PR34 and public GitHub visibility after verification. npm publication and paid inference remain excluded. Earlier private/no-release checkpoints are historical for this explicitly authorized release.

@@ -108,3 +108,8 @@ The owner explicitly authorized analysis and execution of the explained continua
 ## D36 Playwright consumer reporting (issue #33)
 
 Add optional `self-healing-tool/playwright` fixture and `self-healing-tool/reporter` exports. The fixture writes local action reports during teardown, with explicit audit opt-in and attachments; write/attachment failures are diagnostics and never replace the primary test error. The reporter collects final Playwright statuses and per-project/retry identities into one standalone suite index. Preserve immutable per-run directories; optional browser opening occurs once after the run and is disabled in CI. Index status is authoritative after all teardown; action execution and independent correctness remain separate. An action summary leads with original completion, executed recovery, stopped and failed counts. Ship a runnable local consumer example and current full-mode instructions. No recovery algorithm, historical evidence or paid collection changes.
+
+
+## D37 public artifact release
+
+Issue35 implements the owner-authorized public GitHub release under tasks8.1/8.3. Audit current/history/GitHub records, select MIT as requested, finalize0.1.0 and clear user navigation, integrate the verified report workflow and verify anonymous access. Retain private-source exclusions and empirical limitations. npm publication and paper/practitioner completion are outside this release.

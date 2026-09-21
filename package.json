@@ -1,9 +1,9 @@
 {
   "name": "self-healing-tool",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "private": true,
   "description": "Bounded Playwright locator recovery with inspectable outcomes.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
     "node": ">=24 <26"
   },
@@ -59,7 +59,9 @@
     "docs/integration.md",
     "docs/implementation/component-inventory.md",
     "docs/implementation/thesis-method-alignment.md",
-    "docs/playwright.md"
+    "docs/playwright.md",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
   ],
   "peerDependencies": {
     "playwright": "1.62.1",
@@ -69,5 +71,13 @@
     "@playwright/test": {
       "optional": true
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wildanniam/self-healing-tool.git"
+  },
+  "homepage": "https://github.com/wildanniam/self-healing-tool#readme",
+  "bugs": {
+    "url": "https://github.com/wildanniam/self-healing-tool/issues"
   }
 }

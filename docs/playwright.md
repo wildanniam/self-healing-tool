@@ -8,21 +8,21 @@ Run your first recovery test and open its HTML report. This guide starts from an
 - Internet access to install the development package dependencies and Chromium.
 - A terminal and editor. The commands below work in a macOS/Linux shell; use a writable working directory.
 
-This is a development package, not a published npm release. Until [PR #34](https://github.com/wildanniam/self-healing-tool/pull/34) is merged, the clone command selects its integration branch; `main` does not yet include automatic reporting.
+Version **0.1.0** is distributed from GitHub under MIT. It is not yet published to npm. The commands below use `main` and install a locally built package archive.
 
 ## 1. Build the package
 
 Start in an empty working directory:
 
 ```sh
-git clone --branch codex/33-playwright-reporting --single-branch https://github.com/wildanniam/self-healing-tool.git
+git clone https://github.com/wildanniam/self-healing-tool.git
 cd self-healing-tool
 npm ci
 npm pack
 cd ..
 ```
 
-`npm pack` builds the library and creates `self-healing-tool-0.0.8.tgz` in the repository. Leave that directory in place; the next step installs its archive into a separate project.
+`npm pack` builds the library and creates `self-healing-tool-0.1.0.tgz` in the repository. Leave that directory in place; the next step installs its archive into a separate project.
 
 ## 2. Create your test project
 
@@ -33,7 +33,7 @@ mkdir healing-example
 cd healing-example
 npm init -y
 npm pkg set type=module
-npm install ../self-healing-tool/self-healing-tool-0.0.8.tgz playwright@1.62.1
+npm install ../self-healing-tool/self-healing-tool-0.1.0.tgz playwright@1.62.1
 npm install --save-dev @playwright/test@1.62.1
 npx playwright install chromium
 mkdir tests
