@@ -171,3 +171,7 @@ Preserve the initial event context. Each attempt retains `inputContext`, exact s
 New regression uses exact frozen D26/D27 synthetic task/contract/oracle files. Version the changed representation; do not infer causal effect of one bundled component from aggregate model outcomes. Native and forced-selector checks distinguish admission mechanics from model choice. Fresh ledger and per-attempt actual payload retention are required before live dispatch. No private-host rerun in this increment; no new unseen holdout claim.
 
 D29 pre-freeze independent correction: same-tag structural peer families also qualify when at least two members have their own controls and at least one has its own heading. This preserves a headed peer when another loses its heading, and makes that missing peer an owner barrier. Title-only siblings and controls owned by nested semantic entities do not establish this family. No task vocabulary participates.
+
+## D30 evaluation design
+
+Use the unchanged D29 core. Scope stratification is declared after exploration and before new outcomes. Preserve 20 private and 16 synthetic conditions, add six prespecified ordinary variants, and retain all business-effect oracles. Use [the D30 protocol](../../../docs/evaluation/scoped-d30-protocol.md) for native checks, freeze, one central capped ledger, per-attempt records and diagnosis. No semantic-gate redesign, fixture answer leakage, contract relaxation or retuning during collection.

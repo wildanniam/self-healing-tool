@@ -141,3 +141,19 @@ D29 collection SHALL preserve existing tasks, fixtures, contracts and native ora
 #### Scenario: EVAL-010-S3
 - **WHEN** Observed results are compared with D27
 - **THEN** classes, repeated-run denominators, all wrong actions and unresolved failures are preserved
+
+### Requirement: EVAL-011 Scoped ordinary-change evaluation with retained limits
+
+Evaluation SHALL preserve historical outcomes, freeze criteria and new ordinary variants before AI outcomes, and distinguish scope recovery, negative/stress/prerequisite outcomes without changing runtime or truth assertions.
+
+#### Scenario: EVAL-011-S1
+- **WHEN** Scope is refined after exploratory results
+- **THEN** criteria and lineage are explicit, old cases/results remain, and ordinary paraphrase is not excluded because it failed
+
+#### Scenario: EVAL-011-S2
+- **WHEN** The D30 collection starts
+- **THEN** native/oracle, shared-core, privacy and budget checks pass with immutable source/harness/fixture/configuration evidence
+
+#### Scenario: EVAL-011-S3
+- **WHEN** Collection or diagnosis produces an unexpected outcome
+- **THEN** every planned slot and wrong effect remains, exact input/accounting is audited, and confirmed mechanisms are separated from hypotheses

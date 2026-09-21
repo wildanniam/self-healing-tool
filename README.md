@@ -1,8 +1,10 @@
 # Self-healing tool
 
+**Current checkpoint: D30 scoped evaluation complete on unchanged 0.0.8.** See [results, diagnosis and boundaries](docs/evidence/scoped-evaluation-2026-09-15.md). All 378 slots are retained; ordinary wording failures and six misleading-label wrong effects remain. The D29 paragraph below describes its earlier collection. No release or general-safety claim is made.
+
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Current result: 0.0.8 D29 evaluated; an ambiguity regression remains.** All 144 known synthetic slots completed. C correct recovery stays 15/24 while wrong effects rise 3→6. The nested-owner defect is fixed, but the increment is not an overall method improvement. See [D29 results and limitations](docs/evidence/owner-evidence-evaluation-2026-09-14.md). The following D27 numbers are historical; private Koderea was not rerun on 0.0.8.
+**Historical result: 0.0.8 D29 evaluated; an ambiguity regression remains.** All 144 known synthetic slots completed. C correct recovery stays 15/24 while wrong effects rise 3→6. The nested-owner defect is fixed, but the increment is not an overall method improvement. See [D29 results and limitations](docs/evidence/owner-evidence-evaluation-2026-09-14.md). The following D27 numbers are historical; private Koderea was not rerun on 0.0.8.
 
 **Historical checkpoint: 0.0.7 D27 regression collected and audited; follow-up correction required.** See [the complete before/after evidence](docs/evidence/candidate-recovery-evaluation-2026-09-14.md). Contract-enforced recovery increased from 15/36 to 36/36 on the known private workload, with zero wrong effects there. On the known synthetic workload, recovery fell from 18/24 to 15/24 and three wrong effects occurred. The nested-group context task is reopened; passing engineering checks does not establish general safety. Owner interpretation and public release remain pending. The working name, distribution eligibility and license remain undecided; private application source and E2E tests are not distributed here.
 
