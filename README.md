@@ -2,7 +2,9 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: initial library, reports and independent offline/live demo verified; five-case private live pilot completed; final evaluation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: private final technical evaluation completed (120 runs); version 0.0.4 reporting increment verified offline; owner interpretation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+
+See [final findings and limits](docs/evidence/final-evaluation-2026-09-09.md): full and ranker-only both 33/36 recoverable; absent-target refusal 0/12 vs 3/12. No LLM superiority or reliable unattended healing is established.
 
 ## Start here
 
@@ -38,10 +40,10 @@ A blank-key environment template and [local setup guide](docs/local-api-setup.md
 | [Audit workflow](openspec/specs/audit-workflow/spec.md) | AUD | Repository process baseline |
 | [Library integration](openspec/changes/build-self-healing-tool/specs/library-integration/spec.md) | INT | Development package verified; release pending |
 | [Runtime recovery](openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md) | HEAL | Initial offline behavior verified |
-| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Synthetic checks and private pilot audited; final study pending |
+| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Synthetic checks and private final study audited |
 | [Recovery reporting](openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md) | OBS | Offline report checks verified |
 | [Local demo](openspec/changes/build-self-healing-tool/specs/local-demo/spec.md) | DEMO | Offline/live demo verified; release pending |
-| [Evaluation protocol](openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md) | EVAL | Planned |
+| [Evaluation protocol](openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md) | EVAL | Technical collection complete; interpretation/practitioner study pending |
 
 Codex integrations are checked in under `.agents/skills/`. Use `$openspec-propose` for a new proposal, `$openspec-update-change` for a revision and `$openspec-apply-change` when starting an authorized implementation increment. Keep the foundation change open while its tasks are incomplete.
 

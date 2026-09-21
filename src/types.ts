@@ -17,7 +17,8 @@ export interface Context {
   coverage: { discovered: number; included: number; omitted: number; textTruncated: boolean; domChars: number; payloadChars: number; domLimit: number; payloadLimit: number; candidateLimit: number };
 }
 export interface Usage { inputTokens: number; outputTokens: number }
-export interface ProviderResponse { output: string; usage: Usage | null; transportAttempted?: boolean }
+export interface ProviderMetadata { returnedModel: string | null; finishReason: 'stop' | 'length' | 'content_filter' | 'tool_calls' | 'function_call' | null }
+export interface ProviderResponse { output: string; usage: Usage | null; transportAttempted?: boolean; metadata?: ProviderMetadata | null }
 export interface Provider {
   readonly kind: 'offline' | 'openai';
   readonly configuration?: Readonly<Config>;
@@ -28,6 +29,7 @@ export interface Attempt {
   id: string; number: number; selector: string | null;
   candidateAccepted: boolean; actionExecuted: boolean;
   failure: FailureKind; reason: string; usage: Usage | null;
+  providerMetadata?: ProviderMetadata | null;
   providerCalled: boolean; transportAttempted: boolean | null; durationMs: number; providerMs: number; actionMs: number;
 }
 export interface Assessment {

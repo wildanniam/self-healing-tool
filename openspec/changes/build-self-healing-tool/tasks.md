@@ -25,6 +25,10 @@
 - [x] 4.2 Engineer implements timing/usage/cost accounting. Verify original timeout and retry are included only in the labeled total interval, failed requests are retained, missing usage stays unknown and zero-success cost-per-correct-repair is undefined. [OBS-003]
 - [x] 4.3 Engineer implements default omission/redaction, optional local diagnostics and escaped human-readable reports. Verify secret/session sentinels and executable markup cannot leak through normal reports, and proposed changes are reviewable without source auto-application. [OBS-004, OBS-005]
 
+- [x] 4.4 Engineer adds allowlisted returned model/finish provenance in a separate post-collection version. Verify successful, malformed-output and unavailable/error paths without paid calls; preserve the frozen package and records. [OBS-006]
+
+- [x] 4.5 Engineer corrects duplicate wrong-effect summary counting in the separate post-collection version. Verify unique event/attempt counts and retained raw assessments, including a later correct assessment. [OBS-002]
+
 ## 5. Independent synthetic demo
 
 - [x] 5.1 Engineer builds an independent minimal profile/entity/dialog app and example tests in this repo. Verify a clean clone runs the offline demo without private repository access or model credentials. [DEMO-001, DEMO-004]
@@ -36,12 +40,12 @@
 
 - [x] 6.1 Engineer integrates the prepared package through a separate private-host issue/PR using that repo's instructions. Verify pristine profile/entity flows locally with synthetic state and existing assertions; retain private evidence there. [INT-001, INT-004, EVAL-002]
 - [x] 6.2 Engineer prepares five labeled development cases: two normal controls, profile drift, ambiguous entity action and absent target. Wildan reviews task meaning. Verify initial failure, reset, semantic oracle and side-effect checks before measuring healing. [EVAL-001, EVAL-002]
-- [ ] 6.3 Engineer runs the bounded pilot and audits instrumentation under an authorized API budget; Wildan reviews results. Verify actual payload/oracle separation, all attempt outcomes, timing and failures; deliver a pilot findings record without final-study claims. [CTX-003, OBS-003, EVAL-002, EVAL-007]
+- [x] 6.3 Engineer runs the bounded pilot and audits instrumentation under an authorized API budget; Wildan reviews results. Verify actual payload/oracle separation, all attempt outcomes, timing and failures; deliver a pilot findings record without final-study claims. [CTX-003, OBS-003, EVAL-002, EVAL-007]
 
 ## 7. Final protocol and evidence collection
 
-- [ ] 7.1 Wildan with engineering support reviews coverage and freezes the final manifest, versions, model/budget, resets, repetitions and analysis before collection. Verify the versioned protocol labels the provisional 12/4/4 classes, excludes pilot evidence from final results, justifies changes and distinguishes cases from repeated runs. [EVAL-001, EVAL-004]
-- [ ] 7.2 Engineer runs no-healing checks and paired full/ranker-only collection under the frozen protocol. Verify retained manifests/run IDs cover every planned case/method/repeat and preserve failed, missing and rerun entries. [EVAL-003, EVAL-005]
+- [x] 7.1 Wildan with engineering support reviews coverage and freezes the final manifest, versions, model/budget, resets, repetitions and analysis before collection. Verify the versioned protocol labels the provisional 12/4/4 classes, excludes pilot evidence from final results, justifies changes and distinguishes cases from repeated runs. [EVAL-001, EVAL-004]
+- [x] 7.2 Engineer runs no-healing checks and paired full/ranker-only collection under the frozen protocol. Verify retained manifests/run IDs cover every planned case/method/repeat and preserve failed, missing and rerun entries. [EVAL-003, EVAL-005]
 - [ ] 7.3 Engineer produces class-specific semantic/error/resource analysis; Wildan reviews interpretation. Verify all wrong effects and operational failures are counted, setup failures are separate, zero denominators are explicit and claims match observed scope. [OBS-002, OBS-003, EVAL-005, EVAL-007]
 - [ ] 7.4 Wildan prepares the practitioner protocol and feasibility decision with engineering support. Verify balanced distinct tasks, allowed assistants, time limits, negative-task diagnosis, source-repair plus healing-disabled verification, and treatment of participant counts; document omission and narrow claims if infeasible. [EVAL-006, EVAL-007]
 - [ ] 7.5 If the study proceeds, Wildan conducts participant sessions and engineer analyzes permitted records; otherwise record a reviewed scope update. Verify comparable endpoints, retained attempts, learning/order limitations and no fabricated participant productivity claims. [EVAL-006, EVAL-007]

@@ -1,5 +1,8 @@
 # Final evaluation review package — prepared, not frozen
 
+> Historical review package. D24 accepted this plan; collection and analysis are now complete. See [current findings](../evidence/final-evaluation-2026-09-09.md). Pending-review statements below describe the earlier checkpoint and do not override D24.
+
+
 D23 authorizes the immediate checkpoint: complete/audit the pilot, make justified engineering corrections and prepare approximately twenty executable conditions with a concrete protocol for owner review. Final collection follows that review and its own budget. See [pilot evidence](../evidence/pilot-followup-2026-09-08.md) and [decisions D20–D23](../decisions/2026-09-08-live-pilot.md).
 
 The separate private [PR #177](https://github.com/wildanniam/koderea/pull/177) (issue [#176](https://github.com/wildanniam/koderea/issues/176)) holds the case manifest, native preflight, oracle calibration and full proposed protocol. The host source, selectors, case details and raw outputs are deliberately not copied into this library. A public independent synthetic demo is not a reproduction of the private dataset.

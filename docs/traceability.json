@@ -855,6 +855,20 @@
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-D24-REVIEW-CTX-003",
+          "kind": "verification",
+          "ref": "docs/decisions/2026-09-09-final-evaluation.md",
+          "summary": "D24 accepts the concrete protocol/configuration after the audited pilot and authorizes proceeding; pilot facts remain in the dated evidence and private PR #177. No final result acceptance is inferred.",
+          "scenarios": [
+            "CTX-003-S1",
+            "CTX-003-S2"
+          ],
+          "command": "Review explicit owner D24 message against retained pilot evidence",
+          "environment": "Owner review / local audited artifacts",
+          "result": "pass",
+          "date": "2026-09-09"
         }
       ]
     },
@@ -971,13 +985,15 @@
       ],
       "scenarios": [
         "OBS-002-S1",
-        "OBS-002-S2"
+        "OBS-002-S2",
+        "OBS-002-S3"
       ],
       "owner": "engineer",
-      "status": "implemented",
+      "status": "verified",
       "tasks": [
         "4.1",
-        "7.3"
+        "7.3",
+        "4.5"
       ],
       "verification": {
         "id": "V-OBS-002",
@@ -1008,6 +1024,19 @@
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-D24-INCREMENT-OBS-002",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "Separate version 0.0.4: offline adapter/runtime/report regressions verify allowlisted provenance and distinct effect counting without rewriting frozen results.",
+          "scenarios": [
+            "OBS-002-S3"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; private 0.0.3 for final collection, separate 0.0.4 offline increment",
+          "result": "pass",
+          "date": "2026-09-09"
         }
       ]
     },
@@ -1061,6 +1090,20 @@
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-D24-REVIEW-OBS-003",
+          "kind": "verification",
+          "ref": "docs/decisions/2026-09-09-final-evaluation.md",
+          "summary": "D24 accepts the concrete protocol/configuration after the audited pilot and authorizes proceeding; pilot facts remain in the dated evidence and private PR #177. No final result acceptance is inferred.",
+          "scenarios": [
+            "OBS-003-S1",
+            "OBS-003-S2"
+          ],
+          "command": "Review explicit owner D24 message against retained pilot evidence",
+          "environment": "Owner review / local audited artifacts",
+          "result": "pass",
+          "date": "2026-09-09"
         }
       ]
     },
@@ -1416,14 +1459,15 @@
       "decisions": [
         "D08",
         "D10",
-        "D11"
+        "D11",
+        "D24"
       ],
       "scenarios": [
         "EVAL-001-S1",
         "EVAL-001-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "implemented",
+      "status": "verified",
       "tasks": [
         "6.2",
         "7.1"
@@ -1455,6 +1499,20 @@
           "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-D24-FREEZE-EVAL-001",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "Owner-approved v2 protocol and exact runner/source/config/schedule frozen before method collection; pilot overlap and prior manifest correction retained in the private freeze and review evidence.",
+          "scenarios": [
+            "EVAL-001-S1",
+            "EVAL-001-S2"
+          ],
+          "command": "npm run test:e2e:healing:final -- freeze <passed rehearsal id>; validateFreeze",
+          "environment": "Node 24.18.0 / private local Koderea / package 0.0.3",
+          "result": "pass",
+          "date": "2026-09-09"
         }
       ]
     },
@@ -1464,7 +1522,8 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D24"
       ],
       "scenarios": [
         "EVAL-002-S1",
@@ -1518,6 +1577,20 @@
           "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-D24-REVIEW-EVAL-002",
+          "kind": "verification",
+          "ref": "docs/decisions/2026-09-09-final-evaluation.md",
+          "summary": "D24 accepts the concrete protocol/configuration after the audited pilot and authorizes proceeding; pilot facts remain in the dated evidence and private PR #177. No final result acceptance is inferred.",
+          "scenarios": [
+            "EVAL-002-S1",
+            "EVAL-002-S2"
+          ],
+          "command": "Review explicit owner D24 message against retained pilot evidence",
+          "environment": "Owner review / local audited artifacts",
+          "result": "pass",
+          "date": "2026-09-09"
         }
       ]
     },
@@ -1528,14 +1601,15 @@
       "decisions": [
         "D13",
         "D15",
-        "D19"
+        "D19",
+        "D24"
       ],
       "scenarios": [
         "EVAL-003-S1",
         "EVAL-003-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "implemented",
+      "status": "verified",
       "tasks": [
         "3.4",
         "7.2",
@@ -1568,6 +1642,20 @@
           "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
           "date": "2026-09-08",
           "result": "pass"
+        },
+        {
+          "id": "EV-D24-FINAL-EVAL-003",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "120 retained slots; equal paired contexts and non-superiority results retained. Operational/missing-slot behavior verified separately by synthetic analyzer/contract regressions, not claimed as observed live failures. Private PR #179 retains raw-access limitations.",
+          "scenarios": [
+            "EVAL-003-S1",
+            "EVAL-003-S2"
+          ],
+          "command": "Private collect; analyze-self-healing-final; audit-self-healing-final; node --test final-contract and analyzer regression files",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; private 0.0.3 for final collection, separate 0.0.4 offline increment",
+          "result": "pass",
+          "date": "2026-09-09"
         }
       ]
     },
@@ -1579,14 +1667,15 @@
         "D08",
         "D10",
         "D11",
-        "D15"
+        "D15",
+        "D24"
       ],
       "scenarios": [
         "EVAL-004-S1",
         "EVAL-004-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "7.1"
       ],
@@ -1595,7 +1684,22 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Frozen final protocol"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D24-FREEZE-EVAL-004",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "Owner-approved v2 protocol and exact runner/source/config/schedule frozen before method collection; pilot overlap and prior manifest correction retained in the private freeze and review evidence.",
+          "scenarios": [
+            "EVAL-004-S1",
+            "EVAL-004-S2"
+          ],
+          "command": "npm run test:e2e:healing:final -- freeze <passed rehearsal id>; validateFreeze",
+          "environment": "Node 24.18.0 / private local Koderea / package 0.0.3",
+          "result": "pass",
+          "date": "2026-09-09"
+        }
+      ]
     },
     {
       "id": "EVAL-005",
@@ -1603,14 +1707,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D24"
       ],
       "scenarios": [
         "EVAL-005-S1",
         "EVAL-005-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "7.2",
         "7.3"
@@ -1620,7 +1725,22 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Complete outcome accounting"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D24-FINAL-EVAL-005",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "120 retained slots; equal paired contexts and non-superiority results retained. Operational/missing-slot behavior verified separately by synthetic analyzer/contract regressions, not claimed as observed live failures. Private PR #179 retains raw-access limitations.",
+          "scenarios": [
+            "EVAL-005-S1",
+            "EVAL-005-S2"
+          ],
+          "command": "Private collect; analyze-self-healing-final; audit-self-healing-final; node --test final-contract and analyzer regression files",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; private 0.0.3 for final collection, separate 0.0.4 offline increment",
+          "result": "pass",
+          "date": "2026-09-09"
+        }
+      ]
     },
     {
       "id": "EVAL-006",
@@ -1629,7 +1749,8 @@
       "decisions": [
         "D08",
         "D12",
-        "D15"
+        "D15",
+        "D24"
       ],
       "scenarios": [
         "EVAL-006-S1",
@@ -1656,14 +1777,15 @@
       "decisions": [
         "D08",
         "D14",
-        "D15"
+        "D15",
+        "D24"
       ],
       "scenarios": [
         "EVAL-007-S1",
         "EVAL-007-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "6.3",
         "7.3",
@@ -1676,7 +1798,84 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Evidence and claim boundaries"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D24-REVIEW-EVAL-007",
+          "kind": "verification",
+          "ref": "docs/decisions/2026-09-09-final-evaluation.md",
+          "summary": "D24 accepts the concrete protocol/configuration after the audited pilot and authorizes proceeding; pilot facts remain in the dated evidence and private PR #177. No final result acceptance is inferred.",
+          "scenarios": [
+            "EVAL-007-S1",
+            "EVAL-007-S2"
+          ],
+          "command": "Review explicit owner D24 message against retained pilot evidence",
+          "environment": "Owner review / local audited artifacts",
+          "result": "pass",
+          "date": "2026-09-09"
+        },
+        {
+          "id": "EV-D24-REPORT-EVAL-007",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "Scoped technical report distinguishes private final 0.0.3 measurements, offline 0.0.4 checks and pending practitioner/owner interpretation. Does not assert owner acceptance.",
+          "scenarios": [
+            "EVAL-007-S1",
+            "EVAL-007-S2"
+          ],
+          "command": "Read technical report against frozen records; owner review remains task 7.3",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; private 0.0.3 for final collection, separate 0.0.4 offline increment",
+          "result": "pass",
+          "date": "2026-09-09"
+        },
+        {
+          "id": "EV-D24-REPORT-IMPLEMENTATION",
+          "kind": "implementation",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "Written final technical findings and claim limitations; private detailed analysis is linked. Owner interpretation remains open.",
+          "scenarios": [
+            "EVAL-007-S1",
+            "EVAL-007-S2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OBS-006",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D24"
+      ],
+      "scenarios": [
+        "OBS-006-S1",
+        "OBS-006-S2"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "4.4"
+      ],
+      "verification": {
+        "id": "V-OBS-006",
+        "method": "Offline adapter/runtime/report/consumer tests",
+        "acceptance": "Allowlisted returned provenance remains separate from requested model; missing stays unknown; frozen evidence unchanged"
+      },
+      "evidence": [
+        {
+          "id": "EV-D24-INCREMENT-OBS-006",
+          "kind": "verification",
+          "ref": "docs/evidence/final-evaluation-2026-09-09.md",
+          "summary": "Separate version 0.0.4: offline adapter/runtime/report regressions verify allowlisted provenance and distinct effect counting without rewriting frozen results.",
+          "scenarios": [
+            "OBS-006-S1",
+            "OBS-006-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; private 0.0.3 for final collection, separate 0.0.4 offline increment",
+          "result": "pass",
+          "date": "2026-09-09"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -1815,6 +2014,41 @@
       "evidence": [
         "EV-LIVE-EVAL-001-CHECK",
         "EV-LIVE-EVAL-002-CHECK"
+      ]
+    },
+    {
+      "task": "6.3",
+      "evidence": [
+        "EV-D24-REVIEW-CTX-003",
+        "EV-D24-REVIEW-OBS-003",
+        "EV-D24-REVIEW-EVAL-002",
+        "EV-D24-REVIEW-EVAL-007"
+      ]
+    },
+    {
+      "task": "7.1",
+      "evidence": [
+        "EV-D24-FREEZE-EVAL-001",
+        "EV-D24-FREEZE-EVAL-004"
+      ]
+    },
+    {
+      "task": "7.2",
+      "evidence": [
+        "EV-D24-FINAL-EVAL-003",
+        "EV-D24-FINAL-EVAL-005"
+      ]
+    },
+    {
+      "task": "4.4",
+      "evidence": [
+        "EV-D24-INCREMENT-OBS-006"
+      ]
+    },
+    {
+      "task": "4.5",
+      "evidence": [
+        "EV-D24-INCREMENT-OBS-002"
       ]
     }
   ]

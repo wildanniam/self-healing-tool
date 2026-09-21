@@ -3,7 +3,7 @@ import type { Page } from 'playwright';
 import { ConfigurationError, validateConfig } from './config.js';
 import { collectContext, rankerSelection } from './context.js';
 import { cleanContextText, redact } from './privacy.js';
-import { parseSelector, ProviderError, normalizeUsage } from './provider.js';
+import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata } from './provider.js';
 import type { Action, Assessment, Config, Event, Provider, Run, Task } from './types.js';
 
 export class HealingFailure extends Error {
@@ -38,7 +38,11 @@ export function createHealingSession(page: Page, options: {
     for (const event of copy.events) {
       event.originalSelector = redact(event.originalSelector, omitted);
       event.task = { description: cleanContextText(event.task.description, omitted), ...(event.task.scope ? { scope: cleanContextText(event.task.scope, omitted) } : {}) };
-      for (const attempt of event.attempts) if (attempt.selector) attempt.selector = redact(attempt.selector, omitted);
+      for (const attempt of event.attempts) {
+        if (attempt.selector) attempt.selector = redact(attempt.selector, omitted);
+        const metadata = normalizeProviderMetadata(attempt.providerMetadata);
+        attempt.providerMetadata = metadata ? normalizeProviderMetadata({ ...metadata, returnedModel: metadata.returnedModel ? redact(metadata.returnedModel, omitted) : null }) : null;
+      }
     }
     return copy;
   }
@@ -89,7 +93,7 @@ export function createHealingSession(page: Page, options: {
         const attemptStarted = performance.now();
         const attempt: Event['attempts'][number] = { id: randomUUID(), number, selector: null, candidateAccepted: false, actionExecuted: false,
           failure: 'none', reason: '', usage: config.mode === 'ranker-only' ? { inputTokens: 0, outputTokens: 0 } : null,
-          providerCalled: false, transportAttempted: run.provider === 'openai' ? null : false, durationMs: 0, providerMs: 0, actionMs: 0 };
+          providerMetadata: null, providerCalled: false, transportAttempted: run.provider === 'openai' ? null : false, durationMs: 0, providerMs: 0, actionMs: 0 };
         event.attempts.push(attempt);
         try {
           if (config.mode === 'full') {
@@ -101,6 +105,7 @@ export function createHealingSession(page: Page, options: {
               attempt.reason = error instanceof ProviderError && /^(provider_(?:http_\d{3}|aborted|empty_response|response_limit|missing_output|transport_failure|payload_limit|budget_locked|budget_unreconciled|budget_cost_limit)|request_limit_exhausted)$/.test(error.message) ? error.message : 'provider_timeout_or_failure';
               if (error instanceof ProviderError) {
                 attempt.usage = normalizeUsage(error.usage);
+                attempt.providerMetadata = normalizeProviderMetadata(error.metadata);
                 attempt.transportAttempted = run.provider === 'openai' ? error.transportAttempted : false;
               }
               // Candidate-repair retries cannot repair transport/configuration/accounting failure.
@@ -110,6 +115,7 @@ export function createHealingSession(page: Page, options: {
             }
             finally { attempt.providerMs = performance.now() - providerStarted; }
             attempt.usage = normalizeUsage(response.usage);
+            attempt.providerMetadata = normalizeProviderMetadata(response.metadata);
             attempt.transportAttempted = run.provider === 'openai' ? response.transportAttempted ?? null : false;
             try { attempt.selector = parseSelector(response.output); }
             catch { attempt.failure = 'parse'; attempt.reason = 'unsupported_selector_output'; continue; }

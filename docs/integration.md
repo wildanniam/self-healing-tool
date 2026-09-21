@@ -86,3 +86,11 @@ The supplied live demo now requires `HEALING_LIVE_BATCH_FILE` in addition to the
 Provider, transport and budget exceptions terminate the current event as `provider-failure`, unless the total deadline expired (`time-limit`). A candidate-repair attempt cannot fix a halted ledger, unavailable API or uncertain request. Parse/selector-validation failures still use the configured remaining attempts. No default timeout, selection score or prompt changed.
 
 The deadline race may return before the adapter records its cancellation. In that case the event truthfully keeps dispatch/usage unknown; the separately retained budget ledger can establish transport dispatch during the external audit, but missing token usage stays unknown. Late provider output is never applied. Do not clear a halted ledger or interpret API failure as correct abstention.
+
+## Version 0.0.4 reporting refinement
+
+Attempt `providerMetadata` records allowlisted `returnedModel` and `finishReason` when supplied. Effective `config.model` remains the requested identifier. Missing/invalid metadata, old/custom providers and pre-response failures remain null; no snapshot is inferred from an alias. Metadata survives selector parsing failure but cannot reconstruct old 0.0.3 responses. Reports continue to omit arbitrary provider response properties.
+
+`summary.wrongEffects` now means distinct events with any wrong-effect assessment. `wrongEffectAttempts` counts distinct explicitly assessed attempts, and `wrongEffectAssessments` counts raw wrong-assessment records. The last number can be larger when event/attempt assessments describe the same action; it is not a count of separate effects. All assessment records remain intact and later correctness never erases an earlier wrong effect. Historical 0.0.3 summaries used assessment-row counts under `wrongEffects`; do not pool these fields across versions without normalization.
+
+These changes affect observability only. Frozen D24 results use private package 0.0.3 and per-slot independent correctness; 0.0.4 has offline engineering evidence, no new live effectiveness measurement.
