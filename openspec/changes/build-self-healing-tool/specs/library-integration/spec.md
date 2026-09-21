@@ -78,3 +78,20 @@ The library SHALL accept an optional bounded data-only target contract with requ
 #### Scenario: INT-006-S2
 - **WHEN** A malformed or executable contract is supplied
 - **THEN** configuration fails before candidate actions
+
+
+### Requirement: INT-007 Automatic Playwright Test lifecycle
+
+An optional Playwright Test integration SHALL create isolated healing sessions and write reports during teardown, preserve explicit audit opt-in, attach report evidence, and preserve primary test failures when diagnostics fail.
+
+#### Scenario: INT-007-S1
+- **WHEN** an installed consumer runs normal, recovered, refused, provider-failed or assertion-failed tests
+- **THEN** each completed fixture teardown writes its own report without consumer finally blocks and never treats test success as semantic proof
+
+#### Scenario: INT-007-S2
+- **WHEN** a report write or attachment fails
+- **THEN** the test's original failure remains intact and diagnostic unavailability is reported separately
+
+#### Scenario: INT-007-S3
+- **WHEN** parallel tests, retries, skipped tests or an audit-disabled consumer execute
+- **THEN** identities and evidence remain separate and unavailable captures are explicit

@@ -32,4 +32,5 @@ jobs:
       - run: npm run test:browser
       - run: npm run test:presentation
       - run: npm run test:consumer
+      - run: npm run test:lifecycle
       - run: npm run demo:offline

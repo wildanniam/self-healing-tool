@@ -6,8 +6,11 @@ import {pathToFileURL} from 'node:url';
 import {createHealingSession,serializeRequest,renderReport,reportView,writeReport,validateConfig,HealingFailure} from '../dist/index.js';
 import type {Provider} from '../dist/index.js';
 
+// These tests verify reports, not 100 ms browser scheduling; allow CI count/action round-trips.
+const reportActionTimeoutMs = 750;
+
 test('OBS-012 paired attempts, language changes, downloads, native control and mobile',async({page,browser})=>{
- const config=validateConfig({mode:'full',actionTimeoutMs:100,maxAttempts:2});let calls=0;const requests:string[]=[],outputs:string[]=[];
+ const config=validateConfig({mode:'full',actionTimeoutMs:reportActionTimeoutMs,maxAttempts:2});let calls=0;const requests:string[]=[],outputs:string[]=[];
  const provider:Provider={kind:'offline',async select(context,signal,audit){const body=serializeRequest(context,config);requests.push(body);audit?.request(body);const output=calls++===0?'malformed output':'{"selector":"#destination"}';outputs.push(output);return {output,usage:null};}};
  await page.setContent('<label>Destination <input id="destination"></label>');
  const session=createHealingSession(page,{config,provider,audit:true});
@@ -37,7 +40,7 @@ test('OBS-012 paired attempts, language changes, downloads, native control and m
 });
 
 test('OBS-012 safe defaults, missing request support, identity rejection and late omissions',async({page})=>{
- const config=validateConfig({mode:'full',actionTimeoutMs:100,maxAttempts:1});
+ const config=validateConfig({mode:'full',actionTimeoutMs:reportActionTimeoutMs,maxAttempts:1});
  await page.setContent('<label>Destination <input id="destination"></label><p>Future omission</p>');
  const provider:Provider={kind:'offline',async select(){return {output:'{"selector":"#destination"}',usage:null};}};
  const safe=createHealingSession(page,{config,provider});await safe.fill('#old','Value',{description:'Fill destination'});expect(safe.audit().entries).toEqual([]);

@@ -1,0 +1,3 @@
+import { createServer } from 'node:http';
+const html=`<!doctype html><html lang="en"><title>Local profile demo</title><body><h1>Profile</h1><form><label>Display name<input id="display-name"></label><button id="save-profile">Save profile</button></form><p id="saved" role="status"></p><script>document.querySelector('form').onsubmit=e=>{e.preventDefault();document.getElementById('saved').textContent='Saved: '+document.getElementById('display-name').value;};</script></body></html>`;
+createServer((request,response)=>{response.writeHead(200,{'content-type':'text/html; charset=utf-8'});response.end(html);}).listen(3198,'127.0.0.1',()=>console.log('Profile demo: http://127.0.0.1:3198'));

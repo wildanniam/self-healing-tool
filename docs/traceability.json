@@ -2949,6 +2949,90 @@
           "date": "2026-09-18"
         }
       ]
+    },
+    {
+      "id": "INT-007",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D36"
+      ],
+      "scenarios": [
+        "INT-007-S1",
+        "INT-007-S2",
+        "INT-007-S3"
+      ],
+      "owner": "maintainer",
+      "status": "verified",
+      "tasks": [
+        "19.1",
+        "19.3"
+      ],
+      "verification": {
+        "id": "V-INT-007",
+        "method": "Installed Playwright consumer and browser checks",
+        "acceptance": "Automatic audit report lifecycle with separate test and semantic outcomes"
+      },
+      "evidence": [
+        {
+          "id": "EV-D36-INT-007-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/playwright-report-lifecycle-2026-09-21.md",
+          "summary": "Installed fixture/reporter, failure preservation, retries, cleanup and bilingual UI verified offline.",
+          "scenarios": [
+            "INT-007-S1",
+            "INT-007-S2",
+            "INT-007-S3"
+          ],
+          "command": "npm run test:lifecycle; npm run test:unit; npm run test:browser; npm run test:consumer",
+          "environment": "macOS arm64 / Node25.8.2 / Playwright1.62.1",
+          "date": "2026-09-21",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "OBS-013",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D36"
+      ],
+      "scenarios": [
+        "OBS-013-S1",
+        "OBS-013-S2",
+        "OBS-013-S3",
+        "OBS-013-S4"
+      ],
+      "owner": "maintainer",
+      "status": "verified",
+      "tasks": [
+        "19.2",
+        "19.3"
+      ],
+      "verification": {
+        "id": "V-OBS-013",
+        "method": "Installed Playwright consumer and browser checks",
+        "acceptance": "Automatic audit report lifecycle with separate test and semantic outcomes"
+      },
+      "evidence": [
+        {
+          "id": "EV-D36-OBS-013-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/playwright-report-lifecycle-2026-09-21.md",
+          "summary": "Installed fixture/reporter, failure preservation, retries, cleanup and bilingual UI verified offline.",
+          "scenarios": [
+            "OBS-013-S1",
+            "OBS-013-S2",
+            "OBS-013-S3",
+            "OBS-013-S4"
+          ],
+          "command": "npm run test:lifecycle; npm run test:unit; npm run test:browser; npm run test:consumer",
+          "environment": "macOS arm64 / Node25.8.2 / Playwright1.62.1",
+          "date": "2026-09-21",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -3353,6 +3437,25 @@
       "task": "18.4",
       "evidence": [
         "EV-D33-EVAL-012-CONTINUATION"
+      ]
+    },
+    {
+      "task": "19.1",
+      "evidence": [
+        "EV-D36-INT-007-CHECK"
+      ]
+    },
+    {
+      "task": "19.2",
+      "evidence": [
+        "EV-D36-OBS-013-CHECK"
+      ]
+    },
+    {
+      "task": "19.3",
+      "evidence": [
+        "EV-D36-INT-007-CHECK",
+        "EV-D36-OBS-013-CHECK"
       ]
     }
   ]

@@ -152,3 +152,10 @@ Historical checkpoint: D33 live collection is interrupted after one provider tra
 Historical authorization checkpoint: D33 continuation is explicitly owner-authorized on18September2026 after the follow-up explanation. Apply `docs/evaluation/rm1-continuation-protocol.md`: retain original failure/unknown accounting, verify companion controls, complete separate pilot and main, and report historical billing limits. Tasks18.3/18.4 remain open until genuine collection and audit evidence exists.
 
 D33 continuation now completed 9 pilot + 108 main with primary and independent audits passing. Tasks18.3/18.4 are complete under the explicit amendment; historical unknown billing remains null and all failures retained. See `docs/evidence/rm1-continuation-results-2026-09-18.md`. Earlier interruption checkpoints above are historical, not current collection status.
+
+
+## 19. D36 automatic consumer reports
+
+- [x] 19.1 Implement optional Playwright fixture, teardown capture and failure-preserving attachments. [INT-007]
+- [x] 19.2 Implement suite index, retry metadata, operational summaries and bounded single local opener. [OBS-013]
+- [x] 19.3 Verify installed consumer, failures/retries/parallelism/audit-off, UI and regression checks; refresh runnable example and documentation. [INT-007, OBS-013]

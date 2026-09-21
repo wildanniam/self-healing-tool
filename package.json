@@ -25,7 +25,8 @@
     "demo:report": "node presentation/cli.mjs",
     "demo:walkthrough": "npm run build && node presentation/cli.mjs --walkthrough",
     "demo:live:compare": "npm run build && node presentation/cli.mjs --walkthrough --live",
-    "test:presentation": "npm run build && node --test presentation/*.test.mjs"
+    "test:presentation": "npm run build && node --test presentation/*.test.mjs",
+    "test:lifecycle": "npm run build && node scripts/check-playwright-consumer.mjs"
   },
   "devDependencies": {
     "@fission-ai/openspec": "1.12.0",
@@ -40,6 +41,16 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./playwright": {
+      "types": "./dist/playwright.d.ts",
+      "import": "./dist/playwright.js",
+      "default": "./dist/playwright.js"
+    },
+    "./reporter": {
+      "types": "./dist/reporter.d.ts",
+      "import": "./dist/reporter.js",
+      "default": "./dist/reporter.js"
     }
   },
   "files": [
@@ -47,9 +58,16 @@
     "README.md",
     "docs/integration.md",
     "docs/implementation/component-inventory.md",
-    "docs/implementation/thesis-method-alignment.md"
+    "docs/implementation/thesis-method-alignment.md",
+    "docs/playwright.md"
   ],
   "peerDependencies": {
-    "playwright": "1.62.1"
+    "playwright": "1.62.1",
+    "@playwright/test": "1.62.1"
+  },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    }
   }
 }
