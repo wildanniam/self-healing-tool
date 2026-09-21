@@ -159,7 +159,8 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D18"
       ],
       "scenarios": [
         "INT-003-S1",
@@ -259,7 +260,8 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D18"
       ],
       "scenarios": [
         "HEAL-002-S1",
@@ -456,7 +458,8 @@
       "decisions": [
         "D09",
         "D13",
-        "D15"
+        "D15",
+        "D18"
       ],
       "scenarios": [
         "CTX-004-S1",

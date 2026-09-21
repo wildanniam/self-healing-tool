@@ -2,7 +2,8 @@ schema: spec-driven
 context: |
   Write repository artifacts in English; explain decisions to Wildan in Indonesian.
   This is a specification-first TypeScript/Playwright library project. Runtime code is not yet extracted.
-  Read docs/decisions/2026-09-07-foundation.md and docs/audit-workflow.md.
+  Read docs/decisions/2026-09-07-foundation.md, docs/decisions/2026-09-08-local-api.md, and docs/audit-workflow.md.
+  D18 selects the initial gpt-4o-mini profile (output 500, temperature 0, healing limit 3, DOM chars 8000); final budget/protocol remain open.
   Public artifacts are a reusable library and independent synthetic localhost demo.
   The real evaluation application's source and E2E suite remain in a separate private repository.
   Scope: explicit click/fill wrappers, bounded locator recovery, inspectable context and reports.

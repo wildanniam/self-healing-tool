@@ -69,7 +69,7 @@ Record meaningful decisions and progress in Atlas Vault proactively. The reposit
 | Decision | Owner | Evidence prepared first |
 |---|---|---|
 | Distribution eligibility and eventual license | Wildan | Concrete component and package inventory; uncertain components held out |
-| Model identifier, retry/time/context limits, API budget | Wildan with engineering recommendation | Pilot configuration and cost estimate before paid final runs |
+| Initial API settings selected in D18; final model/version, time/payload limits and API budget remain open | Wildan with engineering recommendation | See [the dated refinement](2026-09-08-local-api.md); pilot configuration and cost estimate before paid final runs |
 | Final case coverage and protocol | Wildan / academic supervisor | Pilot findings, manifest, oracle checks and analysis rules |
 | Practitioner availability, permitted assistants and protocol | Wildan | Comparable tasks, instructions, timing rules and data handling plan |
 | Public release / paper submission | Wildan / coauthors | Reviewable package, evidence, limitations, and final text |

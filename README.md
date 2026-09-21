@@ -27,6 +27,10 @@ npm run check
 
 The checks validate OpenSpec structure and traceability, not recovery effectiveness. There is no runnable healing/demo command yet and no model credential is required for this setup.
 
+## Local API configuration
+
+A blank-key environment template and [local setup guide](docs/local-api-setup.md) now document the owner-selected reference settings. Fill `OPENAI_API_KEY` only in your ignored local `.env`; preserve any existing file. Runtime loading and API calls are not implemented yet.
+
 ## Specification map
 
 | Capability | Requirement prefix | Status |

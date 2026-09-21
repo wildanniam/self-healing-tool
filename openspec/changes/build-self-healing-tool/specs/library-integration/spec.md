@@ -32,7 +32,7 @@ Users SHALL opt into recovery for supported click and fill actions while retaini
 
 ### Requirement: INT-003 Explicit validated configuration
 
-The library SHALL validate the configured provider, model, attempt limits, and context limits before a paid invocation, reject unsupported values, and report the effective configuration without secrets.
+The library SHALL validate the configured provider, model, attempt limits, and context limits before a paid invocation, reject unsupported values, and report the effective configuration without secrets. The initial development defaults follow decision D18; preparing an environment template does not establish this runtime behavior.
 
 #### Scenario: INT-003-S1
 - **WHEN** An unknown model or invalid attempt limit is configured

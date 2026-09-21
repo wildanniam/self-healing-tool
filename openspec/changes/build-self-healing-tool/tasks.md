@@ -6,7 +6,7 @@
 
 ## 2. Recovery contract
 
-- [ ] 2.1 Engineer implements validated provider/model/attempt/time/context configuration with no silent model fallback. Verify invalid configurations fail before provider invocation and supported values are reported without secrets. [INT-003]
+- [ ] 2.1 Engineer implements validated provider/model/attempt/time/context configuration starting from the D18 reference profile, with no silent model fallback. Verify invalid configurations fail before provider invocation and supported values are reported without secrets. [INT-003]
 - [ ] 2.2 Engineer implements missing-locator classification. Verify zero-match drift enters recovery and malformed, multiple-match, page-closed and present-but-disabled errors retain their original failures without model calls. [HEAL-001]
 - [ ] 2.3 Engineer implements the bounded attempt/time state machine. Verify exhausted budgets stop, rejected attempts remain recorded, and original fill values/assertions are preserved. [HEAL-002, HEAL-003]
 - [ ] 2.4 Engineer implements constrained output parsing and pre-action validation. Verify malformed/code outputs, non-unique selectors and incompatible fields are rejected without executing generated code. [HEAL-005]
