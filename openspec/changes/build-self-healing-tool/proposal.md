@@ -103,3 +103,8 @@ Implement the owner-authorized controlled ranking comparison in [D33](../../../d
 ## D33 interrupted-pilot continuation
 
 The owner explicitly authorized analysis and execution of the explained continuation on18September2026. Follow the [continuation amendment](../../../docs/evaluation/rm1-continuation-protocol.md), preserve the original50frozen files and halted ledger, retain the historical unknown charge and diagnostic in joint351-request/US$3 accounting, then complete the separately identified pilot and main. This is declared continuation, not claimed billing reconciliation or a new method.
+
+
+## D36 Playwright consumer reporting (issue #33)
+
+Add optional `self-healing-tool/playwright` fixture and `self-healing-tool/reporter` exports. The fixture writes local action reports during teardown, with explicit audit opt-in and attachments; write/attachment failures are diagnostics and never replace the primary test error. The reporter collects final Playwright statuses and per-project/retry identities into one standalone suite index. Preserve immutable per-run directories; optional browser opening occurs once after the run and is disabled in CI. Index status is authoritative after all teardown; action execution and independent correctness remain separate. An action summary leads with original completion, executed recovery, stopped and failed counts. Ship a runnable local consumer example and current full-mode instructions. No recovery algorithm, historical evidence or paid collection changes.

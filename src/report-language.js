@@ -361,3 +361,7 @@ export function languageClient(dictionary, initial = 'en') {
   update();
   return { text, html, bindStatic, subscribe(callback) { listeners.push(callback); }, get current() { return language; } };
 }
+
+Object.assign(UI_TEXT, {"Aksi asli selesai":"Original actions completed","Aksi pemulihan selesai":"Recovery actions completed","Berhenti":"Stopped","Aksi gagal":"Failed actions","Penilaian ketepatan":"Correctness assessment","Aksi selesai bukan bukti ketepatan.":"Action completion is not proof of correctness."});
+
+Object.assign(UI_TEXT,{"Hasil tes":"Test results","Status tes terpisah dari ketepatan aksi.":"Test status is separate from action correctness."});

@@ -84,3 +84,8 @@ Record meaningful decisions and progress in Atlas Vault proactively. The reposit
 ### D35 — Packaged bilingual action inspection (20 September 2026)
 
 The owner authorizes issue #29: implement shared per-action evidence inspection for library and research reports, English/Indonesian UI and concise layout. Capture actual request/returned output prospectively via an explicit local audit option. Preserve ordinary safe projections and missing historical evidence. Share presentation components in the package; study aggregates remain separate. No recovery-method, research-data, manuscript, paid-run, merge or release change. Paper will describe final capabilities only, without migration history. This supersedes D34’s prohibition on optional rich library reports, not the safe default or private-evidence boundaries.
+
+
+### D36 — Automatic Playwright consumer reports (21 September 2026)
+
+Owner-authorized lifecycle/report improvements in issue33. See [scope and verification contract](2026-09-21-consumer-reporting.md). Optional fixture/reporter, explicit audit setting, separate test and action outcomes, bounded local browser opening, no method or study changes.

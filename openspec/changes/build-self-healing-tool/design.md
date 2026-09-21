@@ -208,3 +208,8 @@ Follow the [RM1 protocol](../../../docs/evaluation/rm1-dom-ranking-protocol.md).
 ## D33 continuation design
 
 Companion files under `evaluation/rm1/continuation/` preserve the original experiment sources and output. Hash-anchor old trial/ledger/diagnostic evidence, add explicit verified Vanie routing without changing serialized prompts, and freeze the companion implementation/amendment. Reserve both prior allowances and enforce349new requests / USD2.99816535 (pilot25/main324). The first pilot retry has a unique trial ID and original-payload parity; the other8 and main108 were not started previously. Retain actualTotalCostUsd:null for the historical unknown; any new unknown halts. Pilot acceptance is integrity, not effectiveness. See [amendment](../../../docs/evaluation/rm1-continuation-protocol.md).
+
+
+## D36 Playwright consumer reporting (issue #33)
+
+Add optional `self-healing-tool/playwright` fixture and `self-healing-tool/reporter` exports. The fixture writes local action reports during teardown, with explicit audit opt-in and attachments; write/attachment failures are diagnostics and never replace the primary test error. The reporter collects final Playwright statuses and per-project/retry identities into one standalone suite index. Preserve immutable per-run directories; optional browser opening occurs once after the run and is disabled in CI. Index status is authoritative after all teardown; action execution and independent correctness remain separate. An action summary leads with original completion, executed recovery, stopped and failed counts. Ship a runnable local consumer example and current full-mode instructions. No recovery algorithm, historical evidence or paid collection changes.

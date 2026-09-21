@@ -1,0 +1,3 @@
+# D36 — Automatic Playwright consumer reports
+
+The owner authorized the complete audited integration/report improvements on21September2026, with verification before completion. Issue33. Implement tasks19.1–19.3 under build-self-healing-tool. Session action records remain independent of Playwright test status. The fixture and reporter are optional subpath imports; plain Playwright consumers remain supported. Audit is opt-in through one project option. Test/report failures stay separate. Report index generation and local auto-open happen after the suite, with CI suppression. Keep current method, closed studies and manuscript unchanged.

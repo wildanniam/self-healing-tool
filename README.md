@@ -76,37 +76,30 @@ npm install --save-dev @playwright/test@1.62.1
 npx playwright install chromium
 ```
 
-The example below uses **ranker-only mode** so you can try the integration without an AI key. Adapt the app URL, selectors and assertion to your application, save it as a Playwright test, and run it with `npx playwright test`.
+For **automatic reports**, configure the fixture and reporter once using the [Playwright quick start](docs/playwright.md). Tests then use the library's `test` import:
 
 ```ts
-import { test, expect } from '@playwright/test';
-import { createHealingSession, writeReport } from 'self-healing-tool';
+import { test, expect } from 'self-healing-tool/playwright';
 
-test('update display name', async ({ page }) => {
-  await page.goto('http://127.0.0.1:3100'); // Start your own app first.
-  const healing = createHealingSession(page, { audit: true });
-
-  try {
-    await healing.fill('#previous-display-name', 'Synthetic User', {
-      description: 'Fill display name',
-    });
-    await healing.click('button[type="submit"]', {
-      description: 'Save profile',
-    });
-    await expect(page.getByLabel('Display name')).toHaveValue('Synthetic User');
-  } finally {
-    const directory = await writeReport(healing.snapshot(), {
-      directory: './output/healing',
-      audit: healing.audit(),
-    });
-    console.log(`Open ${directory}/report.html`);
-  }
+test('update profile', async ({ page, healing }) => {
+  await page.goto('http://127.0.0.1:3100'); // Start your app first.
+  await healing.fill('#previous-display-name', 'Taylor', {
+    description: 'Fill display name',
+  });
+  await healing.click('#save-profile', { description: 'Save profile' });
+  await expect(page.getByRole('status')).toHaveText('Saved: Taylor');
 });
 ```
 
-With this setup, the report is written after the actions even when an action or assertion fails. Open the generated HTML in a browser. This library report is separate from Playwright's built-in report; a passing assertion is not automatically recorded as a semantic assessment in the library.
+The fixture saves each action report after the test. The reporter builds one index with test names, projects, statuses and retries, and opens it once locally; CI keeps file output only. No per-test `finally` is needed. Audit capture is configured once with `healingOptions: { audit: true }`. Test status stays separate from independently assessed action correctness.
 
-For **LLM-assisted recovery**, explicitly configure full mode and a provider with a request cap. See [provider configuration](docs/integration.md#configuration-and-provider) and [local API setup](docs/local-api-setup.md). The default session does not call an LLM.
+To try the **complete local example** without your own app or an API key:
+
+```sh
+npx playwright test --config examples/playwright/playwright.config.ts
+```
+
+It starts a synthetic local app and uses ranker-only recovery. The [same guide](docs/playwright.md#4-enable-llm-assisted-recovery) explains full-mode provider setup, explicit request limits and how to run the example with a real model. The [core API](docs/integration.md) remains available for other runners.
 
 ## Inspect the report
 
@@ -127,6 +120,7 @@ See [audit setup and capture limits](docs/integration.md#local-action-audit-repo
 
 | I want to… | Read |
 | --- | --- |
+| Configure automatic Playwright reports | [Playwright quick start](docs/playwright.md) |
 | Integrate the library and configure recovery | [Integration guide](docs/integration.md) |
 | Configure a live provider | [Local API setup](docs/local-api-setup.md) |
 | Explore results or demonstrate recorded recovery | [Presentation guide](docs/presentation.md) |

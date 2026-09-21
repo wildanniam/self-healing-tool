@@ -202,3 +202,24 @@ The library SHALL provide the same per-action inspector as the research report, 
 #### Scenario: OBS-012-S4
 - **WHEN** an installed package or historical presentation renders reports
 - **THEN** the shared inspector works offline on desktop/mobile and with keyboard input, preserves historical results and labels unavailable, unassessed, original-success and replay states truthfully
+
+
+### Requirement: OBS-013 Suite navigation and separate test outcomes
+
+The packaged reporter SHALL provide one index of final test-attempt status and linked action reports, preserving separate execution and semantic assessments, safe metadata, bilingual UI and optional single local browser opening.
+
+#### Scenario: OBS-013-S1
+- **WHEN** a suite completes including retries and missing reports
+- **THEN** the index identifies project, test, attempt and final test status, links available reports and labels missing diagnostics without inventing results
+
+#### Scenario: OBS-013-S2
+- **WHEN** an action finishes without an independent assessment
+- **THEN** execution completion is visible without counting it as a correct repair
+
+#### Scenario: OBS-013-S3
+- **WHEN** automatic opening is enabled locally or the suite runs in CI
+- **THEN** the opener is attempted at most once locally, never in CI, and opener failures do not change test results
+
+#### Scenario: OBS-013-S4
+- **WHEN** a user opens the suite in English or Indonesian on desktop or mobile
+- **THEN** test statuses and report navigation remain readable, source strings are escaped and the original evidence remains unchanged

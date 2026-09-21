@@ -1,5 +1,7 @@
 # Local OpenAI setup
 
+For current consumer setup, use the [Playwright full-mode guide](playwright.md#4-enable-llm-assisted-recovery) or [core configuration](integration.md#configuration-and-provider). The dated development notes below preserve the original setup decision; their earlier “not yet run” statements are historical.
+
 The owner selected the reference prototype's non-secret configuration on 2026-09-08. [Decision D18](decisions/2026-09-08-local-api.md) records the scope. These settings now drive the explicit runtime configuration and provider adapter. Offline verification and a synthetic demo are available; no live request has been made for this increment.
 
 ## Configure locally
