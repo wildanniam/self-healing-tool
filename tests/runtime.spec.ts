@@ -173,7 +173,7 @@ test('OBS default reports omit sensitive context; diagnostic capture is explicit
   const html = renderReport(session.snapshot());
   for (const secret of ['PRIVATE_FIELD', 'PRIVATE_SESSION', 'CUSTOM_CREDENTIAL', 'sk-example-secret']) expect(html).not.toContain(secret);
   expect(html).not.toContain('<script>alert(1)</script>');
-  expect(html).toContain('&lt;script&gt;');
+  expect(html).toContain('\\u003cscript>');
   expect(session.diagnostics()).toEqual([]);
   await session.captureDiagnostics(event.id);
   expect(session.diagnostics()[0]!.rawDom).toContain('PRIVATE_SESSION');
@@ -256,9 +256,13 @@ test('HEAL-006 terminal provider failures stop after one invocation with truthfu
     const event = session.snapshot().events[0]!;
     expect(calls).toBe(1); expect(event.attempts).toHaveLength(1);
     expect(event.stopReason).toBe('provider-failure'); expect(event.failure).toBe('provider');
-    expect(renderReport(session.snapshot())).toContain('<code>No parsed locator recorded</code>');
-    expect(renderReport(session.snapshot())).not.toContain('<code>No candidate selected</code>');
-    expect(renderReport(session.snapshot())).not.toContain('<code>abstained</code>');
+    const reportPage=await page.context().newPage();
+    await reportPage.setContent(renderReport(session.snapshot()));
+    await reportPage.getByRole('button',{name:'Inspect action'}).click();
+    await reportPage.locator('#stage-ai').click();
+    await expect(reportPage.locator('.paired-block').last()).toContainText('Not recorded');
+    await expect(reportPage.locator('.paired-block').last()).not.toContainText('null — no locator selected');
+    await reportPage.close();
     expect(event.attempts[0]).toMatchObject({reason:item.reason,transportAttempted:item.dispatched,usage:item.usage,actionExecuted:false});
     await expect(page.locator('#display')).toHaveValue('');
   }

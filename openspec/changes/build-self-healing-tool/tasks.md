@@ -127,3 +127,11 @@ D32 inspector verification is complete; see `docs/evidence/inspectable-report-20
 - [x] 16.3 Verify archive parity, missing/replay/control/unassessed states, escaping, attempt pairing, keyboard/mobile/desktop and document evidence and Atlas checkpoint. [OBS-011]
 
 D34 verification is complete; see `docs/evidence/report-simplification-2026-09-18.md`. Source data and recovery behavior are unchanged.
+
+## 17. D35 packaged bilingual action audit
+
+- [x] 17.1 Implement opt-in bounded actual request/output capture, safe export boundaries and omission handling. [OBS-012]
+- [x] 17.2 Package shared per-action inspector and EN/ID UI with consumer and research navigation. [OBS-012]
+- [x] 17.3 Verify capture parity/privacy, installed consumer, preserved archives and keyboard/desktop/mobile; document evidence and Atlas checkpoint. [OBS-012]
+
+D35 report engineering verification is complete; see `docs/evidence/bilingual-library-report-2026-09-20.md`. Paper edits and publication are separate; historical data and research findings remain unchanged.

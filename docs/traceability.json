@@ -2777,6 +2777,50 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "OBS-012",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D35"
+      ],
+      "scenarios": [
+        "OBS-012-S1",
+        "OBS-012-S2",
+        "OBS-012-S3",
+        "OBS-012-S4"
+      ],
+      "owner": "maintainer",
+      "status": "verified",
+      "tasks": [
+        "17.1",
+        "17.2",
+        "17.3"
+      ],
+      "verification": {
+        "id": "V-OBS-012",
+        "method": "Offline capture, report, browser and packaged-consumer regression",
+        "acceptance": "Bilingual packaged audit with authentic paired evidence and safe defaults"
+      },
+      "evidence": [
+        {
+          "id": "EV-D35-OBS-012-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/bilingual-library-report-2026-09-20.md",
+          "summary": "Bounded authentic capture, omissions, shared bilingual inspector and packaged-consumer checks; historical snapshot unchanged. No paid inference or new research collection.",
+          "scenarios": [
+            "OBS-012-S1",
+            "OBS-012-S2",
+            "OBS-012-S3",
+            "OBS-012-S4"
+          ],
+          "command": "npm run typecheck && npm run test:unit && npm run test:browser && npm run test:presentation && npm run test:consumer && npm run check && npm run test:audit",
+          "environment": "macOS arm64; Node 25.8.2; Playwright 1.62.1 / Chromium",
+          "result": "pass",
+          "date": "2026-09-20"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -3139,6 +3183,24 @@
       "task": "16.3",
       "evidence": [
         "EV-D34-OBS-011-CHECK"
+      ]
+    },
+    {
+      "task": "17.1",
+      "evidence": [
+        "EV-D35-OBS-012-CHECK"
+      ]
+    },
+    {
+      "task": "17.2",
+      "evidence": [
+        "EV-D35-OBS-012-CHECK"
+      ]
+    },
+    {
+      "task": "17.3",
+      "evidence": [
+        "EV-D35-OBS-012-CHECK"
       ]
     }
   ]

@@ -1,3 +1,4 @@
+import { createAuditCapture } from './audit-capture.js';
 import { randomUUID, createHash } from 'node:crypto';
 import type { Page, ElementHandle } from 'playwright';
 import { ConfigurationError, validateConfig } from './config.js';
@@ -21,8 +22,9 @@ async function within<T>(operation: (signal: AbortSignal) => Promise<T>, ms: num
   finally { clearTimeout(timer!); controller.abort(); }
 }
 export function createHealingSession(page: Page, options: {
-  config?: Partial<Config>; provider?: Provider; repeatOf?: string; omitValues?: readonly string[]; targetSpec?: TargetSpecOptions;
+  audit?: boolean; config?: Partial<Config>; provider?: Provider; repeatOf?: string; omitValues?: readonly string[]; targetSpec?: TargetSpecOptions;
 } = {}) {
+  if (options.audit !== undefined && typeof options.audit !== 'boolean') throw new ConfigurationError('audit');
   const config = validateConfig(options.config);
   const targetSpec = options.targetSpec === undefined ? undefined : validateTargetSpecOptions(options.targetSpec);
   if (config.mode === 'full' && !options.provider) throw new ConfigurationError('full mode requires an explicit provider');
@@ -35,6 +37,7 @@ export function createHealingSession(page: Page, options: {
   const omitted = [...(options.omitValues ?? [])];
   const run: Run = { schemaVersion: 1, id: randomUUID(), repeatOf: options.repeatOf ?? null, createdAt: new Date().toISOString(), config,
     provider: config.mode === 'full' ? options.provider!.kind : 'none', events: [], assessments: [] };
+  const auditCapture = options.audit === true ? createAuditCapture(run.id) : null;
   const diagnostics: { eventId: string; rawDom: string }[] = [];
   let active = false;
   function snapshot(): Run {
@@ -178,7 +181,11 @@ export function createHealingSession(page: Page, options: {
             }
             attempt.providerCalled = true; const providerStarted = performance.now();
             let response;
-            try { response = await within(signal => options.provider!.select(input, signal), Math.min(config.providerTimeoutMs, remaining())); }
+            const capture = auditCapture?.attempt(event.id, attempt.id);
+            try {
+              response = await within(signal => options.provider!.select(input, signal, capture?.sink), Math.min(config.providerTimeoutMs, remaining()));
+              capture?.response(response.output);
+            }
             catch (error) {
               attempt.failure = 'provider';
               attempt.reason = error instanceof ProviderError && /^(provider_(?:http_\d{3}|aborted|empty_response|response_limit|missing_output|transport_failure|payload_limit|budget_locked|budget_unreconciled|budget_cost_limit)|request_limit_exhausted)$/.test(error.message) ? error.message : 'provider_timeout_or_failure';
@@ -192,7 +199,7 @@ export function createHealingSession(page: Page, options: {
               event.stopReason = 'provider-failure';
               break;
             }
-            finally { attempt.providerMs = performance.now() - providerStarted; }
+            finally { capture?.close(); attempt.providerMs = performance.now() - providerStarted; }
             attempt.usage = normalizeUsage(response.usage);
             attempt.providerMetadata = normalizeProviderMetadata(response.metadata);
             attempt.transportAttempted = run.provider === 'openai' ? response.transportAttempted ?? null : false;
@@ -328,6 +335,8 @@ export function createHealingSession(page: Page, options: {
     async click(selector: string, task: Task): Promise<Event> { const event = await perform('click', selector, undefined, task); return snapshot().events.find(e => e.id === event.id)!; },
     async fill(selector: string, value: string, task: Task): Promise<Event> { const event = await perform('fill', selector, value, task); return snapshot().events.find(e => e.id === event.id)!; },
     snapshot,
+    /** Explicit local diagnostics; omitted from ordinary snapshots and summary exports. */
+    audit() { return auditCapture?.snapshot(omitted) ?? { schemaVersion: 1 as const, runId: run.id, entries: [] }; },
     /** Independent assessment is append-only and never feeds candidate selection. */
     assess(input: Assessment): void {
       if (active) throw new Error('Assess only after the action has completed');

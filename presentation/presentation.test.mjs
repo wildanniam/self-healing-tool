@@ -70,7 +70,7 @@ test('offline report renders, filters, opens detail, downloads and escapes hosti
     const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];
     page.on('pageerror',e=>errors.push(e.message));
     await page.route('http**://**/*',route=>route.abort());
-    await page.goto(pathToFileURL(file).href);
+    await page.goto(pathToFileURL(file).href);assert.equal(await page.locator('html').getAttribute('lang'),'en');await page.locator('#report-language').selectOption('id');
     assert.equal(await page.locator('#stats strong').first().textContent(),'198');
     assert.equal(await page.locator('#case-rows tr').count(),12);await page.locator('#next').click();assert.equal(await page.locator('#case-rows tr').count(),10);await page.locator('#previous').click();
     await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));assert.equal(await page.locator('#case-rows tr').count(),22);

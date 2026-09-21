@@ -64,7 +64,7 @@ test('inspector explains controls, B context, C decisions and real input with ac
   await writeFile(file,renderReport(data));
   const browser=await chromium.launch();try{
     const page=await browser.newPage({viewport:{width:1440,height:1050}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
-    await page.route('http**://**/*',r=>r.abort());await page.goto(pathToFileURL(file).href);
+    await page.route('http**://**/*',r=>r.abort());await page.goto(pathToFileURL(file).href);assert.equal(await page.locator('html').getAttribute('lang'),'en');await page.locator('#report-language').selectOption('id');
     await page.locator('#search').fill('h1-01');await page.getByRole('button',{name:/ C ulangan 1:/}).click();
     assert.match(await page.locator('.run-verdict').innerText(),/Tidak ada DOM recovery/);
     await page.locator('#stage-ai').click();assert.match(await page.locator('.stage-panel').innerText(),/Tahap ini dilewati/);
@@ -99,7 +99,7 @@ test('multiple attempts stay separate and changing an attempt selects its own in
   row.audit.attempts.push(a);
   const dir=await mkdtemp(join(tmpdir(),'attempt-browser-')),file=join(dir,'report.html');await writeFile(file,renderReport(data));
   const browser=await chromium.launch();try{
-    const page=await browser.newPage();await page.goto(pathToFileURL(file).href);
+    const page=await browser.newPage();await page.goto(pathToFileURL(file).href);assert.equal(await page.locator('html').getAttribute('lang'),'en');await page.locator('#report-language').selectOption('id');
     await page.locator('#search').fill('h1-02');await page.getByRole('button',{name:/ C ulangan 1:/}).click();await page.locator('#stage-ai').click();
     assert.doesNotMatch(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_ONLY/);
     await page.locator('#audit-attempt').selectOption('2');
@@ -109,4 +109,21 @@ test('multiple attempts stay separate and changing an attempt selects its own in
     assert.match(await page.locator('.stage-panel').innerText(),/ambiguous/);
     await page.locator('#audit-repeat').selectOption('2');assert.equal(await page.locator('#audit-attempt option').count(),1);assert.doesNotMatch(await page.locator('.stage-panel').innerText(),/SECOND_ATTEMPT_RESPONSE/);
   }finally{await browser.close();}
+});
+
+test('OBS-012 English/Indonesian share exact request evidence and preserve selection and filters',async()=>{
+ const data=structuredClone(saved),before=JSON.stringify(data);
+ const dir=await mkdtemp(join(tmpdir(),'bilingual-report-')),file=join(dir,'report.html');await writeFile(file,renderReport(data));assert.equal(JSON.stringify(data),before);
+ const browser=await chromium.launch();try{
+ const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(pathToFileURL(file).href);
+ await page.locator('#search').fill('h1-02');await page.getByRole('button',{name:/ C repeat 2:/}).click();await page.locator('#stage-ai').click();
+ const original=data.rows.find(r=>r.caseId==='h1-02'&&r.arm==='C'&&r.repeat===2).audit.attempts[0].request.body;
+ await page.locator('.paired-block').first().locator('details').nth(1).locator('summary').click();
+ const beforeText=await page.locator('.paired-block').first().locator('pre').nth(1).textContent();
+ await page.locator('#report-language').selectOption('id');assert.equal(await page.locator('#audit-repeat').inputValue(),'2');assert.equal(await page.locator('#stage-title').innerText(),'Input dan jawaban AI');assert.equal(await page.locator('.paired-block').first().locator('pre').nth(1).textContent(),beforeText);assert.equal(await page.locator('.paired-block').first().locator('details').nth(1).getAttribute('open'),'');
+ await page.locator('#report-language').selectOption('en');assert.equal(await page.locator('#stage-title').innerText(),'AI input and output');
+ const next=page.waitForEvent('download');await page.locator('#audit-request-download').click();assert.equal(await readFile(await(await next).path(),'utf8'),original);
+ await page.keyboard.press('Escape');assert.equal(await page.locator('#search').inputValue(),'h1-02');assert.equal(await page.locator('#stats strong').first().innerText(),'198');assert.deepEqual(errors,[]);
+ await page.screenshot({path:'output/d35-study-desktop.png',fullPage:true});
+ }finally{await browser.close();}
 });

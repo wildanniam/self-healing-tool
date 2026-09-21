@@ -63,6 +63,38 @@ Reports use unique run directories and refuse overwrite; `repeatOf` retains reru
 
 Time fields distinguish original action, internal processing and retry action; setup and human maintenance time belong to the evaluation harness. Provider invocations and transport attempts are separate. Usage is unknown when unavailable; failed requests with known usage remain counted. A caller-supplied, model-matched versioned price assumption converts observed tokens to cost. Unknown usage is not zero; cost per correct repair is undefined when there are no independently assessed clean repairs. Offline provider stubs/ranking are mechanism checks, not empirical LLM evidence.
 
+## Local action audit reports
+
+Library and research reports share the same action inspector: DOM context and retained candidate order, paired provider input/output, locator and optional requirement checks, and independently assessed action outcomes. Library navigation selects actions and attempts; research navigation additionally selects study/configuration/repeat. English is the default, with a Bahasa Indonesia selector. Changing UI language preserves the selected action/attempt and original evidence text.
+
+Enable recording **before** running actions, then supply the local audit explicitly:
+
+```ts
+const healing = createHealingSession(page, {
+  config, provider, audit: true,
+  // config.mode must be 'full' to invoke a provider.
+});
+try {
+  await healing.fill('#old-destination', 'London', {
+    description: 'Fill the shipment destination',
+  });
+  // Your own assertions/assessments establish correctness.
+} finally {
+  const directory = await writeReport(healing.snapshot(), {
+    directory: './output/healing',
+    audit: healing.audit(),
+    language: 'en', // optional; the offline HTML also has a language selector
+  });
+  console.log(directory); // open report.html in a browser
+}
+```
+
+`audit: true` observes the actual body supplied by the built-in OpenAI adapter (including the budgeted adapter) and the returned output text. Each record is associated with one event and attempt. An original successful action has no provider evidence. Failed/unsupported/late captures remain missing; an invalid model response remains available for inspection. No new request is made when viewing a report. Headers, credentials and complete provider response envelopes are not captured. Custom providers may implement the optional third `select(context, signal, audit)` argument and call `audit?.request(actualBody)` when dispatching. Without that hook, their request body remains unavailable; the library does not reconstruct it from context.
+
+Capture is bounded to 128,000 characters per request/output and 4,000,000 retained characters per session. Oversized or unsupported request bodies are withheld, not silently truncated into an “exact” record. Fill values and `omitValues` are applied again when reading `healing.audit()`, including values learned from later actions; redacted copies retain the original fingerprint and are labeled as altered. Raw DOM before cleansing and individual ranking contributions are not automatically captured. Candidate fields and final scores are available from the retained contexts. Existing `captureDiagnostics()` remains a separate, explicitly timed raw-page capture.
+
+`report.json` and **Download summary JSON** always use the safe whitelist. Passing `audit` creates a detailed local `report.html` and `SENSITIVE-local-audit.json`; these can contain application context and should be reviewed before sharing. Files use owner-only permissions and a unique non-overwriting directory. `renderReport(run, price?, {audit, language})` produces the same standalone HTML in memory. Without supplied audit, the inspector still shows recorded actions/checks/outcomes and explicitly unavailable detailed payloads. This is the library's report, not Playwright's built-in test report.
+
 ## Independent demo
 
 `npm run demo:offline` launches its own ephemeral loopback server/browser, runs synthetic controls and repairs, writes an HTML/JSON report, and closes its services. It uses no key or private repository. `npm run demo:live` explicitly loads the local `.env` and requires `HEALING_LIVE_MAX_REQUESTS` (1–9) in addition to a key. A live run is an owner-authorized development demonstration, not final study data. Configure its budget before executing it.

@@ -1,0 +1,50 @@
+import {test,expect} from '@playwright/test';
+import {mkdtemp,readFile,stat} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createHealingSession,serializeRequest,renderReport,reportView,writeReport,validateConfig,HealingFailure} from '../dist/index.js';
+import type {Provider} from '../dist/index.js';
+
+test('OBS-012 paired attempts, language changes, downloads, native control and mobile',async({page,browser})=>{
+ const config=validateConfig({mode:'full',actionTimeoutMs:100,maxAttempts:2});let calls=0;const requests:string[]=[],outputs:string[]=[];
+ const provider:Provider={kind:'offline',async select(context,signal,audit){const body=serializeRequest(context,config);requests.push(body);audit?.request(body);const output=calls++===0?'malformed output':'{"selector":"#destination"}';outputs.push(output);return {output,usage:null};}};
+ await page.setContent('<label>Destination <input id="destination"></label>');
+ const session=createHealingSession(page,{config,provider,audit:true});
+ await session.fill('#old','London',{description:'Fill destination'});await session.fill('#destination','Paris',{description:'Native action'});
+ const run=session.snapshot(),audit=session.audit();expect(audit.entries).toHaveLength(2);expect(JSON.stringify(reportView(run))).not.toContain('malformed output');
+ const directory=await writeReport(run,{directory:await mkdtemp(join(tmpdir(),'audit-report-')),audit});
+ expect((await stat(join(directory,'report.html'))).mode&0o777).toBe(0o600);
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(join(directory,'report.html')).href);await expect(page.locator('html')).toHaveAttribute('lang','en');
+ await page.getByRole('button',{name:'Inspect action'}).first().click();await expect(page.locator('.method-switch')).toBeHidden();await expect(page.locator('#audit-repeat')).toBeHidden();
+ await page.locator('#stage-ai').click();await expect(page.locator('.paired-block').last()).toContainText(outputs[0]!);
+ await expect(page.locator('.paired-block').last()).not.toContainText('null — no locator selected');
+ await page.locator('#audit-attempt').selectOption('2');await expect(page.locator('.paired-block').last()).toContainText(outputs[1]!);
+ await page.locator('.paired-block').first().locator('details').nth(1).locator('summary').click();
+ const originalInput=await page.locator('.paired-block').first().locator('pre').nth(1).textContent();
+ await page.locator('#report-language').selectOption('id');await expect(page.locator('#audit-attempt')).toHaveValue('2');await expect(page.locator('#stage-title')).toHaveText('Input dan jawaban AI');
+ expect(await page.locator('.paired-block').first().locator('pre').nth(1).textContent()).toBe(originalInput);
+ const downloadPromise=page.waitForEvent('download');await page.locator('#audit-request-download').click();const download=await downloadPromise;expect(await readFile((await download.path())!,'utf8')).toBe(requests[1]);
+ await page.locator('#report-language').selectOption('en');await expect(page.locator('#stage-title')).toHaveText('AI input and output');
+ await page.locator('#stage-checks').click();await expect(page.locator('.stage-panel')).toContainText('No target rules are supplied');
+ await page.locator('#audit-case').selectOption('library/02');await page.locator('#stage-ai').click();await expect(page.locator('.stage-panel')).toContainText('Skipped');
+ await page.keyboard.press('Escape');await expect(page.locator('#overview-view')).toBeVisible();
+ await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Inspect action'}).first().click();await page.locator('#stage-ai').click();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+ expect(errors).toEqual([]);
+ await page.screenshot({path:'output/d35-library-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:900});await page.screenshot({path:'output/d35-library-desktop.png',fullPage:true});
+});
+
+test('OBS-012 safe defaults, missing request support, identity rejection and late omissions',async({page})=>{
+ const config=validateConfig({mode:'full',actionTimeoutMs:100,maxAttempts:1});
+ await page.setContent('<label>Destination <input id="destination"></label><p>Future omission</p>');
+ const provider:Provider={kind:'offline',async select(){return {output:'{"selector":"#destination"}',usage:null};}};
+ const safe=createHealingSession(page,{config,provider});await safe.fill('#old','Value',{description:'Fill destination'});expect(safe.audit().entries).toEqual([]);
+ const session=createHealingSession(page,{config,provider,audit:true});await session.fill('#old','Value',{description:'Future omission'});await session.fill('#destination','Future omission',{description:'Fill destination'});
+ const audit=session.audit();expect(audit.entries[0]!.request.status).toBe('missing');expect(audit.entries[0]!.response.text).toContain('#destination');
+ const run=session.snapshot();expect(renderReport(run)).not.toContain('Future omission');expect(renderReport(run,undefined,{audit})).not.toContain('Future omission');
+ expect(()=>renderReport(run,undefined,{audit:{...audit,runId:'other'}})).toThrow(/identity/);
+ expect(()=>renderReport(run,undefined,{audit:{...audit,entries:[...audit.entries,...audit.entries]}})).toThrow(/duplicate/);
+ await page.setContent(renderReport(run,undefined,{audit}));await page.getByRole('button',{name:'Inspect action'}).first().click();await page.locator('#stage-ai').click();await expect(page.locator('.paired-block').first()).toContainText('Request body unavailable');
+});

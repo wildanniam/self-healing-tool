@@ -16,3 +16,7 @@ Prepared for OpenSpec task 1.1 / INT-005 under issue #5. This is an engineering 
 Reference-origin filenames/categories are provenance metadata only; neither historical source nor raw artifacts are reproduced. No reference component has been marked approved. Extraction is selective at the architectural level; implementation here is new, not a renamed copy. Public eligibility of the final package will be reviewed under task 8.1.
 
 D25/0.0.5 independently restores documented method components; reference source remains held out. See [method matrix](thesis-method-alignment.md). Excluding source/history was not a justification for omitting method signals. No distribution eligibility change is inferred.
+
+## Shared reporting modules
+
+`src/report-inspector.js`, `report-language.js`, `report-style.js` and `library-report.js` are packaged offline UI modules shared with the research presentation. `audit-capture.ts` records opt-in bounded provider evidence, and `report-adapter.ts` maps library actions without study controls. They introduce no dependency on archived research files. JavaScript browser clients use `allowJs` for emission and declarations; behavior is verified in browser and installed-package tests.

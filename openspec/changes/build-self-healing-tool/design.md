@@ -194,3 +194,9 @@ Retained source adapters and future demonstration capture supply audit data with
 ## D34 results-first reports (issue #27)
 
 Implement the owner-approved four-group inspection hierarchy and separate D33/RM1 and D30/RM2 views. Read archived ranking records through a separate adapter. Lead run reports with outcomes and paired per-attempt evidence; keep sources and raw data collapsed, unavailable evidence explicit, and generic library projections private by default. Preserve exact source identities, denominators, historical outcomes and mode labels. Filters govern exports. No recovery-method changes or paid calls. See DESIGN.md and docs/decisions/2026-09-18-report-simplification.md; OBS-011 and tasks16.1–16.3.
+
+## D35 — Shared action inspector
+
+Use an explicit session audit option. Capture the adapter’s actual request body at dispatch and returned output at settlement, with event/attempt identity; retain it outside ordinary snapshots. The snapshot used for local audit applies omissions and labels any redaction, preserving original hashes without asserting altered bytes are exact. Custom providers lacking capture support remain unavailable. Capture is bounded and never passes secrets/headers/HTTP envelopes to the report. Audit errors cannot change selection. No pre-cleansing raw DOM is promised by this increment.
+
+Package the shared browser inspector and language resources in dist. A library report maps each event to an action row; no arm, repetition or study controls are shown. Presentation rows retain their original identity and study controls. Both use the same four-stage renderer. English is default; switching UI language retains selection and does not translate evidence. Summaries and safe JSON stay payload-free. Local diagnostic HTML/downloads require explicit supplied audit; files are isolated with restrictive permissions.
