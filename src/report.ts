@@ -43,6 +43,7 @@ export function reportView(run: Run, price?: PriceAssumption) {
       attempts: e.attempts.map(a => ({ id: a.id, number: a.number, selector: a.selector ? redact(a.selector) : null,
         candidateAccepted: a.candidateAccepted, actionExecuted: a.actionExecuted, failure: a.failure, reason: a.reason,
         providerMetadata: normalizeProviderMetadata(a.providerMetadata),
+        proposedSelector: a.proposedSelector ? redact(a.proposedSelector) : null, validations: a.validations?.map(v => ({selector: redact(v.selector), count: v.count, reason: v.reason})) ?? [], inputSha256: a.inputSha256, inputCoverage: a.inputCoverage,
         providerCalled: a.providerCalled, transportAttempted: a.transportAttempted, usage: a.usage, durationMs: a.durationMs, providerMs: a.providerMs, actionMs: a.actionMs })),
     })),
     assessments: run.assessments.map(a => ({ eventId: a.eventId, attemptId: a.attemptId, semantic: a.semantic,

@@ -55,3 +55,8 @@
 - [ ] 8.1 Engineer prepares usage/compatibility instructions and a reviewed package manifest; Wildan decides distribution eligibility/license. Verify a clean-consumer installation, package allowlist, secret/private-artifact exclusion and explicit private-evaluation reproducibility limitation. [INT-001, INT-004, INT-005, DEMO-005]
 - [ ] 8.2 Engineer and Wildan review proposed paper/demo claims against evidence. Verify any claimed causal context improvement has an appropriate ablation, any broad superiority claim has relevant comparisons, and historical/planned data are labeled accurately. [EVAL-003, EVAL-007, DEMO-005]
 - [ ] 8.3 Maintainer checks the complete decision-to-evidence chain and prepares release/closure for Wildan's review. Verify scenario evidence, task status, issue/PR references, unresolved scope updates and Atlas Vault checkpoint before any owner-approved publication or OpenSpec archive. [AUD-001, AUD-002, AUD-003, AUD-004, DEMO-005]
+
+## 9. D25 methodological correction
+
+- [x] 9.1 Engineer restores documented thesis context/cleaning/ranking mechanisms for click/fill and writes an explicit parity/deviation matrix. Verify old-selector/stable-attribute/duplicate/entity signals and bounded sanitized sparse fallback on independent fixtures. [CTX-005]
+- [x] 9.2 Engineer restores stable locator normalization and validator feedback across bounded retries. Verify rejected variants/counts, payload limits and provider fail-stop without new live calls; preserve D24 evidence. [HEAL-007]

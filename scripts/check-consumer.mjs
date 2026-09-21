@@ -8,10 +8,11 @@ const directory = mkdtempSync(join(tmpdir(), 'healing-consumer-'));
 const env = Object.fromEntries(['PATH', 'HOME', 'TMPDIR', 'CI', 'PLAYWRIGHT_BROWSERS_PATH', 'npm_config_cache'].filter(k => process.env[k]).map(k => [k, process.env[k]]));
 try {
   const packed = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', directory], { cwd: root, env, encoding: 'utf8' }))[0];
-  const allowed = /^(dist\/[a-z-]+\.(?:js|d\.ts)|README\.md|package\.json|docs\/integration\.md|docs\/implementation\/component-inventory\.md)$/;
+  const allowed = /^(dist\/[a-z-]+\.(?:js|d\.ts)|README\.md|package\.json|docs\/integration\.md|docs\/implementation\/(?:component-inventory|thesis-method-alignment)\.md)$/;
   for (const file of packed.files) assert.match(file.path, allowed, `Unexpected package asset: ${file.path}`);
   assert(packed.files.some(f => f.path === 'dist/index.js'));
   assert(packed.files.some(f => f.path === 'docs/integration.md'));
+  assert(packed.files.some(f => f.path === 'docs/implementation/thesis-method-alignment.md'));
   const consumer = join(directory, 'consumer'); mkdirSync(consumer);
   writeFileSync(join(consumer, 'package.json'), JSON.stringify({ name: 'independent-consumer-check', version: '1.0.0', private: true, type: 'module' }));
   execFileSync('npm', ['install', '--prefer-offline', '--ignore-scripts', '--no-audit', '--no-fund', '--package-lock=false', join(directory, packed.filename), 'playwright@1.62.1'], { cwd: consumer, env, stdio: 'pipe' });

@@ -8,12 +8,21 @@ export interface Config {
   actionTimeoutMs: number; recoveryTimeoutMs: number; providerTimeoutMs: number;
   domMaxChars: number; payloadMaxChars: number; maxCandidates: number;
 }
+export interface CandidateFeatures {
+  id?: string; name?: string; placeholder?: string; role?: string; ariaLabel?: string;
+  dataTestId?: string; dataTest?: string; dataCy?: string; title?: string; classes?: string[];
+  text?: string; nearestLabel?: string; rowContext?: string; parentContext?: string; containerContext?: string;
+  visible?: boolean; disabled?: boolean;
+}
+export interface ValidationFeedback { selector: string; count: number; reason: string }
 export interface Candidate {
   selector: string; tag: string; type: string; label: string;
   container: string; containerKind: string; order: number; score: number;
+  features?: CandidateFeatures; suggestedLocators?: string[]; duplicateCount?: number;
 }
 export interface Context {
   action: Action; task: Task; candidates: Candidate[];
+  method?: string; failure?: { originalSelector: string; classification: string }; cleanedDom?: string; feedback?: ValidationFeedback[];
   coverage: { discovered: number; included: number; omitted: number; textTruncated: boolean; domChars: number; payloadChars: number; domLimit: number; payloadLimit: number; candidateLimit: number };
 }
 export interface Usage { inputTokens: number; outputTokens: number }
@@ -30,6 +39,7 @@ export interface Attempt {
   candidateAccepted: boolean; actionExecuted: boolean;
   failure: FailureKind; reason: string; usage: Usage | null;
   providerMetadata?: ProviderMetadata | null;
+  proposedSelector?: string | null; validations?: ValidationFeedback[]; inputSha256?: string; inputCoverage?: Context['coverage'];
   providerCalled: boolean; transportAttempted: boolean | null; durationMs: number; providerMs: number; actionMs: number;
 }
 export interface Assessment {

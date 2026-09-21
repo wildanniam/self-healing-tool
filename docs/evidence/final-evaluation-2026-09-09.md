@@ -1,5 +1,8 @@
 # D24 frozen evaluation — 2026-09-09
 
+> D25 clarification: this study measured the independently authored simplified 0.0.3 variant, not an exact replication of the TA prototype. See [method audit](../implementation/thesis-method-alignment.md). Results and frozen evidence remain unchanged.
+
+
 Authority: [D24](../decisions/2026-09-09-final-evaluation.md). Work: tool #9 / private host #178. Native rehearsal passed twenty conditions, four calibrations and an independent adapter test; eight contract tests/typecheck/lint passed. The prior unknown-usage pilot ledger is retained unchanged.
 
 ## Freeze

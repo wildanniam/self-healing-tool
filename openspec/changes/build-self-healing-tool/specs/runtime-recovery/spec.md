@@ -77,3 +77,15 @@ Configuration, provider, parsing, validation, and action failures SHALL remain d
 #### Scenario: HEAL-006-S2
 - **WHEN** Token usage is unavailable after a request failure
 - **THEN** usage is recorded as unknown rather than zero
+
+### Requirement: HEAL-007 Normalized locators and rejection feedback
+
+Supported selector normalization SHALL preserve browser validation and record proposed/validated variants; subsequent full-mode attempts SHALL receive sanitized prior rejection reasons/counts within existing budgets.
+
+#### Scenario: HEAL-007-S1
+- **WHEN** A text locator requires normalization or matches multiple elements
+- **THEN** variants are validated before action and rejected selector/count/reason information is retained for the next request
+
+#### Scenario: HEAL-007-S2
+- **WHEN** Feedback makes the payload too large or a provider fails
+- **THEN** the method stops visibly within limits without dropping accounting or executing late output

@@ -1876,6 +1876,102 @@
           "date": "2026-09-09"
         }
       ]
+    },
+    {
+      "id": "CTX-005",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D25"
+      ],
+      "scenarios": [
+        "CTX-005-S1",
+        "CTX-005-S2"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "9.1"
+      ],
+      "verification": {
+        "id": "V-CTX-005",
+        "method": "Independent offline synthetic mechanism tests and written method audit",
+        "acceptance": "Documented mechanisms restored with explicit deviations; no empirical equivalence claim"
+      },
+      "evidence": [
+        {
+          "id": "EV-D25-CTX-005-IMPL",
+          "kind": "implementation",
+          "ref": "docs/evidence/thesis-alignment-2026-09-09.md",
+          "scenarios": [
+            "CTX-005-S1",
+            "CTX-005-S2"
+          ],
+          "summary": "Independent implementation of documented click/fill mechanisms; explicit parity/deviation matrix, no exact-replication claim."
+        },
+        {
+          "id": "EV-D25-CTX-005-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/thesis-alignment-2026-09-09.md",
+          "scenarios": [
+            "CTX-005-S1",
+            "CTX-005-S2"
+          ],
+          "summary": "Offline synthetic mechanism and privacy/budget/runtime regressions pass; no empirical accuracy or full prototype-parity claim.",
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium",
+          "date": "2026-09-09",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "HEAL-007",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D25"
+      ],
+      "scenarios": [
+        "HEAL-007-S1",
+        "HEAL-007-S2"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "9.2"
+      ],
+      "verification": {
+        "id": "V-HEAL-007",
+        "method": "Independent offline synthetic mechanism tests and written method audit",
+        "acceptance": "Documented mechanisms restored with explicit deviations; no empirical equivalence claim"
+      },
+      "evidence": [
+        {
+          "id": "EV-D25-HEAL-007-IMPL",
+          "kind": "implementation",
+          "ref": "docs/evidence/thesis-alignment-2026-09-09.md",
+          "scenarios": [
+            "HEAL-007-S1",
+            "HEAL-007-S2"
+          ],
+          "summary": "Independent implementation of documented click/fill mechanisms; explicit parity/deviation matrix, no exact-replication claim."
+        },
+        {
+          "id": "EV-D25-HEAL-007-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/thesis-alignment-2026-09-09.md",
+          "scenarios": [
+            "HEAL-007-S1",
+            "HEAL-007-S2"
+          ],
+          "summary": "Offline synthetic mechanism and privacy/budget/runtime regressions pass; no empirical accuracy or full prototype-parity claim.",
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium",
+          "date": "2026-09-09",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2049,6 +2145,20 @@
       "task": "4.5",
       "evidence": [
         "EV-D24-INCREMENT-OBS-002"
+      ]
+    },
+    {
+      "task": "9.1",
+      "evidence": [
+        "EV-D25-CTX-005-IMPL",
+        "EV-D25-CTX-005-CHECK"
+      ]
+    },
+    {
+      "task": "9.2",
+      "evidence": [
+        "EV-D25-HEAL-007-IMPL",
+        "EV-D25-HEAL-007-CHECK"
       ]
     }
   ]

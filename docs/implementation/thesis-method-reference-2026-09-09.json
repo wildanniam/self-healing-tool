@@ -1,0 +1,13 @@
+{
+  "note": "Read-only reference provenance, no historical source/artifacts included. Working-file hashes identify exactly the inspected reference, independent of commit status.",
+  "referenceCommit": "29cda2ceb800ac47c9450c8b08a3f699065b8e99",
+  "sha256": {
+    "src/self-healing/openai/dom-cleaner.ts": "b6e30f7ee3884f5bce38e1de5a0692397b14f4313511c59b3dac0a9b37de5068",
+    "src/self-healing/openai/dom-context-extractor.ts": "a7911ef4f0e989e1d9ed6b6dc1cb271bf7536f914074bd70436a21079d9676d7",
+    "src/self-healing/openai/candidate-ranker.ts": "dddc50ae8a5d2cca8e9fd684a93f2f08b1f44389ce09787e7dbb993f67329da6",
+    "src/self-healing/openai/prompt-builder.ts": "8ac38eb36ccaf060400ec6873fd4ab694d6daab7efe3c78237dd1a2c5a9b7c4e",
+    "src/self-healing/openai/selector-normalizer.ts": "39d8203ae0b9e314e1f8beb03503abeeeb4b07d824192cf12c4e20ad377361ae",
+    "src/self-healing/core/healing-orchestrator.ts": "2d461e746c205857a20b6d71e102390b29e78af69658a9501ba5f61ef7df579a",
+    "src/self-healing/core/locator-validator.ts": "e150f2c9a3aa570380526d82c3ea8e0a3a823c8780c86803637647fb6cf4cf33"
+  }
+}

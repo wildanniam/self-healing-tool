@@ -2,7 +2,9 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: private final technical evaluation completed (120 runs); version 0.0.4 reporting increment verified offline; owner interpretation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: private final technical evaluation completed (120 runs); version 0.0.5 thesis-method restoration verified offline; owner interpretation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+
+D25 corrects methodological drift: [method matrix](docs/implementation/thesis-method-alignment.md). D24 evaluated the earlier simplified variant, not an exact replay of the TA method.
 
 See [final findings and limits](docs/evidence/final-evaluation-2026-09-09.md): full and ranker-only both 33/36 recoverable; absent-target refusal 0/12 vs 3/12. No LLM superiority or reliable unattended healing is established.
 

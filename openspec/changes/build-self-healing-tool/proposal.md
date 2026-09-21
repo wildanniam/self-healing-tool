@@ -51,3 +51,7 @@ Future implementation will add library, demo, and evaluation-support modules her
 Issue #9 also prepares version 0.0.4 after collection: preserve allowlisted returned model/finish metadata for future runs. Version 0.0.3 discards these fields, leaving the measured alias unresolved. This is an offline-tested provenance improvement, not a selection change or a retroactive repair of frozen evidence.
 
 The same post-collection increment corrects duplicate wrong-effect summary counting: event and attempt assessments can refer to one observed action. Frozen per-slot analysis already counts unique slots and remains unchanged.
+
+## D25 method correction
+
+[Decision D25](../../../docs/decisions/2026-09-09-thesis-alignment.md) corrects unverified methodological simplification. Issue #11 restores thesis-informed cleaning, ranking, failure context, stable locator handling and validator feedback in a separate version. This refines the original research intent; earlier implementation checkpoints remain historical. Exact parity/deviations must be documented before claiming equivalence.

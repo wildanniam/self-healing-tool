@@ -53,3 +53,15 @@ The effective candidate and payload limits SHALL be explicit and reviewable; tru
 #### Scenario: CTX-004-S2
 - **WHEN** The target is outside the selected candidates
 - **THEN** the evaluator can record the coverage failure without injecting the answer into the runtime
+
+### Requirement: CTX-005 Thesis-aligned information and ranking
+
+The supported click/fill context SHALL preserve sanitized original-locator signals, stable attributes and documented thesis ranking components; cleaned HTML supplement/fallback SHALL remain bounded and subject to the same privacy/oracle rules. Method deviations MUST be explicit.
+
+#### Scenario: CTX-005-S1
+- **WHEN** Similar controls differ in old-locator attributes, duplicate labels or entity context
+- **THEN** extraction and ranking retain those signals, follow the documented weights and offer non-positional locator suggestions
+
+#### Scenario: CTX-005-S2
+- **WHEN** Candidates are sparse or the page contains large noisy/sensitive content
+- **THEN** bounded cleaned supplement/fallback excludes disallowed data and every actual serialized request respects configured limits

@@ -1,6 +1,6 @@
 {
   "name": "self-healing-tool",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "description": "Bounded Playwright locator recovery with inspectable outcomes.",
   "license": "UNLICENSED",
@@ -41,7 +41,8 @@
     "dist",
     "README.md",
     "docs/integration.md",
-    "docs/implementation/component-inventory.md"
+    "docs/implementation/component-inventory.md",
+    "docs/implementation/thesis-method-alignment.md"
   ],
   "peerDependencies": {
     "playwright": "1.62.1"
