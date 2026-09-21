@@ -69,7 +69,7 @@ The supported click/fill context SHALL preserve sanitized original-locator signa
 
 ### Requirement: CTX-006 Equal spec context across comparison arms
 
-Context-only and enforced sessions SHALL provide the same sanitized requirement, applicability and evidence-policy information to the provider; sessions without a target spec MUST preserve the 0.0.5 request contract.
+Context-only and enforced sessions SHALL provide the same sanitized requirement, applicability and evidence-policy information to the provider; sessions without a target spec MUST use the documented request contract of the declared version. D26 preserves its historical 0.0.5 contract; D27 explicitly versions the corrected shared core and compact request projection.
 
 #### Scenario: CTX-006-S1
 - **WHEN** B and C receive the same state and contract
@@ -78,3 +78,39 @@ Context-only and enforced sessions SHALL provide the same sanitized requirement,
 #### Scenario: CTX-006-S2
 - **WHEN** Spec metadata exceeds the payload budget or contains sensitive omitted values
 - **THEN** the request is bounded/sanitized or fails without dispatch
+
+
+### Requirement: CTX-007 Eligible and verified candidate context
+
+The context pipeline SHALL exclude unavailable hidden action targets and preserve meaningful local/accessibility identity across wrappers; suggested locators SHALL be verified with the browser engine to uniquely identify the originating node without positional or evaluator-derived selectors.
+
+#### Scenario: CTX-007-S1
+- **WHEN** A click/fill page contains a visible control, a closed-dialog duplicate and hidden inputs
+- **THEN** only eligible action candidates remain while legitimate accessible labels and scrollable targets retain their identity
+
+#### Scenario: CTX-007-S2
+- **WHEN** Interactive text is nested or the control is wrapped without changing intent
+- **THEN** a supported suggested locator identifies the actual interactive candidate and generic semantic group identity remains available
+
+#### Scenario: CTX-007-S3
+- **WHEN** No unique supported locator can identify a candidate
+- **THEN** the loss is recorded, invalid locator suggestions are not advertised as verified, and independent semantic correctness is not assumed
+
+
+
+### Requirement: CTX-008 Stable ranking and compact bounded payload
+
+The corrected ranking SHALL avoid duplicate structural-token amplification and shared-class identity errors. Provider projection and context budgeting SHALL use the same compact representation, retain distinct entity candidates and audit stage/omission counts within explicit total limits.
+
+#### Scenario: CTX-008-S1
+- **WHEN** A semantic control is wrapped or its old structural locator repeats tag tokens
+- **THEN** ranking preserves relevant semantic features without multiplying bare structural matches
+
+#### Scenario: CTX-008-S2
+- **WHEN** Distinct entities share button text/classes while another field has unique stable identity
+- **THEN** entity candidates remain distinct and the unique field is not penalized solely for shared classes
+
+#### Scenario: CTX-008-S3
+- **WHEN** Compact candidates and fallback approach configured limits
+- **THEN** actual serialized projection is measured, all input limits hold, and omitted candidates/stages are reported without claiming guaranteed target coverage
+

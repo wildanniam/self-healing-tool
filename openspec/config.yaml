@@ -5,6 +5,7 @@ context: |
   Read docs/decisions/2026-09-07-foundation.md, docs/decisions/2026-09-08-local-api.md, and docs/audit-workflow.md.
   D19/D23 authorize autonomous engineering through pilot, corrections and a concrete final-protocol review package.
   D20 accepts five pilot cases; D21 caps their live batch; D22 approves its specified private UI disclosure. The pilot has executed with one unknown-usage failure; retain its halted ledger.
+  D27 authorizes implementing diagnosed candidate fixes and one fresh bounded $2/980-request regression rerun; preserve D26 and label reused synthetic tasks as known regression.
   D26 explicitly authorizes the four-stage spec-aware method study under a fresh US$2/980-request cap; historical ledgers stay untouched.
   D24 final collection completed on simplified 0.0.3; preserve its frozen evidence. D25 restores documented thesis mechanisms in 0.0.5 offline, with explicit method deviations. No additional paid batch is implied. Release remains separate.
   D18 selects the initial gpt-4o-mini profile (output 500, temperature 0, healing limit 3, DOM chars 8000); final budget/protocol remain open.

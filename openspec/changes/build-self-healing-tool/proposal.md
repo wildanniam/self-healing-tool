@@ -60,3 +60,7 @@ The same post-collection increment corrects duplicate wrong-effect summary count
 ## D26 authorized method-validation extension
 
 Execute the four owner-requested stages in issue #13. Extend the existing library-integration, context-selection, runtime-recovery and evaluation-protocol capabilities with optional consumer-provided target contracts, a context-only arm and a generic before-recovery admission arm. Preserve the no-contract 0.0.5 behavior. Run known private regression cases separately from independently authored synthetic holdout. Do not imply universal semantic verification or public release.
+
+## D27 owner-authorized correction and rerun
+
+Issue #15 implements the candidate/locator defects demonstrated by the D26 audit. The owner explicitly requests the discussed fixes, offline verification, then live re-evaluation of the same scenarios. Improve eligible-action filtering, nested host locators, wrapper-invariant semantic features, duplicate ranking and compact bounded inputs. Apply the same corrected core to A/B/C. Preserve all D26 artifacts and label reused private and synthetic cases as known regression evidence. D27 supersedes the historical no-spec 0.0.5 payload-identity promise for the new version only; it does not replace old results or authorize release/merge/submission. See [D27](../../../docs/decisions/2026-09-14-candidate-recovery.md).

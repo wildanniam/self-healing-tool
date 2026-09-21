@@ -43,6 +43,21 @@ export function createHealingSession(page: Page, options: {
     for (const event of copy.events) {
       event.originalSelector = redact(event.originalSelector, omitted);
       event.task = { description: cleanContextText(event.task.description, omitted), ...(event.task.scope ? { scope: cleanContextText(event.task.scope, omitted) } : {}) };
+      if (event.context) {
+        // A later fill can make text captured by an earlier event sensitive. Re-redact retained
+        // data on every snapshot; keep the original coverage/hashes as measurements of that request.
+        const context = event.context, clean = (text: string) => redact(text, omitted);
+        context.task = { description: clean(context.task.description), ...(context.task.scope ? { scope: clean(context.task.scope) } : {}) };
+        if (context.failure) context.failure.originalSelector = clean(context.failure.originalSelector);
+        if (context.cleanedDom !== undefined) context.cleanedDom = clean(context.cleanedDom);
+        context.candidates = context.candidates.map(candidate => ({ ...candidate,
+          selector: clean(candidate.selector), label: clean(candidate.label), container: clean(candidate.container), type: clean(candidate.type),
+          ...(candidate.suggestedLocators ? { suggestedLocators: candidate.suggestedLocators.map(clean) } : {}),
+          ...(candidate.features ? { features: Object.fromEntries(Object.entries(candidate.features).map(([key, value]) =>
+            [key, typeof value === 'string' ? clean(value) : Array.isArray(value) ? value.map(clean) : value])) } : {}),
+        }));
+        if (context.feedback) context.feedback = context.feedback.map(item => ({ ...item, selector: clean(item.selector) }));
+      }
       if(event.targetSpec){
         // Values supplied by a later fill must also be omitted from earlier spec evidence.
         const clean=(value:string)=>cleanContextText(value,omitted);
