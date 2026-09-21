@@ -16,7 +16,7 @@
 
 <p align="center">
   <a href="#what-it-does"><strong>Overview</strong></a> ·
-  <a href="#try-the-offline-demo">Quick Start</a> ·
+  <a href="docs/playwright.md">Quick Start</a> ·
   <a href="#use-in-your-tests">Library Usage</a> ·
   <a href="#inspect-the-report">Reports</a> ·
   <a href="#documentation">Documentation</a>
@@ -38,68 +38,19 @@ Navigation, setup and assertions remain in your Playwright tests. The library do
 
 **Package status:** development package; public distribution and licensing are pending. The instructions below use the repository and a local package archive, not an assumed npm release.
 
-## Try the offline demo
+## Quick start
 
-Use **Node.js 24 or 25** and npm. Chromium is the tested browser.
+Start with the **[Playwright quick start](docs/playwright.md)**. It takes you from an empty directory through prerequisites, package installation, configuration, a complete test, and the automatic HTML report.
 
-```sh
-git clone https://github.com/wildanniam/self-healing-tool.git
-cd self-healing-tool
-npm ci
-npx playwright install chromium
-npm run demo:offline
-```
-
-This runs the independent synthetic application and creates an HTML/JSON report. It uses **ranker-only recovery**, requires no API key, and makes no AI requests. Open `report.html` in the output directory printed by the command.
-
-To inspect retained research results instead:
-
-```sh
-npm run demo
-```
-
-This opens a report in your default browser; it does not rerun the experiments. A fresh clone includes only the portable evidence. Missing private or local archives are shown as unavailable. See the [presentation guide](docs/presentation.md) for a browser walkthrough using recorded AI decisions.
+The first test creates its own small page, recovers a broken field locator, clicks Save, and checks the result. It uses **ranker-only recovery**: no separate application, API key or AI request is needed. The guide then explains how to use your own application and [enable LLM-assisted recovery](docs/playwright.md#optional-enable-llm-assisted-recovery).
 
 ## Use in your tests
 
-First build and package this checkout:
+After the quick start, import `test` and `expect` from `self-healing-tool/playwright`. Use `healing.click(selector, task)` and `healing.fill(selector, value, task)` for actions you want to recover. Navigation and assertions remain ordinary Playwright operations.
 
-```sh
-npm pack
-```
+Configure the fixture and reporter once. The fixture saves each action report after the test; the reporter builds one index with test names, projects, statuses and retries, and opens it once locally when enabled. CI keeps file output only. No per-test `finally` or report-writing call is needed. Set `healingOptions: { audit: true }` to capture available AI input/output. Test status stays separate from independently assessed action correctness.
 
-In your own Playwright project, install the generated archive and the supported Playwright version. Replace the archive path with its actual location:
-
-```sh
-npm install /absolute/path/to/self-healing-tool-0.0.8.tgz playwright@1.62.1
-npm install --save-dev @playwright/test@1.62.1
-npx playwright install chromium
-```
-
-For **automatic reports**, configure the fixture and reporter once using the [Playwright quick start](docs/playwright.md). Tests then use the library's `test` import:
-
-```ts
-import { test, expect } from 'self-healing-tool/playwright';
-
-test('update profile', async ({ page, healing }) => {
-  await page.goto('http://127.0.0.1:3100'); // Start your app first.
-  await healing.fill('#previous-display-name', 'Taylor', {
-    description: 'Fill display name',
-  });
-  await healing.click('#save-profile', { description: 'Save profile' });
-  await expect(page.getByRole('status')).toHaveText('Saved: Taylor');
-});
-```
-
-The fixture saves each action report after the test. The reporter builds one index with test names, projects, statuses and retries, and opens it once locally; CI keeps file output only. No per-test `finally` is needed. Audit capture is configured once with `healingOptions: { audit: true }`. Test status stays separate from independently assessed action correctness.
-
-To try the **complete local example** without your own app or an API key:
-
-```sh
-npx playwright test --config examples/playwright/playwright.config.ts
-```
-
-It starts a synthetic local app and uses ranker-only recovery. The [same guide](docs/playwright.md#4-enable-llm-assisted-recovery) explains full-mode provider setup, explicit request limits and how to run the example with a real model. The [core API](docs/integration.md) remains available for other runners.
+For other test runners or manual lifecycle control, use the [core API guide](docs/integration.md).
 
 ## Inspect the report
 
@@ -112,7 +63,7 @@ The report supports **English and Bahasa Indonesia**. Select an action and attem
 | Checks | Locator validation and optional target-rule decisions |
 | Outcome | Execution status and independent effect assessments when supplied |
 
-Enable `audit: true` before running and pass `healing.audit()` to `writeReport` for detailed capture. Original evidence is not translated when switching the interface language. No-AI actions and unavailable records are labeled explicitly. Custom providers must supply the capture hook for their actual request bodies.
+With the Playwright fixture, enable `healingOptions: { audit: true }` before running; the fixture includes captured evidence in the report automatically. Only consumers managing the [core API lifecycle](docs/integration.md#local-action-audit-reports) themselves need to pass `healing.audit()` to `writeReport`. Original evidence is not translated when switching the interface language. No-AI actions and unavailable records are labeled explicitly. Custom providers must supply the capture hook for their actual request bodies.
 
 See [audit setup and capture limits](docs/integration.md#local-action-audit-reports). Detailed reports can contain application context; review them before sharing.
 
@@ -127,6 +78,18 @@ See [audit setup and capture limits](docs/integration.md#local-action-audit-repo
 | Understand DOM preparation and ranking | [Method alignment](docs/implementation/thesis-method-alignment.md) |
 | Review report verification | [Bilingual report evidence](docs/evidence/bilingual-library-report-2026-09-20.md) |
 | Inspect research history and development decisions | [Development and research records](DEVELOPMENT.md) |
+
+## Other demos and research results
+
+Run these from the tool repository after `npm ci` and `npx playwright install chromium`:
+
+| Command | What it runs |
+| --- | --- |
+| `npx playwright test --config examples/playwright/playwright.config.ts` | A profile app with its own local server and automatic reports; ranker-only by default. |
+| `npm run demo:offline` | The core API example; ranker-only, with an HTML/JSON report path printed for manual opening. |
+| `npm run demo` | A browser view of retained research results; no experiment rerun or new AI request. |
+
+A fresh clone includes only portable research evidence. Missing private/local archives are shown as unavailable. See the [presentation guide](docs/presentation.md) for recorded results and replay; these are separate from the quick start above.
 
 ## Scope and limitations
 

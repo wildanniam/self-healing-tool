@@ -27,3 +27,12 @@ Initial tests exposed missing reporter export resolution and loss of passed-test
 ## Limits
 
 Only the supported Playwright/Chromium configuration is verified. Abrupt process termination can prevent teardown/index creation. Audit is explicitly configured; missing capture remains missing. Per-test report bodies can contain application context and are local diagnostic artifacts. Final Playwright status does not prove every recovered action correct. Publication/licensing and future merge are separate from this implementation.
+
+
+## Quick-start documentation follow-up
+
+The owner authorized the documentation audit corrections: one primary start page, explicit automatic versus manual reporting, and a complete empty-project setup. README now points to docs/playwright.md; that guide includes the package build, sibling ESM consumer, exact config/test file paths, a self-contained profile page, run command and expected report. Research/demo alternatives stay separate. Its clone selects the integration branch while PR34 is pending; this is a development-package path, not a public npm release.
+
+Verification on macOS/Node25.8.2 used the shell commands and TypeScript snippets extracted directly from the revised Markdown, with a fresh remote clone of runtime202191f and a separate empty consumer. No source changes or hidden application/server setup were needed. All install/build commands and the documented test passed. The generated suite/action HTML was opened in Chromium: one passing test, one recovered fill to #display-name, one original click, two unassessed actions and zero provider invocations. The index link, displayed counts and provider-not-called panel matched the guide. CI=1 suppressed opening the OS browser during this check; automatic local opening was verified in the preceding implementation check.
+
+The optional full-mode configuration loaded and discovered the test with playwright test --list using a placeholder credential. No test action or model request was executed in this configuration check. All35 local links/anchors across README and current setup/integration guides passed; strict spec/traceability and git diff --check passed. The library runtime and frozen study evidence are unchanged by this follow-up.

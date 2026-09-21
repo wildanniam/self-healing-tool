@@ -76,7 +76,7 @@ D27 (docs/decisions/2026-09-14-candidate-recovery.md) explicitly authorizes the 
 
 ## User-facing documentation
 
-Keep README usage-first: overview, development-package setup, supported click/fill integration and report access. Keep research checkpoints in DEVELOPMENT.md and linked evidence files. Label ranker-only, recorded replay and live inference distinctly. Do not claim a public npm release, automatic browser opening for all library consumers or semantic correctness from action completion. Recheck README commands and anchors when changing the integration contract.
+Keep README usage-first: overview, development-package setup, supported click/fill integration and report access. Keep research checkpoints in DEVELOPMENT.md and linked evidence files. Label ranker-only, recorded replay and live inference distinctly. Do not claim a public npm release, automatic browser opening for all library consumers or semantic correctness from action completion. Recheck README commands and anchors when changing the integration contract. Keep one canonical Playwright quick start with explicit project initialization, file paths and a self-contained first test. README must distinguish automatic fixture capture from manual core API report writing; verify the documented snippets from a fresh consumer project when changing this path.
 
 ## D36 consumer report integration
 
