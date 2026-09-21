@@ -1,0 +1,10 @@
+import {readFileSync, existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createLiveBudget,readLiveBudget} from '../dist/index.js';
+const study=JSON.parse(readFileSync(new URL('./d29-config.json',import.meta.url),'utf8'));
+const path=resolve(process.argv[2]??'output/d29/budget.json');
+const {config,regression,holdout,runOrder,limits,...plan}=study;
+if(existsSync(path)) throw new Error('Budget already exists; inspect/resume explicitly, never replace');
+createLiveBudget(path,plan);
+const ledger=readLiveBudget(path);
+console.log(JSON.stringify({ledger:path,id:ledger.plan.id,maxRequests:ledger.plan.maxRequests,maxCostUsd:ledger.plan.maxCostUsd,requests:ledger.requests.length}));

@@ -146,3 +146,11 @@ Version0.0.7 changes the common extraction/ranking/request representation for al
 The wire payload drops empty fields and redundant audit metadata. `coverage.domChars` measures projected candidate JSON plus any cleaned HTML; `payloadChars` measures the complete request. Additional coverage fields distinguish scanned nodes, unavailable controls, ranked eligible candidates, checked shortlist, unaddressable descriptors and budget omissions. These counters report separate stages; `omitted` remains eligible candidates minus included candidates. Neither uniqueness nor contract admission proves the intended business outcome.
 
 Historical D25/D26 behavior and results above remain versioned references. D27 reuses known cases for regression and does not establish unseen generalization.
+
+## Version 0.0.8: owning evidence and bounded observation refresh
+
+D29 separates `localActionContext` from `ownerContext`, with `ownerStatus` and `ownerSources` provenance. Legacy container evidence now carries bounded owning identity, not an entire ancestor's prose. Unnamed action wrappers do not automatically stop ownership traversal; unresolved named boundaries and missing nested owners are explicit uncertainty. This does not infer arbitrary business semantics from markup.
+
+After an explicit null choice, the full provider mode refreshes observations at most once within the current event budget. Only changed selection evidence permits a subsequent call; unchanged evidence stops as abstention. Invalid-selector feedback retries remain bounded as before. Default maxAttempts is still a ceiling, not a required number of API calls. Per-attempt exact input context and refresh diagnostics are available in local snapshots; normal reports omit them. A later known fill value is redacted from all retained context copies.
+
+Contracts and lexical admission are unchanged. Reworded labels, misleading metadata and semantically ambiguous controls can still lead to refusal or wrong action; independent behavioral assertions remain necessary. See [D29](decisions/2026-09-14-owner-evidence.md) for scope and evidence rules.

@@ -35,6 +35,7 @@ export interface CandidateFeatures {
   id?: string; name?: string; placeholder?: string; role?: string; ariaLabel?: string;
   dataTestId?: string; dataTest?: string; dataCy?: string; title?: string; classes?: string[];
   text?: string; nearestLabel?: string; rowContext?: string; parentContext?: string; containerContext?: string;
+  localActionContext?: string; ownerContext?: string; ownerStatus?: 'identified' | 'missing' | 'ambiguous'; ownerSources?: string[];
   visible?: boolean; disabled?: boolean;
   href?: string; formAction?: string;
 }
@@ -66,6 +67,11 @@ export interface Attempt {
   providerMetadata?: ProviderMetadata | null;
   specDecision?: SpecDecision;
   proposedSelector?: string | null; validations?: ValidationFeedback[]; inputSha256?: string; inputCoverage?: Context['coverage'];
+  inputContext?: Context;
+  observationRefresh?: {
+    policy: 'null-refresh-once-v1'; outcome: 'changed' | 'unchanged' | 'failed' | 'time-limit';
+    previousSha256: string; refreshedSha256?: string; context?: Context; durationMs: number;
+  };
   providerCalled: boolean; transportAttempted: boolean | null; durationMs: number; providerMs: number; actionMs: number;
 }
 export interface Assessment {

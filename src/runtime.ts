@@ -4,9 +4,9 @@ import { ConfigurationError, validateConfig } from './config.js';
 import { collectContext, collectSpecEvidence, rankerSelection, fitContext } from './context.js';
 import { buildSpecContext, evaluateSpecAdmission, validateTargetSpecOptions } from './spec.js';
 import { cleanContextText, redact } from './privacy.js';
-import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata, serializeRequest } from './provider.js';
+import { parseSelector, ProviderError, normalizeUsage, normalizeProviderMetadata, serializeRequest, projectCandidates } from './provider.js';
 import { normalizeSelectors } from './selectors.js';
-import type { Action, Assessment, Config, Event, Provider, Run, Task, TargetSpecOptions } from './types.js';
+import type { Action, Assessment, Config, Event, Provider, Run, Task, TargetSpecOptions, Context } from './types.js';
 
 export class HealingFailure extends Error {
   constructor(readonly eventId: string, cause: unknown) { super(`Locator recovery failed; inspect event ${eventId}`, { cause }); this.name = 'HealingFailure'; }
@@ -43,10 +43,10 @@ export function createHealingSession(page: Page, options: {
     for (const event of copy.events) {
       event.originalSelector = redact(event.originalSelector, omitted);
       event.task = { description: cleanContextText(event.task.description, omitted), ...(event.task.scope ? { scope: cleanContextText(event.task.scope, omitted) } : {}) };
-      if (event.context) {
-        // A later fill can make text captured by an earlier event sensitive. Re-redact retained
-        // data on every snapshot; keep the original coverage/hashes as measurements of that request.
-        const context = event.context, clean = (text: string) => redact(text, omitted);
+      // A later fill can make text captured by an earlier observation sensitive. Re-redact
+      // all retained contexts while keeping hashes/coverage as original request measurements.
+      const cleanRetainedContext = (context: Context) => {
+        const clean = (text: string) => redact(text, omitted);
         context.task = { description: clean(context.task.description), ...(context.task.scope ? { scope: clean(context.task.scope) } : {}) };
         if (context.failure) context.failure.originalSelector = clean(context.failure.originalSelector);
         if (context.cleanedDom !== undefined) context.cleanedDom = clean(context.cleanedDom);
@@ -57,7 +57,17 @@ export function createHealingSession(page: Page, options: {
             [key, typeof value === 'string' ? clean(value) : Array.isArray(value) ? value.map(clean) : value])) } : {}),
         }));
         if (context.feedback) context.feedback = context.feedback.map(item => ({ ...item, selector: clean(item.selector) }));
-      }
+        if (context.targetSpec) {
+          context.targetSpec.expectedRevision = clean(context.targetSpec.expectedRevision);
+          const contract = context.targetSpec.contract;
+          if (contract) {
+            contract.requirementId = clean(contract.requirementId); contract.revision = clean(contract.revision); contract.intent = clean(contract.intent);
+            contract.allOf.forEach(clause => { clause.anyOf = clause.anyOf.map(clean); });
+            if (contract.provenance) contract.provenance.fileName = clean(contract.provenance.fileName);
+          }
+        }
+      };
+      if (event.context) cleanRetainedContext(event.context);
       if(event.targetSpec){
         // Values supplied by a later fill must also be omitted from earlier spec evidence.
         const clean=(value:string)=>cleanContextText(value,omitted);
@@ -78,6 +88,8 @@ export function createHealingSession(page: Page, options: {
         for(const attempt of event.attempts)if(attempt.specDecision)cleanDecision(attempt.specDecision);
       }
       for (const attempt of event.attempts) {
+        if (attempt.inputContext) cleanRetainedContext(attempt.inputContext);
+        if (attempt.observationRefresh?.context) cleanRetainedContext(attempt.observationRefresh.context);
         if (attempt.selector) attempt.selector = redact(attempt.selector, omitted);
         if (attempt.proposedSelector) attempt.proposedSelector = redact(attempt.proposedSelector, omitted);
         attempt.validations = attempt.validations?.map(v => ({ ...v, selector: redact(v.selector, omitted) }));
@@ -133,6 +145,16 @@ export function createHealingSession(page: Page, options: {
         event.stopReason = remaining() <= 0 ? 'time-limit' : 'context-failure';
         throw new HealingFailure(event.id, originalError);
       }
+      // Preserve the first observation for audit; only a bounded fresh observation may
+      // replace the active selection context after an explicit model abstention.
+      let activeContext = event.context;
+      let observationRefreshed = false;
+      const evidenceHash = (context: Context) => {
+        const { coverage: _coverage, feedback: _feedback, ...evidence } = context;
+        // Coverage describes measurement, not selection evidence. Candidate uniqueness,
+        // visibility and disabled state still matter; projectCandidates omits only order.
+        return createHash('sha256').update(JSON.stringify({ ...evidence, candidates: projectCandidates(context.candidates) })).digest('hex');
+      };
       for (let number = 1; number <= config.maxAttempts && remaining() > 0; number++) {
         event.stopReason = 'attempt-limit';
         const attemptStarted = performance.now();
@@ -144,10 +166,11 @@ export function createHealingSession(page: Page, options: {
           if (config.mode === 'full') {
             let input;
             try {
-              input = structuredClone(event.context!);
+              input = structuredClone(activeContext);
               const feedback = event.attempts.flatMap(a => a.validations ?? []).map(v => ({ ...v, selector: cleanContextText(v.selector, omitted) }));
               if (feedback.length) input.feedback = structuredClone(feedback);
               fitContext(input, config);
+              attempt.inputContext = structuredClone(input);
               attempt.inputCoverage = structuredClone(input.coverage);
               attempt.inputSha256 = createHash('sha256').update(serializeRequest(input, config)).digest('hex');
             } catch {
@@ -177,7 +200,39 @@ export function createHealingSession(page: Page, options: {
             catch { attempt.failure = 'parse'; attempt.reason = 'unsupported_selector_output'; continue; }
           } else { attempt.selector = rankerSelection(event.context!, rejected); }
           if (remaining() <= 0) { attempt.failure = 'budget'; attempt.reason = 'recovery_time_exhausted'; break; }
-          if (!attempt.selector) { event.stopReason = 'abstained'; attempt.failure = 'abstained'; attempt.reason = 'no_candidate_selected'; if (config.mode === 'full' && number < config.maxAttempts && remaining() > 0) continue; break; }
+          if (!attempt.selector) {
+            event.stopReason = 'abstained'; attempt.failure = 'abstained'; attempt.reason = 'no_candidate_selected';
+            if (config.mode !== 'full' || number >= config.maxAttempts || observationRefreshed) break;
+            observationRefreshed = true;
+            const refreshStarted = performance.now();
+            const refresh: NonNullable<Event['attempts'][number]['observationRefresh']> = {
+              policy: 'null-refresh-once-v1', outcome: 'failed', previousSha256: evidenceHash(attempt.inputContext!), durationMs: 0,
+            };
+            attempt.observationRefresh = refresh;
+            try {
+              const observed = await within(() => collectContext(page, action, task, config, omitted, selector, specContext), remaining());
+              if (remaining() <= 0) throw new Error('time_budget_exhausted');
+              // Compare what the next call can actually see under the same existing
+              // feedback and payload cap, not changes that fitting would omit again.
+              const fittedObservation = structuredClone(observed);
+              if (attempt.inputContext!.feedback) fittedObservation.feedback = structuredClone(attempt.inputContext!.feedback);
+              fitContext(fittedObservation, config);
+              refresh.context = structuredClone(fittedObservation);
+              refresh.refreshedSha256 = evidenceHash(fittedObservation);
+              refresh.outcome = refresh.previousSha256 === refresh.refreshedSha256 ? 'unchanged' : 'changed';
+              if (refresh.outcome === 'unchanged') { attempt.reason = 'no_candidate_selected_evidence_unchanged'; break; }
+              activeContext = observed;
+              attempt.reason = 'no_candidate_selected_evidence_changed';
+            } catch (error) {
+              const timedOut = remaining() <= 0 || error instanceof Error && error.message === 'time_budget_exhausted';
+              refresh.outcome = timedOut ? 'time-limit' : 'failed';
+              attempt.failure = refresh.outcome === 'time-limit' ? 'budget' : 'context';
+              attempt.reason = refresh.outcome === 'time-limit' ? 'recovery_time_exhausted' : 'observation_refresh_failed';
+              event.stopReason = refresh.outcome === 'time-limit' ? 'time-limit' : 'context-failure';
+              break;
+            } finally { refresh.durationMs = performance.now() - refreshStarted; }
+            continue;
+          }
           attempt.proposedSelector = attempt.selector;
           const variants = normalizeSelectors(attempt.selector);
           let chosen: string | null = null;

@@ -66,6 +66,10 @@ export function reportView(run: Run, price?: PriceAssumption) {
         providerMetadata: normalizeProviderMetadata(a.providerMetadata),
         ...(a.specDecision?{specDecision:specDecisionView(a.specDecision)}:{}),
         proposedSelector: a.proposedSelector ? redact(a.proposedSelector) : null, validations: a.validations?.map(v => ({selector: redact(v.selector), count: v.count, reason: v.reason})) ?? [], inputSha256: a.inputSha256, inputCoverage: a.inputCoverage,
+        ...(a.observationRefresh ? { observationRefresh: {
+          policy: a.observationRefresh.policy, outcome: a.observationRefresh.outcome, durationMs: a.observationRefresh.durationMs,
+          previousSha256: a.observationRefresh.previousSha256, refreshedSha256: a.observationRefresh.refreshedSha256,
+        } } : {}),
         providerCalled: a.providerCalled, transportAttempted: a.transportAttempted, usage: a.usage, durationMs: a.durationMs, providerMs: a.providerMs, actionMs: a.actionMs })),
     })),
     assessments: run.assessments.map(a => ({ eventId: a.eventId, attemptId: a.attemptId, semantic: a.semantic,

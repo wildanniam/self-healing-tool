@@ -120,3 +120,20 @@ The runtime SHALL treat supported explicit null-selection output as a no-candida
 - **WHEN** An output contains unsupported code or a malformed selector record
 - **THEN** the output is rejected without execution and normal validation remains required for actual selectors
 
+
+
+### Requirement: HEAL-010 Observation-aware bounded no-selection retry
+
+After explicit no-selection, full-mode recovery SHALL refresh observations at most once per event and call the provider again only when selection evidence changes within existing attempt/time limits; unchanged evidence MUST stop as abstention.
+
+#### Scenario: HEAL-010-S1
+- **WHEN** New observable candidate evidence appears after the first null response
+- **THEN** one refreshed observation may support the next bounded attempt
+
+#### Scenario: HEAL-010-S2
+- **WHEN** Only accounting counts change or evidence is unchanged
+- **THEN** no duplicate provider call is made and abstention stays visible
+
+#### Scenario: HEAL-010-S3
+- **WHEN** Refresh fails, time expires or the provider returns null again
+- **THEN** the method stops with recorded cause and no unbounded polling

@@ -114,3 +114,20 @@ The corrected ranking SHALL avoid duplicate structural-token amplification and s
 - **WHEN** Compact candidates and fallback approach configured limits
 - **THEN** actual serialized projection is measured, all input limits hold, and omitted candidates/stages are reported without claiming guaranteed target coverage
 
+
+
+### Requirement: CTX-009 Owned evidence with bounded provenance
+
+Candidate context SHALL distinguish local action context from owning identity and expose bounded provenance; owner-bearing evidence MUST NOT borrow unrelated sibling or nested entity prose. No task or contract phrase may guide ownership traversal.
+
+#### Scenario: CTX-009-S1
+- **WHEN** An unnamed semantic wrapper is added around a control
+- **THEN** the nearest justified owner remains identifiable through the wrapper
+
+#### Scenario: CTX-009-S2
+- **WHEN** A nested owner is missing identity or named ownership boundaries conflict
+- **THEN** ownership is reported missing or ambiguous rather than borrowing broader identity
+
+#### Scenario: CTX-009-S3
+- **WHEN** A neighboring entity mentions the desired identity in its prose
+- **THEN** that mention does not become the candidate owner identity

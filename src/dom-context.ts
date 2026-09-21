@@ -69,39 +69,160 @@ export function inspectDom(root: Element, options: InspectionOptions) {
     const result = value.slice(0, limit), cache = textCache.get(e) ?? new Map<string, string>();
     cache.set(key, result); textCache.set(e, cache); return result;
   };
-  const firstHeading = (e: Element) => {
-    const walker = document.createTreeWalker(e, NodeFilter.SHOW_ELEMENT), limit = 2000;
-    for (let visits = 0; visits < limit; visits++) {
-      const next = walker.nextNode() as Element | null;
-      if (!next) return null;
-      if (next.matches('h1,h2,h3,h4,h5,h6,legend,td,th') && !next.closest(blocked) && !hidden(next) && text(next, 160)) return next;
+  // Identity is a relationship to a bounded owner node, not arbitrary nearby prose.
+  const strongOwner = 'tr,li,article,fieldset,form,nav,dialog,[role="dialog"],[role="listitem"],[role="navigation"]';
+  const headingQuery = 'h1,h2,h3,h4,h5,h6,legend';
+  const rawHeadings = new WeakMap<Element, Element | null>();
+  const firstOwnedHeading = (host: Element, excludeCards = true): Element | null => {
+    if (!excludeCards && rawHeadings.has(host)) return rawHeadings.get(host)!;
+    let visits = 0;
+    const walk = (parent: Element, depth: number): Element | null => {
+      for (const child of parent.children) {
+        if (++visits > 2000 || depth > 80) { scanTruncated = true; return null; }
+        if (child.closest(blocked) || hidden(child) || child.matches(controls + ',button,a,[role="button"],[role="link"]')) continue;
+        // A nested semantic entity owns its headings. Transparent div/header wrappers do not.
+        if (child.matches(semantic) || excludeCards && repeatedCard(child)) continue;
+        if (child.matches(headingQuery) && text(child, 160)) return child;
+        const nested = walk(child, depth + 1);
+        if (nested) return nested;
+      }
+      return null;
+    };
+    const result = walk(host, 0);
+    if (!excludeCards) rawHeadings.set(host, result);
+    return result;
+  };
+  const ownControlsCache = new WeakMap<Element, boolean>();
+  const hasOwnedControls = (host: Element) => {
+    const cached = ownControlsCache.get(host);
+    if (cached !== undefined) return cached;
+    let visits = 0;
+    const walk = (node: Element, depth: number): boolean => {
+      if (++visits > 2000 || depth > 80) { scanTruncated = true; return false; }
+      if (node.closest(blocked) || hidden(node)) return false;
+      // Wrapping controls in an unnamed section/aside does not transfer them to another entity.
+      if (node !== host && node.matches(strongOwner)) return false;
+      if (node.matches('button,a,input:not([type="hidden"]),textarea,select,[contenteditable="true"],[role="button"],[role="link"],[role="tab"],[role="menuitem"],[role="checkbox"],[role="radio"],[role="switch"]')) return true;
+      for (const child of node.children) if (walk(child, depth + 1)) return true;
+      return false;
+    };
+    const result = walk(host, 0); ownControlsCache.set(host, result); return result;
+  };
+  const cardCache = new WeakMap<Element, boolean>();
+  const repeatedCard = (host: Element): boolean => {
+    const cached = cardCache.get(host);
+    if (cached !== undefined) return cached;
+    if (!host.matches('div,section,aside') || !hasOwnedControls(host)) { cardCache.set(host, false); return false; }
+    // Membership is structural, including a peer whose heading disappeared. Requiring every
+    // peer to have a heading would make both peers borrow a broader owner after that mutation.
+    let count = 0, named = false, visits = 0;
+    const peers: Element[] = [];
+    for (const sibling of host.parentElement?.children ?? []) {
+      if (++visits > 2000) { scanTruncated = true; break; }
+      if (sibling.tagName !== host.tagName || !hasOwnedControls(sibling)) continue;
+      peers.push(sibling); count++;
+      named ||= !!firstOwnedHeading(sibling, false);
     }
-    scanTruncated = true; return null;
+    const result = count > 1 && named;
+    for (const peer of peers) cardCache.set(peer, result);
+    cardCache.set(host, result); return result;
+  };
+  const accessibleName = (e: Element) => {
+    const literal = compact(e.getAttribute('aria-label'));
+    if (literal.length > 160) scanTruncated = true;
+    if (literal) return { value: literal.slice(0, 160), source: 'aria-label' };
+    const ids = compact(e.getAttribute('aria-labelledby')).split(/\s+/).filter(Boolean);
+    if (ids.length > 8) scanTruncated = true;
+    const value = compact(ids.slice(0, 8).map(id => text(document.getElementById(id), 80, true)).join(' '));
+    if (value.length > 160) scanTruncated = true;
+    return value ? { value: value.slice(0, 160), source: 'aria-labelledby' } : null;
+  };
+  const ownedIdentityText = (host: Element) => {
+    const parts: string[] = [];
+    let visits = 0, remaining = 160;
+    const walk = (node: Element, depth: number) => {
+      if (++visits > 2000 || depth > 80 || remaining <= 0) { scanTruncated = true; return; }
+      if (node.closest(blocked) || hidden(node) || node.matches(controls + ',button,a,[role="button"],[role="link"]')) return;
+      if (node !== host && (node.matches(semantic) || repeatedCard(node))) return;
+      for (const child of node.childNodes) {
+        if (remaining <= 0 || visits > 2000) { scanTruncated = true; break; }
+        if (child.nodeType === Node.TEXT_NODE) {
+          const value = compact(child.textContent); parts.push(value.slice(0, remaining)); remaining -= value.length;
+        } else if (child.nodeType === Node.ELEMENT_NODE) walk(child as Element, depth + 1);
+      }
+    };
+    walk(host, 0); return compact(parts.join(' ')).slice(0, 160);
+  };
+  type Identity = { value: string; sources: string[]; heading: Element | null };
+  const identities = new WeakMap<Element, Identity>();
+  const identityFor = (host: Element): Identity => {
+    const cached = identities.get(host);
+    if (cached) return cached;
+    const explicit = accessibleName(host);
+    const heading = firstOwnedHeading(host);
+    let result: Identity = { value: '', sources: [], heading };
+    if (explicit) result = { value: explicit.value, sources: [explicit.source], heading };
+    else if (host.matches('tr')) {
+      if (host.children.length > 2000) scanTruncated = true;
+      const cells = [...host.children].slice(0, 2000).filter(e => e.matches('td,th') && !hidden(e));
+      // A row header declares identity. Fallback to the first non-action data cell, never concatenate notes.
+      const header = cells.find(e => e.matches('th[scope="row"],[role="rowheader"]'));
+      const cell = header ?? cells.find(e => !e.querySelector(controls + ',button,a,[role="button"],[role="link"]') && ownedIdentityText(e));
+      if (cell) result = { value: ownedIdentityText(cell), sources: [header ? 'row-header' : 'row-identity-cell'], heading: cell };
+    } else if (heading) result = { value: ownedIdentityText(heading), sources: [heading.matches('legend') ? 'legend' : 'heading'], heading };
+    identities.set(host, result); return result;
+  };
+  type Owner = { node: Element | null; identity: Identity; status: 'identified' | 'missing' | 'ambiguous' };
+  const emptyIdentity = (): Identity => ({ value: '', sources: [], heading: null });
+  const ownerFor = (e: Element): Owner => {
+    let pending: { node: Element; identity: Identity } | null = null, depth = 0;
+    for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) {
+      if (++depth > 80) { scanTruncated = true; return { node: null, identity: emptyIdentity(), status: 'missing' }; }
+      if (hidden(p) || p.closest(blocked)) continue;
+      const strong = p.matches(strongOwner) || repeatedCard(p);
+      if (!strong && !p.matches(semantic)) continue;
+      const identity = identityFor(p);
+      if (strong) {
+        // Missing nested owners are barriers: their controls cannot inherit a different outer entity.
+        if (!identity.value) return { node: null, identity: emptyIdentity(), status: pending ? 'ambiguous' : 'missing' };
+        if (pending && pending.identity.value !== identity.value) return { node: null, identity: emptyIdentity(), status: 'ambiguous' };
+        return pending ? { ...pending, status: 'identified' } : { node: p, identity, status: 'identified' };
+      }
+      if (!identity.value) continue; // Unnamed aside/section/group wrappers are transparent.
+      if (pending && pending.identity.value !== identity.value) return { node: null, identity: emptyIdentity(), status: 'ambiguous' };
+      pending ??= { node: p, identity };
+    }
+    return pending ? { ...pending, status: 'identified' } : { node: null, identity: emptyIdentity(), status: 'missing' };
+  };
+  const localActionFor = (e: Element) => {
+    let depth = 0;
+    for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) {
+      if (++depth > 80) { scanTruncated = true; break; }
+      if (!p.matches(semantic)) continue;
+      let visits = 0, remaining = 320;
+      const parts: string[] = [];
+      const walk = (node: Element, level: number) => {
+        if (++visits > 500 || level > 80 || remaining <= 0) { scanTruncated = true; return; }
+        if (node.closest(blocked) || hidden(node) || node.matches(controls)) return;
+        if (node !== p && (node.matches(semantic) || repeatedCard(node))) return;
+        for (const child of node.childNodes) {
+          if (remaining <= 0 || visits > 500) { scanTruncated = true; break; }
+          if (child.nodeType === Node.TEXT_NODE) {
+            const value = compact(child.textContent); parts.push(value.slice(0, remaining)); remaining -= value.length;
+          } else if (child.nodeType === Node.ELEMENT_NODE) walk(child as Element, level + 1);
+        }
+      };
+      walk(p, 0);
+      // Action labels remain available but are not promoted to owner evidence.
+      const value = compact([accessibleName(p)?.value, parts.join(' ')].filter(Boolean).join(' '));
+      if (value.length > 320) scanTruncated = true;
+      return value.slice(0, 320);
+    }
+    return '';
   };
   const path = (raw: string | null) => {
     if (!raw) return '';
     try { const u = new URL(raw, /^https?:/.test(document.baseURI) ? document.baseURI : 'http://localhost/'); return ['http:','https:'].includes(u.protocol) ? u.pathname : ''; } catch { return ''; }
-  };
-  const containerFor = (e: Element) => {
-    let depth = 0;
-    for (let p = e.parentElement; p && p !== document.body; p = p.parentElement) {
-      if (++depth > 80) { scanTruncated = true; break; }
-      if (p.matches(semantic)) return p;
-      if (firstHeading(p)) {
-        let similar = 0, visited = 0;
-        for (const sibling of p.parentElement?.children ?? []) {
-          if (++visited > 2000) { scanTruncated = true; break; }
-          if (sibling.tagName === p.tagName && firstHeading(sibling)) similar++;
-          if (similar > 1) return p;
-        }
-      }
-    }
-    return e.closest('label');
-  };
-  const groupText = (e: Element | null) => {
-    if (!e) return '';
-    const accessibleName = e.getAttribute('aria-label') || compact((e.getAttribute('aria-labelledby') ?? '').split(/\s+/).map(id => text(document.getElementById(id), 80, true)).join(' '));
-    return compact([accessibleName, text(e)].filter(Boolean).join(' ')).slice(0, 500);
   };
   const describe = (e: Element) => {
     const attr = (name: string) => e.getAttribute(name) ?? '';
@@ -111,10 +232,10 @@ export function inspectDom(root: Element, options: InspectionOptions) {
     const labels = nativeLabels.length ? nativeLabels.map(n => text(n, 80, true)).join(' ') : text(e.closest('label'), 80, true);
     const ariaRefs = compact(attr('aria-labelledby').split(/\s+/).map(id => text(document.getElementById(id), 80, true)).join(' '));
     const ownText = e.matches(controls) ? '' : text(e, 80, false, false, false);
-    const container = containerFor(e), row = e.closest('tr');
-    const rowContext = row ? [...row.querySelectorAll('td,th')].slice(0, 6).map(cell => text(cell, 160, false, true)).filter(Boolean).join(' | ').slice(0, 160) : '';
-    // Semantic parent identity survives purely structural wrappers.
-    const parent = container ?? e.parentElement;
+    const owner = ownerFor(e), container = owner.node;
+    const rowContext = container?.matches('tr') ? owner.identity.value : '';
+    // Parent metadata is structural identity only, never a fallback to an unrelated parent.
+    const parent = container;
     const parentContext = parent ? parent.tagName.toLowerCase() + (parent.id ? '#' + parent.id : '') + [...parent.classList].filter(c => c.length < 20).slice(0, 2).map(c => '.' + c).join('') : '';
     const form = 'form' in e ? (e as HTMLInputElement).form : e.closest('form');
     const evidence = {
@@ -122,7 +243,8 @@ export function inspectDom(root: Element, options: InspectionOptions) {
       tag, type, id: attr('id'), name: attr('name'), placeholder: attr('placeholder'), role: attr('role'), ariaLabel: attr('aria-label'),
       dataTestId: attr('data-testid'), dataTest: attr('data-test'), dataCy: attr('data-cy'), title: attr('title'), classes,
       text: ownText, nearestLabel: labels || ariaRefs, rowContext, parentContext,
-      containerContext: groupText(container), container: groupText(container), href: path(attr('href')), formAction: path(attr('formaction') || form?.getAttribute('action') || null),
+      containerContext: owner.identity.value, container: owner.identity.value,
+      ownerContext: owner.identity.value, ownerStatus: owner.status, ownerSources: owner.identity.sources, localActionContext: localActionFor(e), href: path(attr('href')), formAction: path(attr('formaction') || form?.getAttribute('action') || null),
     } satisfies SpecEvidence;
     return { evidence, container, nativeLabels };
   };
@@ -166,9 +288,9 @@ export function inspectDom(root: Element, options: InspectionOptions) {
     if (container && container !== e) {
       scopes.push(...addAttributes(container));
       // Descendant headings survive wrappers; candidates remain distinct even with equal text.
-      const heading = firstHeading(container);
+      const heading = identityFor(container).heading;
       if (heading) {
-        const identity = text(heading, 160, false, false, false);
+        const identity = ownedIdentityText(heading);
         // Prefer an exact text-bearing node, retaining the path back to its semantic host.
         let anchor = heading;
         while (anchor.children.length === 1 && text(anchor.children[0]!, 160, false, false, false) === identity) anchor = anchor.children[0]!;
