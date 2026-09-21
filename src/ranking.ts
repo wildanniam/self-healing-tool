@@ -1,4 +1,4 @@
-import type { Action, Candidate, CandidateFeatures, Task } from './types.js';
+import type { Action, Candidate, CandidateFeatures, RankingExperiment, Task } from './types.js';
 
 /** D27 keeps the additive thesis signals but counts each intent token once. */
 const words = (value = '') => [...new Set(value.toLowerCase().replace(/[^a-z0-9\s_-]/g, ' ').split(/[\s_-]+/).filter(w => w.length > 1))];
@@ -24,17 +24,32 @@ const stableFields = ['id', 'dataTestId', 'dataTest', 'dataCy', 'name'] as const
 const stableSignatures = (c: Candidate) => stableFields.flatMap(key => c.features?.[key] ? [`${key}:${c.features[key]}`] : []);
 const labelSignatures = (c: Candidate) => [...new Set([c.features?.text, c.features?.ariaLabel, c.label].filter((v): v is string => !!v?.trim()).map(v => 'label:' + v.toLowerCase().trim()))];
 
-export function rankThesis(candidates: Candidate[], action: Action, task: Task, oldSelector = ''): Candidate[] {
-  const old = locatorWords(oldSelector), step = words(`${task.description} ${task.scope ?? ''}`);
+function frequencies(candidates: Candidate[]): Map<string, number> {
   const frequency = new Map<string, number>();
   for (const c of candidates) for (const key of [...stableSignatures(c), ...labelSignatures(c)]) frequency.set(key, (frequency.get(key) ?? 0) + 1);
+  return frequency;
+}
+function duplicateCount(c: Candidate, frequency: Map<string, number>): number {
+  const stable = stableSignatures(c);
+  return stable.length ? Math.min(...stable.map(s => frequency.get(s) ?? 1)) : Math.max(1, ...labelSignatures(c).map(s => frequency.get(s) ?? 1));
+}
+function lexicalFields(f: CandidateFeatures, relational: boolean): string[] {
+  return words([f.id, f.name, f.placeholder, f.ariaLabel, f.text, f.nearestLabel, f.dataTestId, f.dataTest, f.dataCy, f.title,
+    ...(relational ? [f.rowContext, f.containerContext, ...parentWords(f.parentContext)] : []), ...(f.classes ?? [])].filter(Boolean).join(' '));
+}
+export function rankThesis(candidates: Candidate[], action: Action, task: Task, oldSelector = ''): Candidate[] {
+  return rankThesisSignals(candidates, action, task, oldSelector, true);
+}
+function rankThesisSignals(candidates: Candidate[], action: Action, task: Task, oldSelector: string, relational: boolean): Candidate[] {
+  const old = locatorWords(oldSelector), step = words(`${task.description} ${task.scope ?? ''}`);
+  const frequency = frequencies(candidates);
   return candidates.map(c => {
     const f = c.features ?? {}, parent = parentWords(f.parentContext);
-    const all = words([f.id, f.name, f.placeholder, f.ariaLabel, f.text, f.nearestLabel, f.dataTestId, f.dataTest, f.dataCy, f.title, f.rowContext, f.containerContext, ...parent, ...(f.classes ?? [])].filter(Boolean).join(' '));
-    const a = overlap(old, all), b = overlap(step, all), stable = stableSignatures(c);
+    const all = lexicalFields(f, relational);
+    const a = overlap(old, all), b = overlap(step, all);
     // A common class or label cannot make an independently unique stable field a duplicate.
     // Candidates remain separate nodes, including equal labels in different entity rows.
-    const dup = stable.length ? Math.min(...stable.map(s => frequency.get(s) ?? 1)) : Math.max(1, ...labelSignatures(c).map(s => frequency.get(s) ?? 1));
+    const dup = duplicateCount(c, frequency);
     let score = a * 15 + b * 10;
     if ((action === 'fill' ? ['input', 'textarea'] : clickTags).includes(c.tag)) score += 5;
     if (roles[action].includes(f.role ?? '')) score += 8;
@@ -52,9 +67,24 @@ export function rankThesis(candidates: Candidate[], action: Action, task: Task, 
       if (key && !matched.has(name) && f[key] === value) { score += name === 'placeholder' ? 25 : 30; matched.add(name); }
     }
     const ot = overlap(old, words(f.text)), st = overlap(step, words(f.text)); score += ot * 8 + st * 6 + (ot >= 2 || st >= 2 ? 12 : 0);
-    score += overlap(old, words(f.rowContext)) * 8 + overlap(step, words(f.rowContext)) * 12;
-    score += (overlap(old, parent) + overlap(step, parent)) * 5;
-    score += overlap(step, words(f.containerContext)) * 8;
+    if (relational) {
+      score += overlap(old, words(f.rowContext)) * 8 + overlap(step, words(f.rowContext)) * 12;
+      score += (overlap(old, parent) + overlap(step, parent)) * 5;
+      score += overlap(step, words(f.containerContext)) * 8;
+    }
     return { ...c, score, duplicateCount: dup };
+  }).sort((a, b) => b.score - a.score || a.order - b.order);
+}
+
+/** RM1 changes only scoring/order. Features and common duplicate metadata are retained. */
+export function rankCandidates(candidates: Candidate[], action: Action, task: Task, oldSelector = '', experiment?: RankingExperiment): Candidate[] {
+  if (experiment === undefined || experiment === 'thesis-full') return rankThesis(candidates, action, task, oldSelector);
+  if (experiment === 'thesis-no-relations') return rankThesisSignals(candidates, action, task, oldSelector, false);
+  const query = [...new Set([...locatorWords(oldSelector), ...words(`${task.description} ${task.scope ?? ''}`)])];
+  const frequency = frequencies(candidates);
+  return candidates.map(c => {
+    const tokens = lexicalFields(c.features ?? {}, true);
+    const union = new Set([...query, ...tokens]).size;
+    return { ...c, score: union ? overlap(query, tokens) / union : 0, duplicateCount: duplicateCount(c, frequency) };
   }).sort((a, b) => b.score - a.score || a.order - b.order);
 }

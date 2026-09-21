@@ -1,0 +1,45 @@
+{
+  "id": "apsec-d33-rm1-dom-ranking-2026-09-18-v1",
+  "model": "gpt-4o-mini-2024-07-18",
+  "maxRequests": 351,
+  "maxCostUsd": 3,
+  "phases": {
+    "pilot": 27,
+    "main": 324
+  },
+  "price": {
+    "version": "openai-model-page-2026-09-18",
+    "inputUsdPerMillion": 0.15,
+    "outputUsdPerMillion": 0.6
+  },
+  "config": {
+    "mode": "full",
+    "model": "gpt-4o-mini-2024-07-18",
+    "maxTokens": 500,
+    "temperature": 0,
+    "maxAttempts": 3,
+    "actionTimeoutMs": 3000,
+    "recoveryTimeoutMs": 45000,
+    "providerTimeoutMs": 15000,
+    "domMaxChars": 8000,
+    "payloadMaxChars": 12000,
+    "maxCandidates": 30
+  },
+  "arms": {
+    "R0": "lexical-jaccard",
+    "R1": "thesis-no-relations",
+    "R2": "thesis-full"
+  },
+  "workload": {
+    "pilot": {
+      "cases": 3,
+      "repeats": 1,
+      "slots": 9
+    },
+    "main": {
+      "cases": 12,
+      "repeats": 3,
+      "slots": 108
+    }
+  }
+}

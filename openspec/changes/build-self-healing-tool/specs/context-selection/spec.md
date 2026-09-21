@@ -131,3 +131,15 @@ Candidate context SHALL distinguish local action context from owning identity an
 #### Scenario: CTX-009-S3
 - **WHEN** A neighboring entity mentions the desired identity in its prose
 - **THEN** that mention does not become the candidate owner identity
+
+### Requirement: CTX-010 Auditable ranking interventions
+
+Experimental ranking SHALL select R0/R1/R2 before every top-k and budget operation while preserving shared extraction/candidate fields and default behavior; audit records MUST be detached observations without evaluator inputs.
+
+#### Scenario: CTX-010-S1
+- **WHEN** An experimental arm runs
+- **THEN** only the declared scoring/order differs, full/default scores retain parity, R1 removes both pooled and dedicated relational terms, and all arms preserve duplicate metadata
+
+#### Scenario: CTX-010-S2
+- **WHEN** Context is serialized or refreshed
+- **THEN** score-free experimental projection is identical for metering and wire, strategy persists and the audit cannot modify selection

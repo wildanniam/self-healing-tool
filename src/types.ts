@@ -1,5 +1,6 @@
 export type Action = 'click' | 'fill';
 export type Mode = 'ranker-only' | 'full';
+export type RankingExperiment = 'lexical-jaccard' | 'thesis-no-relations' | 'thesis-full';
 export type SemanticOutcome = 'unassessed' | 'correct' | 'incorrect';
 export interface Task { description: string; scope?: string }
 export type SpecEvidenceSource = 'label' | 'text' | 'nearestLabel' | 'placeholder' | 'ariaLabel' | 'name' | 'title' | 'role' | 'tag' | 'type' | 'id' | 'dataTestId' | 'dataTest' | 'dataCy' | 'classes' | 'rowContext' | 'parentContext' | 'containerContext' | 'container' | 'href' | 'formAction';
@@ -30,6 +31,8 @@ export interface Config {
   maxTokens: number; temperature: number; maxAttempts: number;
   actionTimeoutMs: number; recoveryTimeoutMs: number; providerTimeoutMs: number;
   domMaxChars: number; payloadMaxChars: number; maxCandidates: number;
+  /** Explicit RM1 intervention; absence preserves the production ranker and projection. */
+  rankingExperiment?: RankingExperiment;
 }
 export interface CandidateFeatures {
   id?: string; name?: string; placeholder?: string; role?: string; ariaLabel?: string;
@@ -52,6 +55,13 @@ export interface Context {
   coverage: { scanned?: number; ineligible?: number; locatorCheckedCandidates?: number; unaddressable?: number; beforeBudget?: number; budgetOmitted?: number; discovered: number; included: number; omitted: number; textTruncated: boolean; domChars: number; payloadChars: number; domLimit: number; payloadLimit: number; candidateLimit: number };
 }
 export interface Usage { inputTokens: number; outputTokens: number }
+/** Out-of-band collection evidence. Never added to Context or a model request. */
+export interface ContextCollectionAudit {
+  schemaVersion: 1; rankingExperiment?: RankingExperiment;
+  /** Candidate.order identifies the originating inspectDom node, before eligibility filtering. */
+  preRank: Candidate[]; ranked: Candidate[]; cleanedDom: string; context: Context;
+  timingsMs: { extract: number; sanitize: number; rank: number; verify: number; fit: number; total: number };
+}
 export interface ProviderMetadata { returnedModel: string | null; finishReason: 'stop' | 'length' | 'content_filter' | 'tool_calls' | 'function_call' | null }
 export interface ProviderResponse { output: string; usage: Usage | null; transportAttempted?: boolean; metadata?: ProviderMetadata | null }
 /** Optional diagnostic sink. An adapter calls this with the body it actually dispatches. */

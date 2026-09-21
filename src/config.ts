@@ -8,8 +8,9 @@ export const DEFAULT_CONFIG: Readonly<Config> = Object.freeze({
   providerTimeoutMs: 5000, domMaxChars: 8000, payloadMaxChars: 12000, maxCandidates: 30,
 });
 export function validateConfig(input: Partial<Config> = {}): Readonly<Config> {
-  for (const key of Object.keys(input)) if (!Object.hasOwn(DEFAULT_CONFIG, key)) throw new ConfigurationError(key);
+  for (const key of Object.keys(input)) if (!Object.hasOwn(DEFAULT_CONFIG, key) && key !== 'rankingExperiment') throw new ConfigurationError(key);
   const c = { ...DEFAULT_CONFIG, ...input };
+  if (c.rankingExperiment !== undefined && !['lexical-jaccard', 'thesis-no-relations', 'thesis-full'].includes(c.rankingExperiment)) throw new ConfigurationError('rankingExperiment');
   if (!['ranker-only', 'full'].includes(c.mode)) throw new ConfigurationError('mode');
   if (!['gpt-4o-mini', 'gpt-4o-mini-2024-07-18'].includes(c.model)) throw new ConfigurationError('model');
   const limits: [keyof Config, number, number][] = [
