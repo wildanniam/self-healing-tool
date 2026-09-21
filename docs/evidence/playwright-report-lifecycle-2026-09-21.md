@@ -22,7 +22,7 @@ Local environment: macOS arm64, Node25.8.2, Playwright/Chromium1.62.1. No model 
 - Complete local example command passed with ranker-only recovery, starting/stopping its own app and creating the suite index.
 - Suite/action browser checks cover EN/ID, links, escaping and mobile overflow; local preview is outside Git.
 
-Initial tests exposed missing reporter export resolution and loss of passed-test reports after runner cleanup. Both were fixed and the corresponding consumer checks rerun. No recovery-core source or frozen research file is changed. Live-provider walkthrough remains unexecuted; provider/capture behavior is tested with offline transport, not represented as new model effectiveness.
+Initial tests exposed missing reporter export resolution and loss of passed-test reports after runner cleanup. Both were fixed and the corresponding consumer checks rerun. The first push CI also exposed two existing report tests with a 100 ms action/count budget; the same commit passed PR CI. Report-focused tests now allow 750 ms for browser round-trips, including the new consumer fixture, without changing production timeouts or removing assertions. The affected report cases passed 20 repeated local runs, and the installed consumer passed again with 12 cases/19 attempts; a fresh full CI run follows. No recovery-core source or frozen research file is changed. Live-provider walkthrough remains unexecuted; provider/capture behavior is tested with offline transport, not represented as new model effectiveness.
 
 ## Limits
 

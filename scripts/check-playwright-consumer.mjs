@@ -18,7 +18,7 @@ export default defineConfig({projects:[{name:'chromium'}],preserveOutput:'failur
  writeFileSync(join(consumer,'flow.spec.ts'),`import {test,expect} from 'self-healing-tool/playwright';
 import {validateConfig,serializeRequest,ProviderError} from 'self-healing-tool';
 import {writeFile} from 'node:fs/promises';
-const config=validateConfig({mode:'full',actionTimeoutMs:100,providerTimeoutMs:1000,recoveryTimeoutMs:4000});
+const config=validateConfig({mode:'full',actionTimeoutMs:750,providerTimeoutMs:1000,recoveryTimeoutMs:4000});
 const provider={kind:'offline' as const,async select(context,signal,audit){audit?.request(serializeRequest(context,config));return {output:JSON.stringify({selector:'#current'}),usage:null};}};
 test.use({healingOptions:{config,provider,audit:true}});
 const content='<label>Display name<input id="current"></label>';
