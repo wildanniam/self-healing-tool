@@ -17,7 +17,8 @@ The report includes:
 - A/B/C comparison, separate recovery and wrong-action denominators;
 - controls, ordinary changes, unavailable/retired targets, misleading-label stress, and insufficient requirements;
 - application/category/search filters and a wrong-action filter;
-- condition details with each repetition, proposals, admission, execution and independent outcome;
+- an Inspeksi view with one case, A/B/C arm, repeat and attempt at a time;
+- stage-by-stage DOM context/ranking, exact AI messages, available output, validator decisions, requirement clauses and independent effects;
 - request counts, recorded token usage, and cost estimates using the retained D30 rate assumption;
 - JSON/CSV export, printing of all filtered conditions, and source fingerprints.
 
@@ -31,7 +32,26 @@ npm run demo -- --synthetic /path/to/synthetic/results.json --private /path/to/p
 
 Alternatively, put `synthetic` and `privateDirectory` paths in ignored `.presentation.local.json`. For the independent data alone, omit the private source. Existing normalized report JSON can be reopened directly through its sibling HTML or loaded with `--snapshot` when no duplicate private source is configured.
 
-The private adapter copies outcome/accounting fields, not private DOM, task text, locators, values or browser sessions. Generated full reports remain local and ignored. Packaging the library does not package any presentation or private evaluation assets.
+By default, the private adapter copies outcome/accounting fields only. For authorized local diagnosis, add `--private-audit` or set `"privateAudit": true` in ignored `.presentation.local.json`. This includes allowlisted private task/context, selectors, recorded request/response bodies, rules and observed effects. It never loads browser sessions or provider credentials. `--summary-only` overrides the setting and omits private diagnostics. Generated diagnostic HTML/JSON and explicit per-run downloads are private local artifacts; do not share them as public examples. Packaging the library excludes presentation and private evaluation assets.
+
+## Inspect a case
+
+Click **Inspeksi** beside a condition. Select A, B or C, a repetition and (if available) a healing attempt. The left navigation shows eight stages:
+
+1. **Aksi awal**: intended task, action, original locator and failure classification.
+2. **DOM & ranking**: recorded attempt context, coverage counts, ranked candidates, features and any cleaned DOM supplement.
+3. **Input ke AI**: the stored system prompt and user message, model settings, byte count and SHA-256 checks. Download the original body for independent comparison.
+4. **Output AI**: recorded provider text when available and the separately recorded parsed locator.
+5. **Validasi locator**: technical admission, rejected variants and feedback sent to that attempt.
+6. **Aturan requirement**: B supplies context; C additionally checks declared clauses before action. Each available clause result shows evidence and its matched source.
+7. **Bukti hasil**: independent outcome assessment and observed effects, separate from the AI's choice or the validator's admission.
+8. **Sumber & batas**: source identity, stored configuration and gaps in capture.
+
+Start with **F-C01 → Aksi awal**: the original locator succeeds, so AI and candidate-check stages are explicitly skipped. **F-R01 → Input ke AI** demonstrates an actual platform recovery request. **h1-06 → C → Aturan requirement** shows a rejected candidate; compare B on the same condition. **h1-05 → Bukti hasil** retains the misleading-label failure.
+
+Some older data cannot support a complete trace: raw DOM before cleansing, discarded nodes and per-feature score contributions were not recorded. The 180 independent historical requests retain only parsed responses; the 144 private-host requests also retain raw output. These gaps are labeled, never reconstructed as original evidence. New replay/live presentation captures store the provider input and returned text; replay text remains labeled replay. Successful request hash verification confirms agreement with retained fingerprints, not independent attestation by the provider.
+
+**Unduh ringkasan JSON** omits private diagnostic objects; **Unduh bukti run** explicitly includes the selected run's locally loaded audit. Both retain source/evidence labels. JSON details expand on demand. Keyboard navigation and Escape/back return to the overview; the layout adapts to mobile.
 
 ## Walk through browser actions
 
@@ -83,4 +103,4 @@ No paid live comparison was executed while implementing this workflow. Its missi
 - A replay mismatch means the recorded input no longer matches this checkout. Do not edit the expected result to force a pass; use the matching D30 core/fixtures or record a separately authorized new demonstration.
 - Press Ctrl-C to stop. Intermediate progress is retained; an interrupted sequence is not a complete report.
 
-See [D31 verification](evidence/presentation-demo-2026-09-16.md) and [decision](decisions/2026-09-16-presentation.md).
+See [D32 inspection verification](evidence/inspectable-report-2026-09-16.md), [D32 decision](decisions/2026-09-16-inspector.md), and historical [D31 verification](evidence/presentation-demo-2026-09-16.md).

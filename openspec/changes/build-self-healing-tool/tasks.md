@@ -109,3 +109,12 @@ D30 completed 378 scoped regression slots with full accounting and retained fail
 - [x] 14.3 Verify actual archived totals, browser interactions, escaping, replay outcomes and unchanged archive fingerprints; document commands and evidence. [OBS-009, DEMO-006]
 
 D31 presentation verification is complete; retained D30 results and research/release limitations remain unchanged. See `docs/evidence/presentation-demo-2026-09-16.md`. No paid live comparison was run.
+
+
+## 15. D32 inspectable evidence workflow
+
+- [x] 15.1 Implement allowlisted per-attempt audit adapters, exact request integrity, missing/skipped states and local private diagnostic boundaries. [OBS-010]
+- [x] 15.2 Implement spacious stage navigation, case/arm/repeat/attempt inspection, decision/effect explanations and future demo capture. [OBS-010]
+- [x] 15.3 Verify source/result parity, control/recovery/refusal/retry paths, exports, escaping, keyboard/mobile behavior and unchanged archives; document evidence and Atlas checkpoint. [OBS-010]
+
+D32 inspector verification is complete; see `docs/evidence/inspectable-report-2026-09-16.md`. Historical inputs/results remain unchanged; raw evidence gaps stay explicit. No paid API calls were made.
