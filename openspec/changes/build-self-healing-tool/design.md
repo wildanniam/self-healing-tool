@@ -175,3 +175,10 @@ D29 pre-freeze independent correction: same-tag structural peer families also qu
 ## D30 evaluation design
 
 Use the unchanged D29 core. Scope stratification is declared after exploration and before new outcomes. Preserve 20 private and 16 synthetic conditions, add six prespecified ordinary variants, and retain all business-effect oracles. Use [the D30 protocol](../../../docs/evaluation/scoped-d30-protocol.md) for native checks, freeze, one central capped ledger, per-attempt records and diagnosis. No semantic-gate redesign, fixture answer leakage, contract relaxation or retuning during collection.
+
+
+## D31 presentation workflow (issue #21)
+
+Wildan requests a presentation-ready A/B/C report and simple commands for the supervisor demo. Add an offline, standalone comparison generated from retained D30 evidence, plus a separate headed walkthrough on the existing independent fixtures. Read historical archives without mutation. Normalize only allowlisted results; never commit private-host raw context. Keep all categories and failures visible, with per-condition detail and actual usage when known. Distinguish historical model evidence, replayed model decisions, and fresh API calls. Default commands do not read credentials or spend API budget. Replay invokes the real current runtime with stored proposals but is not new model-performance evidence. Optional live demonstration creates a separate bounded ledger and is never started implicitly. No changes to core healing, old freezes, or approved study scores.
+
+The report is a self-contained HTML file with embedded sanitized JSON, no CDN or remote scripts. A projector-friendly editorial layout uses navy/teal and plain Indonesian explanations, clear A/B/C definitions, category comparisons, a searchable condition table, paired details and download/print actions. Report generation and walkthrough write to new output directories. Private inputs are selected through an ignored local configuration or CLI arguments; absence is explicit and never substituted with manufactured results.

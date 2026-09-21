@@ -2601,6 +2601,88 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "OBS-009",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D31"
+      ],
+      "scenarios": [
+        "OBS-009-S1",
+        "OBS-009-S2",
+        "OBS-009-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "14.1",
+        "14.3"
+      ],
+      "verification": {
+        "id": "V-OBS-009",
+        "method": "Adapter tests, browser report and walkthrough verification",
+        "acceptance": "Truthful offline comparison and explicit replay/live modes"
+      },
+      "evidence": [
+        {
+          "id": "EV-D31-OBS-009-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/presentation-demo-2026-09-16.md",
+          "scenarios": [
+            "OBS-009-S1",
+            "OBS-009-S2",
+            "OBS-009-S3"
+          ],
+          "summary": "Retained-source parity, offline browser interactions and nine-step exact-input replay verified. Live orchestration is checked by source/guard/budget tests only; no new API performance evidence.",
+          "command": "npm run test:presentation; npm run demo; headed and interactive demo:walkthrough; npm run test:unit; npm run test:consumer; archive SHA-256 audits",
+          "environment": "macOS arm64; Node25.8.2; Playwright1.62.1 / Chromium",
+          "date": "2026-09-16",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "DEMO-006",
+      "capability": "local-demo",
+      "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
+      "decisions": [
+        "D31"
+      ],
+      "scenarios": [
+        "DEMO-006-S1",
+        "DEMO-006-S2",
+        "DEMO-006-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "14.2",
+        "14.3"
+      ],
+      "verification": {
+        "id": "V-DEMO-006",
+        "method": "Adapter tests, browser report and walkthrough verification",
+        "acceptance": "Truthful offline comparison and explicit replay/live modes"
+      },
+      "evidence": [
+        {
+          "id": "EV-D31-DEMO-006-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/presentation-demo-2026-09-16.md",
+          "scenarios": [
+            "DEMO-006-S1",
+            "DEMO-006-S2",
+            "DEMO-006-S3"
+          ],
+          "summary": "Retained-source parity, offline browser interactions and nine-step exact-input replay verified. Live orchestration is checked by source/guard/budget tests only; no new API performance evidence.",
+          "command": "npm run test:presentation; npm run demo; headed and interactive demo:walkthrough; npm run test:unit; npm run test:consumer; archive SHA-256 audits",
+          "environment": "macOS arm64; Node25.8.2; Playwright1.62.1 / Chromium",
+          "date": "2026-09-16",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2908,6 +2990,25 @@
       "task": "13.4",
       "evidence": [
         "EV-D30-EVAL-011-LIVE"
+      ]
+    },
+    {
+      "task": "14.1",
+      "evidence": [
+        "EV-D31-OBS-009-CHECK"
+      ]
+    },
+    {
+      "task": "14.2",
+      "evidence": [
+        "EV-D31-DEMO-006-CHECK"
+      ]
+    },
+    {
+      "task": "14.3",
+      "evidence": [
+        "EV-D31-OBS-009-CHECK",
+        "EV-D31-DEMO-006-CHECK"
       ]
     }
   ]

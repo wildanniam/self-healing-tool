@@ -20,7 +20,12 @@
     "test:consumer": "npm run build && node scripts/check-consumer.mjs",
     "demo:offline": "npm run build && node examples/local-demo/run.mjs",
     "demo:live": "npm run build && node --env-file=.env examples/local-demo/run.mjs --live",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "demo": "node presentation/cli.mjs",
+    "demo:report": "node presentation/cli.mjs",
+    "demo:walkthrough": "npm run build && node presentation/cli.mjs --walkthrough",
+    "demo:live:compare": "npm run build && node presentation/cli.mjs --walkthrough --live",
+    "test:presentation": "npm run build && node --test presentation/*.test.mjs"
   },
   "devDependencies": {
     "@fission-ai/openspec": "1.12.0",

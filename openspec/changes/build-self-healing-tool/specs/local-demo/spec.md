@@ -65,3 +65,20 @@ A public release SHALL include usage instructions and a reviewed distribution ma
 #### Scenario: DEMO-005-S2
 - **WHEN** Only the synthetic demo is shared
 - **THEN** documentation identifies that it does not fully reproduce the separate private-application evaluation
+
+
+### Requirement: DEMO-006 One-command presentation and bounded walkthrough
+
+The supplied commands SHALL generate and open the retained comparison and support a separate headed A/B/C walkthrough on independent loopback fixtures. Recorded decisions MUST be labeled replay, not live inference or new empirical results. No credential or paid request SHALL be used by default.
+
+#### Scenario: DEMO-006-S1
+- **WHEN** the owner runs the default presentation command
+- **THEN** new JSON and standalone HTML files are written and the report opens unless explicitly disabled, without changing historical sources
+
+#### Scenario: DEMO-006-S2
+- **WHEN** the replay walkthrough runs across A/B/C
+- **THEN** real browser actions, runtime admission and independent outcome checks run with bounded recorded proposals; replay discrepancies are visible and not silently replaced with expected outcomes
+
+#### Scenario: DEMO-006-S3
+- **WHEN** live mode is explicitly selected
+- **THEN** it requires explicit API configuration and a fresh bounded ledger, writes separate results, and cannot reuse or alter historical experiment accounting

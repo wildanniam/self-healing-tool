@@ -1,5 +1,14 @@
 # Self-healing tool
 
+## Present the A/B/C comparison
+
+```sh
+npm run demo                         # open retained results; no API calls
+npm run demo:walkthrough -- --step   # visible browser; recorded AI decisions
+```
+
+The standalone report includes category-specific results, per-case evidence, filters and exports. The walkthrough pauses for discussion and saves a separate report. Read the [presentation guide](docs/presentation.md) for setup, the optional fresh-inference command and evidence boundaries. [D31 verification](docs/evidence/presentation-demo-2026-09-16.md) covers this presentation layer; the research results below remain unchanged.
+
 **Current checkpoint: D30 scoped evaluation complete on unchanged 0.0.8.** See [results, diagnosis and boundaries](docs/evidence/scoped-evaluation-2026-09-15.md). All 378 slots are retained; ordinary wording failures and six misleading-label wrong effects remain. The D29 paragraph below describes its earlier collection. No release or general-safety claim is made.
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
