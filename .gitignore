@@ -10,3 +10,5 @@ playwright/.auth/
 *.log
 *.tsbuildinfo
 .npm-cache/
+dist/
+*.tgz

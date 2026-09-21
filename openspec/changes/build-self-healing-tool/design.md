@@ -1,6 +1,6 @@
 ## Context
 
-See [proposal.md](proposal.md) for motivation and the [decision register](../../../docs/decisions/2026-09-07-foundation.md) for direction and authority. This repository currently contains specifications and audit tooling; the following architecture is proposed.
+See [proposal.md](proposal.md) for motivation and the [decision register](../../../docs/decisions/2026-09-07-foundation.md) for direction and authority. This document defines the architecture. The initial runtime implementation and its limits are now recorded in docs/integration.md and the traceability register; remaining research/release work stays proposed.
 
 The owner's earlier prototype was inspected read-only. It already has a wrapper/orchestrator, candidate extraction/ranking, model invocation, validation, and reports. Extraction cannot be a wholesale repository copy: packaging is not consumer-ready, public exports include source/Git automation, output management and report metadata are application-specific, and failure handling can treat unrelated action errors as missing locators. The existing wrapper uses string selectors plus a descriptor rather than accepting every native Playwright Locator.
 
@@ -49,7 +49,7 @@ The evaluator retains expected targets and outcomes out of band. Sanitize every 
 
 Use one extraction/candidate contract, validator and attempt accounting. Full mode invokes the explicitly configured model; ranker-only selects through a documented deterministic ranking rule without a provider call. Both receive equivalent legitimate task information and no oracle. Freeze tie-breaking, thresholds, model ID, payload limits and stopping rules before final collection. Do not retune one method after inspecting final outcomes.
 
-The initial provider adapter must validate configured values and expose actual usage or unknown usage, rather than silently substituting a model. [D18](../../../docs/decisions/2026-09-08-local-api.md) selects the initial reference profile: OpenAI Chat Completions, gpt-4o-mini, output cap 500, temperature 0, healing limit 3 and DOM-context characters 8000. The local environment/template only records these values; runtime loading and validation are still pending. Total spending, request timeout, complete-payload limits and final experiment model/version are set before live collection; offline fake-provider responses support integration checks but cannot support model performance claims (INT-003, EVAL-003, DEMO-004).
+The initial provider adapter must validate configured values and expose actual usage or unknown usage, rather than silently substituting a model. [D18](../../../docs/decisions/2026-09-08-local-api.md) selects the initial reference profile: OpenAI Chat Completions, gpt-4o-mini, output cap 500, temperature 0, healing limit 3 and DOM-context characters 8000. The initial implementation now reads these values through an explicit allowlisted environment function and validates them before provider use. Total spending, request timeout, complete-payload limits and final experiment model/version are set before live collection; offline fake-provider responses support integration checks but cannot support model performance claims (INT-003, EVAL-003, DEMO-004).
 
 ### 5. Event records separate facts from interpretation
 
@@ -101,3 +101,18 @@ Rollback is removal/reversion of the wrapper integration or package version in t
 ## Open Questions
 
 These are parameters or release decisions deferred to named tasks, not permission to start unbounded work: final tool branding/license; exact supported package/module/version matrix after a consumer check; final experiment model/version and live budget (initial profile selected in D18); final case manifest after the pilot; study participants and allowed auxiliary tools. Their owners and preparation requirements are in the decision register. A choice that materially changes the capability contract must update the specs before implementation.
+
+## Initial implementation choices — D19
+
+The package is ESM on Node 24/25 with consumer-owned Playwright 1.62.1/Chromium. New source implements the contracts without copying unresolved reference components. The wrapper accepts explicit string selectors and generates light-DOM structural CSS candidate paths, so iframe/shadow extraction and robust permanent selector synthesis are not claimed. Ranking is a documented lexical rule; native row/card/dialog labels preserve entity context. There is no raw-DOM fallback. Scope-specific metadata and assertions remain out of band.
+
+Initial non-final limits: 1000 ms original/retry actions, 15000 ms recovery, 5000 ms provider, 30 candidates, 8000 candidate-JSON characters and 12000 complete-request characters. The provider is explicit; offline ranker-only is the default. Native HTTP uses Chat Completions without SDK transport retries. Reports distinguish adapter invocation from transport attempt and expose unknown resource measurements. Private-host semantic instrumentation still needs its own pilot evidence.
+
+These choices refine the planned contracts, not the study's scientific claims or final parameter freeze. See [integration](../../../docs/integration.md) for the exact selection/measurement rules and [inventory](../../../docs/implementation/component-inventory.md) for component origin.
+
+
+## Authorized live pilot refinement — D20/D21
+
+D20 accepts the five prepared development cases. D21 authorizes one batch capped at US$0.25 and fifteen requests across the demo (six) and private pilot (nine). Implement an opt-in persisted budget ledger alongside the provider: reserve before dispatch under an exclusive file lock, retain request/phase/cost reservations across provider instances/processes, never overwrite an existing ledger, and stop on unresolved usage. Record price assumptions; estimate conservatively from serialized-request UTF-8 bytes plus message-framing allowance and maximum output, without claiming a provider-side account spending limit.
+
+Private evaluation records actual serialized candidate inputs locally after checking sentinel/secret exclusion; expected targets and observed side effects remain in evaluator memory/records. Observe input/dialog effects throughout attempts, retaining intermediate wrong effects even if the final action succeeds. Controls still use native assertions. Method failure/refusal is a recorded research outcome, not a reason to suppress later cases or rerun until success. This refines bounded spending/reporting and task 5.4/6.3 execution; it does not change candidate selection or freeze the final protocol.

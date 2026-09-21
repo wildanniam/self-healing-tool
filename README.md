@@ -1,8 +1,8 @@
 # Self-healing tool
 
-A planned reusable Playwright locator-recovery library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
+A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: OpenSpec foundation prepared; runtime, demo and experiments are not implemented here yet.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: initial library, reports and independent offline/live demo verified; private-host live evaluation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
 
 ## Start here
 
@@ -15,7 +15,7 @@ A planned reusable Playwright locator-recovery library with an independent synth
 
 ## Check the specification workspace
 
-Install Node.js 24 (recommended for this workspace) and npm. OpenSpec `1.12.0` is an exact development dependency and requires Node.js at least `20.19.0`; this does not declare the future library's compatibility range.
+Install Node.js 24 (recommended for this workspace) and npm. OpenSpec `1.12.0` is an exact development dependency and requires Node.js at least `20.19.0`; the library supports Node 24/25 and Playwright 1.62.1 (Chromium), with evidence and limitations in the integration guide.
 
 ```sh
 npm ci --ignore-scripts
@@ -25,26 +25,42 @@ npm run check
 ./node_modules/.bin/openspec status --change build-self-healing-tool
 ```
 
-The checks validate OpenSpec structure and traceability, not recovery effectiveness. There is no runnable healing/demo command yet and no model credential is required for this setup.
+The checks validate OpenSpec structure and traceability, not recovery effectiveness. No model credential is required for offline verification.
 
 ## Local API configuration
 
-A blank-key environment template and [local setup guide](docs/local-api-setup.md) now document the owner-selected reference settings. Fill `OPENAI_API_KEY` only in your ignored local `.env`; preserve any existing file. Runtime loading and API calls are not implemented yet.
+A blank-key environment template and [local setup guide](docs/local-api-setup.md) now document the owner-selected reference settings. Fill `OPENAI_API_KEY` only in your ignored local `.env`; preserve any existing file. Environment loading is explicit in the live demo; offline commands do not load a key. The adapter is verified with fake transport, not a live account.
 
 ## Specification map
 
 | Capability | Requirement prefix | Status |
 |---|---|---|
 | [Audit workflow](openspec/specs/audit-workflow/spec.md) | AUD | Repository process baseline |
-| [Library integration](openspec/changes/build-self-healing-tool/specs/library-integration/spec.md) | INT | Planned |
-| [Runtime recovery](openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md) | HEAL | Planned |
-| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Planned |
-| [Recovery reporting](openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md) | OBS | Planned |
-| [Local demo](openspec/changes/build-self-healing-tool/specs/local-demo/spec.md) | DEMO | Planned |
+| [Library integration](openspec/changes/build-self-healing-tool/specs/library-integration/spec.md) | INT | Development package verified; release pending |
+| [Runtime recovery](openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md) | HEAL | Initial offline behavior verified |
+| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Synthetic context checks verified; private pilot pending |
+| [Recovery reporting](openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md) | OBS | Offline report checks verified |
+| [Local demo](openspec/changes/build-self-healing-tool/specs/local-demo/spec.md) | DEMO | Offline demo verified; live/release pending |
 | [Evaluation protocol](openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md) | EVAL | Planned |
 
 Codex integrations are checked in under `.agents/skills/`. Use `$openspec-propose` for a new proposal, `$openspec-update-change` for a revision and `$openspec-apply-change` when starting an authorized implementation increment. Keep the foundation change open while its tasks are incomplete.
 
-The first implementation increment is component provenance and the independent package/consumer boundary (tasks 1.1–1.3), followed by runtime and offline verification. The five-case pilot comes after a functioning library, local demo and separate private-host integration.
+The first implementation increment covers tasks 1.1–5.3. D21 authorizes one bounded live batch; task 5.4 now has actual independent live-demo evidence. The five-case pilot follows separate private-host integration and case review. See [integration instructions](docs/integration.md), [component inventory](docs/implementation/component-inventory.md) and [runtime evidence](docs/evidence/offline-runtime-2026-09-08.md).
+
+## Try the independent demo
+
+```sh
+npm ci --ignore-scripts
+npx playwright install chromium
+npm run demo:offline
+```
+
+The command prints the path to a local HTML/JSON report. It runs controls, a profile locator drift and an ambiguous entity action in its own synthetic local app. It does not contact a model or the private evaluation application.
+
+Development checks: `npm run typecheck`, `npm run test:unit`, `npm run test:browser`, `npm run test:consumer`, `npm run check`, `npm run test:audit`. Runtime results from fake providers/ranking establish mechanism checks only.
 
 OpenSpec reference: [official setup guide](https://openspec.dev/docs/setup). Contribution rules: [AGENTS.md](AGENTS.md).
+
+The optional persisted live-budget API and package 0.0.1 enforce shared phase/request reservations across instances. See [D20/D21](docs/decisions/2026-09-08-live-pilot.md) and [integration instructions](docs/integration.md).
+
+Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution currently awaits the disclosure approval requested after automatic review.

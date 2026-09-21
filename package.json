@@ -1,20 +1,49 @@
 {
   "name": "self-healing-tool",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
-  "description": "Specification-first workspace for a reusable Playwright self-healing library.",
+  "description": "Bounded Playwright locator recovery with inspectable outcomes.",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=24 <26"
   },
   "scripts": {
     "spec:validate": "openspec validate --all --strict --no-interactive",
     "spec:list": "openspec list --json",
     "audit:check": "node scripts/check-traceability.mjs",
     "check": "npm run spec:validate && npm run audit:check",
-    "test:audit": "node --test scripts/check-traceability.test.mjs"
+    "test:audit": "node --test scripts/check-traceability.test.mjs",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "npm run build && node --test tests/*.test.mjs",
+    "test:browser": "npm run build && playwright test",
+    "test:consumer": "npm run build && node scripts/check-consumer.mjs",
+    "demo:offline": "npm run build && node examples/local-demo/run.mjs",
+    "demo:live": "npm run build && node --env-file=.env examples/local-demo/run.mjs --live",
+    "prepack": "npm run build"
   },
   "devDependencies": {
-    "@fission-ai/openspec": "1.12.0"
+    "@fission-ai/openspec": "1.12.0",
+    "@playwright/test": "1.62.1",
+    "@types/node": "24.0.0",
+    "typescript": "5.9.3"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "docs/integration.md",
+    "docs/implementation/component-inventory.md"
+  ],
+  "peerDependencies": {
+    "playwright": "1.62.1"
   }
 }

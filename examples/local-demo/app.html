@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Locator recovery lab</title>
+<style>body{font:17px system-ui;background:#f4f7f6;color:#163b32;max-width:960px;margin:48px auto;padding:0 24px}header{border-bottom:2px solid #b9cec8;padding-bottom:24px}h1{font-size:42px;letter-spacing:-1.5px;margin:12px 0}small{letter-spacing:2px;font-size:12px}section{margin:32px 0}label{display:block;margin:16px 0}input{display:block;padding:10px;border:1px solid #94b1a7;border-radius:4px;font:inherit;margin-top:6px}button{background:#17664e;color:white;border:0;padding:12px 18px;border-radius:4px;font:inherit;cursor:pointer}article{background:white;border:1px solid #c6d8d1;padding:24px}#people{display:grid;grid-template-columns:1fr 1fr;gap:20px}dialog{border:1px solid #94b1a7;border-radius:8px;min-width:280px}dialog::backdrop{background:#163b3255}p{line-height:1.6}output{display:block;margin-top:12px}@media(max-width:600px){#people{grid-template-columns:1fr}h1{font-size:32px}}</style>
+<header><small>SYNTHETIC LOCAL DEMO</small><h1>Locator recovery lab</h1><p>A small workspace for trying profile-field and repeated-entity locator recovery.</p></header>
+<main><section aria-labelledby="profile-title"><h2 id="profile-title">Profile</h2><label>Display name<input id="display-name" value="Demo User"></label><label>Certificate name<input id="certificate-name" value="Demo User"></label><button id="save-profile">Save profile</button><output id="saved" aria-live="polite"></output></section>
+<section aria-labelledby="people-title"><h2 id="people-title">Participants</h2><div id="people"><article><h3>Alya Pratama</h3><p>Interaction design</p><button id="open-alya" data-person="Alya Pratama">View profile</button></article><article><h3>Bima Setiawan</h3><p>Software testing</p><button id="open-bima" data-person="Bima Setiawan">View profile</button></article></div></section>
+<dialog aria-labelledby="dialog-title"><h2 id="dialog-title"></h2><p>Local demonstration profile.</p><form method="dialog"><button>Close</button></form></dialog></main>
+<script>
+const dialog = document.querySelector('dialog');
+document.querySelector('#save-profile').onclick = () => { document.querySelector('#saved').textContent = 'Saved: ' + document.querySelector('input').value; };
+for (const button of document.querySelectorAll('[data-person]')) button.onclick = () => { document.querySelector('#dialog-title').textContent = button.dataset.person; dialog.showModal(); };
+window.demoReset = () => { document.querySelectorAll('input').forEach(n => n.value='Demo User'); document.querySelector('#saved').textContent=''; dialog.close(); };
+</script></html>

@@ -35,3 +35,9 @@ None. The current `audit-workflow` capability governs repository process; it doe
 ## Impact
 
 Future implementation will add library, demo, and evaluation-support modules here. Integration with the real application happens separately in its private repository. Foundation issue #1 adds specifications and repository tooling; follow-up issue #3 prepares the local API environment. No application source, model execution, participant data, or prior experiment artifacts are migrated. D18 selects the initial model/profile. Final experiment configuration, API budget, case manifest, participant availability, public licensing, and release approval remain explicit decisions to resolve at their relevant milestones.
+
+## Implementation checkpoint — 2026-09-08
+
+[D19](../../../docs/decisions/2026-09-08-autonomous-development.md) authorizes autonomous engineering in the agreed scope. [Issue #5](https://github.com/wildanniam/self-healing-tool/issues/5) implements the initial library, context/reporting and synthetic offline demo. The reference source/history remains excluded; the implementation is newly authored from the agreed contracts. Exact completed tasks and passing acceptance evidence are recorded in the register; this update does not mark the entire change or research complete.
+
+[D20/D21](../../../docs/decisions/2026-09-08-live-pilot.md) record accepted five-case pilot meanings and an explicitly authorized one-batch live API budget. Tasks 5.4/6.3 may now execute once their limits/instrumentation are verified; final-study authorization remains separate.

@@ -109,14 +109,15 @@
       "decisions": [
         "D02",
         "D05",
-        "D06"
+        "D06",
+        "D19"
       ],
       "scenarios": [
         "INT-001-S1",
         "INT-001-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "1.2",
         "6.1",
@@ -127,7 +128,46 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Independent consumer package"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-INT-001-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-001-S1",
+            "INT-001-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-INT-001-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-001-S1",
+            "INT-001-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-PRIVATE-INT-001-CHECK",
+          "kind": "verification",
+          "summary": "Private package integration and native controls passed; wrong-field negative outcome retained. Owner case review/live pilot remain pending. See checkpoint for scope.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "INT-001-S1",
+            "INT-001-S2"
+          ],
+          "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "INT-002",
@@ -135,14 +175,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
       "decisions": [
         "D02",
-        "D09"
+        "D09",
+        "D19"
       ],
       "scenarios": [
         "INT-002-S1",
         "INT-002-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "1.3"
       ],
@@ -151,7 +192,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Explicit action integration"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-INT-002-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-002-S1",
+            "INT-002-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-INT-002-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-002-S1",
+            "INT-002-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "INT-003",
@@ -160,14 +226,15 @@
       "decisions": [
         "D09",
         "D15",
-        "D18"
+        "D18",
+        "D19"
       ],
       "scenarios": [
         "INT-003-S1",
         "INT-003-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "2.1"
       ],
@@ -176,7 +243,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Explicit validated configuration"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-INT-003-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-003-S1",
+            "INT-003-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-INT-003-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-003-S1",
+            "INT-003-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "INT-004",
@@ -184,14 +276,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
       "decisions": [
         "D02",
-        "D07"
+        "D07",
+        "D19"
       ],
       "scenarios": [
         "INT-004-S1",
         "INT-004-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "1.2",
         "6.1",
@@ -202,7 +295,46 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Documented compatibility"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-INT-004-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-004-S1",
+            "INT-004-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-INT-004-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-004-S1",
+            "INT-004-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-PRIVATE-INT-004-CHECK",
+          "kind": "verification",
+          "summary": "Private package integration and native controls passed; wrong-field negative outcome retained. Owner case review/live pilot remain pending. See checkpoint for scope.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "INT-004-S1",
+            "INT-004-S2"
+          ],
+          "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "INT-005",
@@ -211,14 +343,15 @@
       "decisions": [
         "D05",
         "D06",
-        "D14"
+        "D14",
+        "D19"
       ],
       "scenarios": [
         "INT-005-S1",
         "INT-005-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "1.1",
         "8.1"
@@ -228,7 +361,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Authorized source extraction"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-INT-005-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-005-S1",
+            "INT-005-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-INT-005-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "INT-005-S1",
+            "INT-005-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-001",
@@ -236,14 +394,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
       "decisions": [
         "D02",
-        "D09"
+        "D09",
+        "D19"
       ],
       "scenarios": [
         "HEAL-001-S1",
         "HEAL-001-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "2.2"
       ],
@@ -252,7 +411,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Narrow recovery trigger"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-HEAL-001-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-001-S1",
+            "HEAL-001-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-HEAL-001-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-001-S1",
+            "HEAL-001-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-002",
@@ -261,14 +445,15 @@
       "decisions": [
         "D09",
         "D15",
-        "D18"
+        "D18",
+        "D19"
       ],
       "scenarios": [
         "HEAL-002-S1",
         "HEAL-002-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "2.3"
       ],
@@ -277,7 +462,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Bounded attempts"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-HEAL-002-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-002-S1",
+            "HEAL-002-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-HEAL-002-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-002-S1",
+            "HEAL-002-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-003",
@@ -286,14 +496,15 @@
       "decisions": [
         "D02",
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "HEAL-003-S1",
         "HEAL-003-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "1.3",
         "2.3"
@@ -303,7 +514,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Preserved test intent"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-HEAL-003-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-003-S1",
+            "HEAL-003-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-HEAL-003-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-003-S1",
+            "HEAL-003-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-004",
@@ -311,14 +547,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "HEAL-004-S1",
         "HEAL-004-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "2.5"
       ],
@@ -327,7 +564,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Separated action outcomes"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-HEAL-004-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-004-S1",
+            "HEAL-004-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-HEAL-004-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-004-S1",
+            "HEAL-004-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-005",
@@ -335,14 +597,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "HEAL-005-S1",
         "HEAL-005-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "2.4"
       ],
@@ -351,7 +614,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Validated selector output"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-HEAL-005-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-005-S1",
+            "HEAL-005-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-HEAL-005-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-005-S1",
+            "HEAL-005-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "HEAL-006",
@@ -359,14 +647,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "HEAL-006-S1",
         "HEAL-006-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "2.5"
       ],
@@ -375,7 +664,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Visible operational failures"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-HEAL-006-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-006-S1",
+            "HEAL-006-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-HEAL-006-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "HEAL-006-S1",
+            "HEAL-006-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "CTX-001",
@@ -383,14 +697,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
       "decisions": [
         "D02",
-        "D09"
+        "D09",
+        "D19"
       ],
       "scenarios": [
         "CTX-001-S1",
         "CTX-001-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "3.1"
       ],
@@ -399,7 +714,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Action-relevant candidate context"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-CTX-001-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-001-S1",
+            "CTX-001-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-CTX-001-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-001-S1",
+            "CTX-001-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "CTX-002",
@@ -408,14 +748,15 @@
       "decisions": [
         "D03",
         "D07",
-        "D09"
+        "D09",
+        "D19"
       ],
       "scenarios": [
         "CTX-002-S1",
         "CTX-002-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "3.2"
       ],
@@ -424,7 +765,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Reusable entity context"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-CTX-002-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-002-S1",
+            "CTX-002-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-CTX-002-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-002-S1",
+            "CTX-002-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "CTX-003",
@@ -432,14 +798,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "CTX-003-S1",
         "CTX-003-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "3.3",
         "6.3"
@@ -449,7 +816,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Oracle separation"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-CTX-003-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-003-S1",
+            "CTX-003-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-CTX-003-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-003-S1",
+            "CTX-003-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "CTX-004",
@@ -459,14 +851,15 @@
         "D09",
         "D13",
         "D15",
-        "D18"
+        "D18",
+        "D19"
       ],
       "scenarios": [
         "CTX-004-S1",
         "CTX-004-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "3.1"
       ],
@@ -475,7 +868,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Auditable input budget"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-CTX-004-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-004-S1",
+            "CTX-004-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-CTX-004-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "CTX-004-S1",
+            "CTX-004-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "OBS-001",
@@ -483,14 +901,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "OBS-001-S1",
         "OBS-001-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "4.1"
       ],
@@ -499,7 +918,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Isolated recovery records"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-OBS-001-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-001-S1",
+            "OBS-001-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-OBS-001-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-001-S1",
+            "OBS-001-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "OBS-002",
@@ -507,14 +951,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
       "decisions": [
         "D09",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "OBS-002-S1",
         "OBS-002-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "4.1",
         "7.3"
@@ -524,7 +969,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Independent result dimensions"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-OBS-002-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-002-S1",
+            "OBS-002-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-OBS-002-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-002-S1",
+            "OBS-002-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "OBS-003",
@@ -533,14 +1003,15 @@
       "decisions": [
         "D09",
         "D12",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "OBS-003-S1",
         "OBS-003-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "4.2",
         "6.3",
@@ -551,7 +1022,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Comparable time and resource accounting"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-OBS-003-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-003-S1",
+            "OBS-003-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-OBS-003-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-003-S1",
+            "OBS-003-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "OBS-004",
@@ -560,14 +1056,15 @@
       "decisions": [
         "D05",
         "D06",
-        "D14"
+        "D14",
+        "D19"
       ],
       "scenarios": [
         "OBS-004-S1",
         "OBS-004-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "4.3"
       ],
@@ -576,7 +1073,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Controlled artifact disclosure"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-OBS-004-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-004-S1",
+            "OBS-004-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-OBS-004-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-004-S1",
+            "OBS-004-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "OBS-005",
@@ -585,14 +1107,15 @@
       "decisions": [
         "D09",
         "D12",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "OBS-005-S1",
         "OBS-005-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "4.3"
       ],
@@ -601,7 +1124,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Human review support"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-OBS-005-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-005-S1",
+            "OBS-005-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-OBS-005-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "OBS-005-S1",
+            "OBS-005-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "DEMO-001",
@@ -609,14 +1157,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
       "decisions": [
         "D05",
-        "D06"
+        "D06",
+        "D19"
       ],
       "scenarios": [
         "DEMO-001-S1",
         "DEMO-001-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "5.1"
       ],
@@ -625,7 +1174,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Independent example application"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-DEMO-001-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-001-S1",
+            "DEMO-001-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-DEMO-001-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-001-S1",
+            "DEMO-001-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "DEMO-002",
@@ -634,14 +1208,15 @@
       "decisions": [
         "D04",
         "D05",
-        "D06"
+        "D06",
+        "D19"
       ],
       "scenarios": [
         "DEMO-002-S1",
         "DEMO-002-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "5.2"
       ],
@@ -650,7 +1225,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Local target confinement"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-DEMO-002-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-002-S1",
+            "DEMO-002-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-DEMO-002-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-002-S1",
+            "DEMO-002-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "DEMO-003",
@@ -659,14 +1259,15 @@
       "decisions": [
         "D04",
         "D05",
-        "D06"
+        "D06",
+        "D19"
       ],
       "scenarios": [
         "DEMO-003-S1",
         "DEMO-003-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "5.3"
       ],
@@ -675,7 +1276,32 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Synthetic isolated state"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-DEMO-003-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-003-S1",
+            "DEMO-003-S2"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-DEMO-003-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-003-S1",
+            "DEMO-003-S2"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "DEMO-004",
@@ -683,14 +1309,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/local-demo/spec.md",
       "decisions": [
         "D05",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "DEMO-004-S1",
         "DEMO-004-S2"
       ],
       "owner": "engineer",
-      "status": "planned",
+      "status": "verified",
       "tasks": [
         "5.1",
         "5.4"
@@ -700,7 +1327,44 @@
         "method": "Automated contract or integration check plus review",
         "acceptance": "Explicit execution modes"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-DEMO-004-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-004-S1"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-DEMO-004-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "DEMO-004-S1"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-LIVE-DEMO-004-CHECK",
+          "kind": "verification",
+          "summary": "Actual independent live smoke and configuration checks (DEMO), or accepted/verified private development case meanings and retained wrong-field observation (EVAL); scoped details in checkpoint, no private live result yet.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "DEMO-004-S1",
+            "DEMO-004-S2"
+          ],
+          "command": "npm run test:unit; npm run demo:live; private npm run test:e2e:healing in audit/ranker-only modes; D20 owner case review",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "DEMO-005",
@@ -744,7 +1408,7 @@
         "EVAL-001-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "6.2",
         "7.1"
@@ -754,7 +1418,30 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Classified and justified cases"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D20-EVAL-001-IMPL",
+          "kind": "implementation",
+          "summary": "Five classified development case cards and independent private-harness oracles are implemented; owner accepted their meanings in D20. Final manifest remains separate.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "EVAL-001-S2"
+          ]
+        },
+        {
+          "id": "EV-LIVE-EVAL-001-CHECK",
+          "kind": "verification",
+          "summary": "Actual independent live smoke and configuration checks (DEMO), or accepted/verified private development case meanings and retained wrong-field observation (EVAL); scoped details in checkpoint, no private live result yet.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "EVAL-001-S2"
+          ],
+          "command": "npm run test:unit; npm run demo:live; private npm run test:e2e:healing in audit/ranker-only modes; D20 owner case review",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "EVAL-002",
@@ -769,7 +1456,7 @@
         "EVAL-002-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "6.1",
         "6.2",
@@ -780,7 +1467,44 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Independent semantic assessment"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-PRIVATE-EVAL-002-IMPL",
+          "kind": "implementation",
+          "summary": "Consumer-side field, observed-dialog and account-state checks are implemented in private PR #175; live per-attempt audit and owner review remain pending.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "EVAL-002-S1",
+            "EVAL-002-S2"
+          ]
+        },
+        {
+          "id": "EV-PRIVATE-EVAL-002-CHECK",
+          "kind": "verification",
+          "summary": "Private package integration and native controls passed; wrong-field negative outcome retained. Owner case review/live pilot remain pending. See checkpoint for scope.",
+          "ref": "docs/evidence/private-integration-2026-09-08.md",
+          "scenarios": [
+            "EVAL-002-S2"
+          ],
+          "command": "Private host: npm run test:e2e:healing; npx tsc --noEmit; targeted ESLint",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; guarded loopback synthetic PostgreSQL/Mailpit",
+          "date": "2026-09-08",
+          "result": "pass"
+        },
+        {
+          "id": "EV-LIVE-EVAL-002-CHECK",
+          "kind": "verification",
+          "summary": "Actual independent live smoke and configuration checks (DEMO), or accepted/verified private development case meanings and retained wrong-field observation (EVAL); scoped details in checkpoint, no private live result yet.",
+          "ref": "docs/evidence/live-batch-2026-09-08.md",
+          "scenarios": [
+            "EVAL-002-S2"
+          ],
+          "command": "npm run test:unit; npm run demo:live; private npm run test:e2e:healing in audit/ranker-only modes; D20 owner case review",
+          "environment": "macOS arm64; Node 24.18.0; Playwright 1.62.1 Chromium; explicit D21 batch ledger; private local synthetic services",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "EVAL-003",
@@ -788,14 +1512,15 @@
       "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
       "decisions": [
         "D13",
-        "D15"
+        "D15",
+        "D19"
       ],
       "scenarios": [
         "EVAL-003-S1",
         "EVAL-003-S2"
       ],
       "owner": "research-author-and-engineer",
-      "status": "planned",
+      "status": "implemented",
       "tasks": [
         "3.4",
         "7.2",
@@ -806,7 +1531,30 @@
         "method": "Controlled experiment or protocol review",
         "acceptance": "Comparable technical baselines"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-RUNTIME-EVAL-003-IMPL",
+          "kind": "implementation",
+          "summary": "New standalone implementation; see the dated evidence mapping for scope and remaining private/live verification.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "EVAL-003-S1"
+          ]
+        },
+        {
+          "id": "EV-RUNTIME-EVAL-003-CHECK",
+          "kind": "verification",
+          "summary": "Passing synthetic/consumer verification and implementation review as mapped in the dated evidence; no live model or final study claim.",
+          "ref": "docs/evidence/offline-runtime-2026-09-08.md",
+          "scenarios": [
+            "EVAL-003-S1"
+          ],
+          "command": "npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run demo:offline",
+          "environment": "macOS arm64; Node 25.8.2; TypeScript 5.9.3; Playwright 1.62.1 Chromium",
+          "date": "2026-09-08",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "EVAL-004",
@@ -916,5 +1664,143 @@
       "evidence": []
     }
   ],
-  "completedTasks": []
+  "completedTasks": [
+    {
+      "task": "1.1",
+      "evidence": [
+        "EV-RUNTIME-INT-005-CHECK"
+      ]
+    },
+    {
+      "task": "1.2",
+      "evidence": [
+        "EV-RUNTIME-INT-001-CHECK",
+        "EV-RUNTIME-INT-004-CHECK"
+      ]
+    },
+    {
+      "task": "1.3",
+      "evidence": [
+        "EV-RUNTIME-INT-002-CHECK",
+        "EV-RUNTIME-HEAL-003-CHECK"
+      ]
+    },
+    {
+      "task": "2.1",
+      "evidence": [
+        "EV-RUNTIME-INT-003-CHECK"
+      ]
+    },
+    {
+      "task": "2.2",
+      "evidence": [
+        "EV-RUNTIME-HEAL-001-CHECK"
+      ]
+    },
+    {
+      "task": "2.3",
+      "evidence": [
+        "EV-RUNTIME-HEAL-002-CHECK",
+        "EV-RUNTIME-HEAL-003-CHECK"
+      ]
+    },
+    {
+      "task": "2.4",
+      "evidence": [
+        "EV-RUNTIME-HEAL-005-CHECK"
+      ]
+    },
+    {
+      "task": "2.5",
+      "evidence": [
+        "EV-RUNTIME-HEAL-004-CHECK",
+        "EV-RUNTIME-HEAL-006-CHECK"
+      ]
+    },
+    {
+      "task": "3.1",
+      "evidence": [
+        "EV-RUNTIME-CTX-001-CHECK",
+        "EV-RUNTIME-CTX-004-CHECK"
+      ]
+    },
+    {
+      "task": "3.2",
+      "evidence": [
+        "EV-RUNTIME-CTX-002-CHECK"
+      ]
+    },
+    {
+      "task": "3.3",
+      "evidence": [
+        "EV-RUNTIME-CTX-003-CHECK"
+      ]
+    },
+    {
+      "task": "3.4",
+      "evidence": [
+        "EV-RUNTIME-EVAL-003-CHECK"
+      ]
+    },
+    {
+      "task": "4.1",
+      "evidence": [
+        "EV-RUNTIME-OBS-001-CHECK",
+        "EV-RUNTIME-OBS-002-CHECK"
+      ]
+    },
+    {
+      "task": "4.2",
+      "evidence": [
+        "EV-RUNTIME-OBS-003-CHECK"
+      ]
+    },
+    {
+      "task": "4.3",
+      "evidence": [
+        "EV-RUNTIME-OBS-004-CHECK",
+        "EV-RUNTIME-OBS-005-CHECK"
+      ]
+    },
+    {
+      "task": "5.1",
+      "evidence": [
+        "EV-RUNTIME-DEMO-001-CHECK",
+        "EV-RUNTIME-DEMO-004-CHECK"
+      ]
+    },
+    {
+      "task": "5.2",
+      "evidence": [
+        "EV-RUNTIME-DEMO-002-CHECK"
+      ]
+    },
+    {
+      "task": "5.3",
+      "evidence": [
+        "EV-RUNTIME-DEMO-003-CHECK"
+      ]
+    },
+    {
+      "task": "6.1",
+      "evidence": [
+        "EV-PRIVATE-INT-001-CHECK",
+        "EV-PRIVATE-INT-004-CHECK",
+        "EV-PRIVATE-EVAL-002-CHECK"
+      ]
+    },
+    {
+      "task": "5.4",
+      "evidence": [
+        "EV-LIVE-DEMO-004-CHECK"
+      ]
+    },
+    {
+      "task": "6.2",
+      "evidence": [
+        "EV-LIVE-EVAL-001-CHECK",
+        "EV-LIVE-EVAL-002-CHECK"
+      ]
+    }
+  ]
 }
