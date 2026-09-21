@@ -81,3 +81,16 @@ Future provider-backed reports SHALL distinguish the requested model configurati
 #### Scenario: OBS-006-S2
 - **WHEN** Metadata is missing, invalid or accompanied by private extra fields, or a transport fails before a response
 - **THEN** only validated allowlisted fields appear in snapshots/reports and unavailable values remain null
+
+
+### Requirement: OBS-007 Inspect spec decisions without overstating correctness
+
+Reports SHALL distinguish spec provenance, admission decisions, action execution and independent semantic outcome; summaries MUST report accepted-error risk as undefined when no actions were accepted.
+
+#### Scenario: OBS-007-S1
+- **WHEN** An enforced candidate is refused
+- **THEN** report shows its policy reason and no action without calling it a successful heal
+
+#### Scenario: OBS-007-S2
+- **WHEN** No recovery is accepted in a group
+- **THEN** the summary does not claim zero-error effectiveness from an empty denominator

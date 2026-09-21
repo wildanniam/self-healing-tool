@@ -2,11 +2,11 @@
 
 A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
 
-**Status: private final technical evaluation completed (120 runs); version 0.0.5 thesis-method restoration verified offline; owner interpretation and public release remain pending.** This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
+**Status: D26 method evaluation completed with 324 live test executions; spec-aware prototype 0.0.6 remains experimental.** See [the four-stage results and limitations](docs/evidence/spec-aware-evaluation-2026-09-14.md). The enforced contract prevented observed wrong effects in this sample, but private verified recovery remained 15/36 and six valid holdout repair opportunities were stopped. Owner interpretation and public release remain pending. This repository starts private. The working name is provisional; package licensing/public release remain later decisions. No private evaluation-application source or E2E suite is distributed here.
 
 D25 corrects methodological drift: [method matrix](docs/implementation/thesis-method-alignment.md). D24 evaluated the earlier simplified variant, not an exact replay of the TA method.
 
-See [final findings and limits](docs/evidence/final-evaluation-2026-09-09.md): full and ranker-only both 33/36 recoverable; absent-target refusal 0/12 vs 3/12. No LLM superiority or reliable unattended healing is established.
+Historical D24 [findings and limits](docs/evidence/final-evaluation-2026-09-09.md): the earlier full and ranker-only variants both achieved 33/36 recoverable cases; absent-target refusal 0/12 vs 3/12. These are different versions/protocols from D26 and must not be pooled or presented as current 0.0.6 performance. No LLM superiority or reliable unattended healing is established.
 
 ## Start here
 

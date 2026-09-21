@@ -1,5 +1,6 @@
-import type { Page } from 'playwright';
-import type { Action, Candidate, CandidateFeatures, Config, Context, Task } from './types.js';
+import type { Page, ElementHandle } from 'playwright';
+import type { Action, Candidate, CandidateFeatures, Config, Context, SpecContext, Task } from './types.js';
+import type { SpecEvidence } from './spec.js';
 import { cleanContextText, redact } from './privacy.js';
 import { serializeRequest } from './provider.js';
 import { rankThesis } from './ranking.js';
@@ -20,8 +21,8 @@ export function fitContext(context: Context, config: Readonly<Config>): Context 
   }
   return context;
 }
-export async function collectContext(page: Page, action: Action, task: Task, config: Readonly<Config>, omitted: readonly string[], originalSelector=''): Promise<Context> {
-  const extracted=await page.evaluate(({action})=>{
+export async function collectContext(page: Page, action: Action, task: Task, config: Readonly<Config>, omitted: readonly string[], originalSelector='', targetSpec?: SpecContext): Promise<Context> {
+  const extracted=await page.evaluate(({action,specMode})=>{
     const blocked='script,style,svg,head,noscript,iframe,canvas,[data-oracle],[data-evaluator],[data-healing-evaluator]';
     const compact=(s:string|null)=> (s??'').replace(/\s+/g,' ').trim();
     const text=(e:Element|null,limit=500)=>{
@@ -59,6 +60,11 @@ export async function collectContext(page: Page, action: Action, task: Task, con
       const parent=e.parentElement;
       const parentContext=parent?parent.tagName.toLowerCase()+(parent.id?'#'+parent.id:'')+[...parent.classList].filter(c=>c.length<20).slice(0,2).map(c=>'.'+c).join(''):'';
       const features:CandidateFeatures={id:attr.id,name:attr.name,placeholder:attr.placeholder,role,ariaLabel:attr['aria-label'],dataTestId:attr['data-testid'],dataTest:attr['data-test'],dataCy:attr['data-cy'],title:attr.title,classes,text:ownText,nearestLabel:labels||ariaRefs,rowContext,parentContext,containerContext:text(container),visible,disabled};
+      if(specMode){
+        const path=(raw:string|null)=>{if(!raw)return '';try{const u=new URL(raw,/^https?:/.test(document.baseURI)?document.baseURI:'http://localhost/');return ['http:','https:'].includes(u.protocol)?u.pathname:'';}catch{return '';}};
+        const form='form' in e?(e as HTMLInputElement).form:e.closest('form');
+        features.href=path(e.getAttribute('href'));features.formAction=path(e.getAttribute('formaction')??form?.getAttribute('action')??null);
+      }
       const suggestions:string[]=[];
       if(attr.id)suggestions.push('#'+CSS.escape(attr.id));
       for(const a of ['data-testid','data-test','data-cy','name','aria-label','placeholder'])if(attr[a])suggestions.push(`[${a}=${q(attr[a]!)}]`);
@@ -85,7 +91,7 @@ export async function collectContext(page: Page, action: Action, task: Task, con
     }
     const walker=document.createTreeWalker(clone,NodeFilter.SHOW_COMMENT);const comments:Node[]=[];while(walker.nextNode())comments.push(walker.currentNode);comments.forEach(n=>n.parentNode?.removeChild(n));
     return {candidates,cleanedDom:clone.outerHTML,scanTruncated:nodes.length>5000};
-  },{action});
+  },{action,specMode:targetSpec!==undefined});
   const clean=(s:string)=>cleanContextText(s,omitted);
   const safeSelector=(s:string)=>{const safe=clean(s);return safe===s&&!/\[redacted/.test(s)?safe:'';};
   const candidates=extracted.candidates.map(c=>{
@@ -107,12 +113,51 @@ export async function collectContext(page: Page, action: Action, task: Task, con
   const context:Context={action,task:cleanTask,method:'thesis-aligned-v1',failure:{originalSelector:failed,classification:'missing-locator'},candidates:selected,
     ...(selected.length<5?{cleanedDom:cleaned.slice(0,selected.length?Math.floor(config.domMaxChars/2):config.domMaxChars)}:{}),
     coverage:{discovered:ranked.length,included:0,omitted:0,textTruncated:extracted.scanTruncated||cleaned.length>config.domMaxChars||extracted.candidates.some(c=>c.label.length>=500||c.container.length>=500||(c.features?.text?.length??0)>=80),domChars:0,payloadChars:0,domLimit:config.domMaxChars,payloadLimit:config.payloadMaxChars,candidateLimit:config.maxCandidates}};
+  if(targetSpec!==undefined)context.targetSpec=structuredClone(targetSpec);
   fitContext(context,config);
   if(context.candidates.length<5&&context.cleanedDom===undefined){
     context.cleanedDom=cleaned.slice(0,context.candidates.length?Math.floor(config.domMaxChars/2):config.domMaxChars);
     fitContext(context,config);
   }
   return context;
+}
+/** Read only the resolved node about to receive the action, independently of the ranked snapshot. */
+export async function collectSpecEvidence(handle: ElementHandle<Element>, omitted: readonly string[]): Promise<SpecEvidence> {
+  const raw = await handle.evaluate(e => {
+    const blocked='script,style,svg,head,noscript,iframe,canvas,[data-oracle],[data-evaluator],[data-healing-evaluator]';
+    if(!e.isConnected||e.closest(blocked+', [hidden], [aria-hidden="true"]'))return {};
+    const compact=(s:string|null)=>(s??'').replace(/\s+/g,' ').trim();
+    const text=(node:Element|null,limit=500)=>{
+      if(!node||node.closest(blocked+', [hidden], [aria-hidden="true"]')||node.matches('input,textarea,select,[contenteditable="true"]'))return '';
+      const clone=node.cloneNode(true) as Element;
+      clone.querySelectorAll(blocked+',input,textarea,select,[contenteditable="true"],[hidden],[aria-hidden="true"]').forEach(n=>n.remove());
+      const walker=document.createTreeWalker(clone,NodeFilter.SHOW_TEXT),parts:string[]=[];
+      while(walker.nextNode())parts.push(walker.currentNode.textContent??'');
+      return compact(parts.join(' ')).slice(0,limit);
+    };
+    const attr=(name:string)=>e.getAttribute(name)??'';
+    const tag=e.tagName.toLowerCase(),type=attr('type').toLowerCase();
+    const classes=[...e.classList].filter(c=>c.length<30&&!/^css-/.test(c)).slice(0,5);
+    const labels='labels' in e?[...((e as HTMLInputElement).labels??[])].map(n=>text(n,60)).join(' '):text(e.closest('label'),60);
+    const ariaRefs=attr('aria-labelledby').split(/\s+/).map(id=>text(document.getElementById(id),80)).join(' ').trim();
+    const ownText=['input','textarea','select'].includes(tag)||attr('contenteditable')==='true'?'':text(e,80);
+    let container=e.closest('tr,li,article,dialog,[role="dialog"],[role="listitem"],[role="complementary"]');
+    if(!container)for(let p=e.parentElement,depth=0;p&&depth<5;p=p.parentElement,depth++){
+      const siblings=[...(p.parentElement?.children??[])];if(siblings.filter(s=>s.tagName===p!.tagName&&s.querySelector('button,input,textarea,[role="button"]')).length>1){container=p;break;}
+    }
+    const row=e.closest('tr');
+    const rowContext=row?[...row.querySelectorAll('td,th')].slice(0,6).map(cell=>{const clone=cell.cloneNode(true) as Element;clone.querySelectorAll('button,a,input,textarea,select').forEach(n=>n.remove());return text(clone,160);}).filter(Boolean).join(' | ').slice(0,160):'';
+    const parent=e.parentElement;
+    const parentContext=parent?parent.tagName.toLowerCase()+(parent.id?'#'+parent.id:'')+[...parent.classList].filter(c=>c.length<20).slice(0,2).map(c=>'.'+c).join(''):'';
+    const path=(value:string|null)=>{if(!value)return '';try{const u=new URL(value,/^https?:/.test(document.baseURI)?document.baseURI:'http://localhost/');return ['http:','https:'].includes(u.protocol)?u.pathname:'';}catch{return '';}};
+    const form='form' in e?(e as HTMLInputElement).form:e.closest('form');
+    return {label:attr('aria-label')||ariaRefs||labels||attr('placeholder')||ownText,tag,type,
+      id:attr('id'),name:attr('name'),placeholder:attr('placeholder'),role:attr('role'),ariaLabel:attr('aria-label'),
+      dataTestId:attr('data-testid'),dataTest:attr('data-test'),dataCy:attr('data-cy'),title:attr('title'),classes,
+      text:ownText,nearestLabel:labels||ariaRefs,rowContext,parentContext,containerContext:text(container),container:text(container),
+      href:path(e.getAttribute('href')),formAction:path(e.getAttribute('formaction')??form?.getAttribute('action')??null)};
+  });
+  return Object.fromEntries(Object.entries(raw).map(([key,value])=>[key,Array.isArray(value)?value.map(v=>cleanContextText(v,omitted)):cleanContextText(value as string,omitted)]));
 }
 export function rankerSelection(context:Readonly<Context>,rejected:ReadonlySet<string>):string|null{
   for(const c of context.candidates)if(c.score>0)for(const s of c.suggestedLocators?.length?c.suggestedLocators:[c.selector])if(!rejected.has(s))return s;

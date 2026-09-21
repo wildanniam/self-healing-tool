@@ -1972,6 +1972,231 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "INT-006",
+      "capability": "library-integration",
+      "spec": "openspec/changes/build-self-healing-tool/specs/library-integration/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "INT-006-S1",
+        "INT-006-S2"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "10.1"
+      ],
+      "verification": {
+        "id": "V-INT-006",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Explicit target contract input"
+      },
+      "evidence": [
+        {
+          "ref": "docs/evidence/spec-aware-engineering-2026-09-14.md",
+          "scenarios": [
+            "INT-006-S1",
+            "INT-006-S2"
+          ],
+          "id": "EV-D26-INT-006-IMPL",
+          "kind": "implementation",
+          "summary": "Explicit generic target-contract prototype; no default-method change."
+        },
+        {
+          "ref": "docs/evidence/spec-aware-engineering-2026-09-14.md",
+          "scenarios": [
+            "INT-006-S1",
+            "INT-006-S2"
+          ],
+          "id": "EV-D26-INT-006-CHECK",
+          "kind": "verification",
+          "summary": "New targeted contract mechanisms pass; full-suite timing failures are separately retained, no empirical effectiveness claim.",
+          "command": "npm run test:unit; targeted tests/spec-admission.spec.ts checks; npm run test:consumer; archived no-spec byte-parity probe",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "CTX-006",
+      "capability": "context-selection",
+      "spec": "openspec/changes/build-self-healing-tool/specs/context-selection/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "CTX-006-S1",
+        "CTX-006-S2"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "10.2"
+      ],
+      "verification": {
+        "id": "V-CTX-006",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Equal spec context across comparison arms"
+      },
+      "evidence": [
+        {
+          "ref": "docs/evidence/spec-aware-engineering-2026-09-14.md",
+          "scenarios": [
+            "CTX-006-S1",
+            "CTX-006-S2"
+          ],
+          "id": "EV-D26-CTX-006-IMPL",
+          "kind": "implementation",
+          "summary": "Explicit generic target-contract prototype; no default-method change."
+        },
+        {
+          "ref": "docs/evidence/spec-aware-engineering-2026-09-14.md",
+          "scenarios": [
+            "CTX-006-S1",
+            "CTX-006-S2"
+          ],
+          "id": "EV-D26-CTX-006-CHECK",
+          "kind": "verification",
+          "summary": "New targeted contract mechanisms pass; full-suite timing failures are separately retained, no empirical effectiveness claim.",
+          "command": "npm run test:unit; targeted tests/spec-admission.spec.ts checks; npm run test:consumer; archived no-spec byte-parity probe",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "HEAL-008",
+      "capability": "runtime-recovery",
+      "spec": "openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "HEAL-008-S1",
+        "HEAL-008-S2",
+        "HEAL-008-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "10.3"
+      ],
+      "verification": {
+        "id": "V-HEAL-008",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Generic admission before recovery action"
+      },
+      "evidence": [
+        {
+          "ref": "docs/evidence/spec-aware-engineering-2026-09-14.md",
+          "scenarios": [
+            "HEAL-008-S1",
+            "HEAL-008-S2",
+            "HEAL-008-S3"
+          ],
+          "id": "EV-D26-HEAL-008-IMPL",
+          "kind": "implementation",
+          "summary": "Explicit generic target-contract prototype; no default-method change."
+        },
+        {
+          "ref": "docs/evidence/spec-aware-engineering-2026-09-14.md",
+          "scenarios": [
+            "HEAL-008-S1",
+            "HEAL-008-S2",
+            "HEAL-008-S3"
+          ],
+          "id": "EV-D26-HEAL-008-CHECK",
+          "kind": "verification",
+          "summary": "New targeted contract mechanisms pass; full-suite timing failures are separately retained, no empirical effectiveness claim.",
+          "command": "npm run test:unit; targeted tests/spec-admission.spec.ts checks; npm run test:consumer; archived no-spec byte-parity probe",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "EVAL-008",
+      "capability": "evaluation-protocol",
+      "spec": "openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "EVAL-008-S1",
+        "EVAL-008-S2",
+        "EVAL-008-S3"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "10.4"
+      ],
+      "verification": {
+        "id": "V-EVAL-008",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Frozen comparable live study"
+      },
+      "evidence": [
+        {
+          "id": "EV-D26-EVAL-008-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/spec-aware-evaluation-2026-09-14.md",
+          "scenarios": [
+            "EVAL-008-S1",
+            "EVAL-008-S2",
+            "EVAL-008-S3"
+          ],
+          "summary": "All 324 slots completed with actual model recovery calls; frozen inputs, class-specific outcomes, oracle gaps and accounting audited. Verification pass means trustworthy execution, not universally correct healing.",
+          "command": "Frozen D26 runners; post-collection input audits; evaluation/analyze-holdout.mjs; private audit-self-healing-d26-results.mjs",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
+    },
+    {
+      "id": "OBS-007",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D26"
+      ],
+      "scenarios": [
+        "OBS-007-S1",
+        "OBS-007-S2"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "10.5"
+      ],
+      "verification": {
+        "id": "V-OBS-007",
+        "method": "Mechanism checks and auditable D26 study",
+        "acceptance": "Inspect spec decisions without overstating correctness"
+      },
+      "evidence": [
+        {
+          "id": "EV-D26-OBS-007-LIVE",
+          "kind": "verification",
+          "ref": "docs/evidence/spec-aware-evaluation-2026-09-14.md",
+          "scenarios": [
+            "OBS-007-S1",
+            "OBS-007-S2"
+          ],
+          "summary": "All 324 slots completed with actual model recovery calls; frozen inputs, class-specific outcomes, oracle gaps and accounting audited. Verification pass means trustworthy execution, not universally correct healing.",
+          "command": "Frozen D26 runners; post-collection input audits; evaluation/analyze-holdout.mjs; private audit-self-healing-d26-results.mjs",
+          "environment": "macOS arm64; Node24.18.0; Playwright1.62.1 Chromium; gpt-4o-mini-2024-07-18",
+          "date": "2026-09-14",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -2159,6 +2384,39 @@
       "evidence": [
         "EV-D25-HEAL-007-IMPL",
         "EV-D25-HEAL-007-CHECK"
+      ]
+    },
+    {
+      "task": "10.1",
+      "evidence": [
+        "EV-D26-INT-006-IMPL",
+        "EV-D26-INT-006-CHECK"
+      ]
+    },
+    {
+      "task": "10.2",
+      "evidence": [
+        "EV-D26-CTX-006-IMPL",
+        "EV-D26-CTX-006-CHECK"
+      ]
+    },
+    {
+      "task": "10.3",
+      "evidence": [
+        "EV-D26-HEAL-008-IMPL",
+        "EV-D26-HEAL-008-CHECK"
+      ]
+    },
+    {
+      "task": "10.4",
+      "evidence": [
+        "EV-D26-EVAL-008-LIVE"
+      ]
+    },
+    {
+      "task": "10.5",
+      "evidence": [
+        "EV-D26-OBS-007-LIVE"
       ]
     }
   ]

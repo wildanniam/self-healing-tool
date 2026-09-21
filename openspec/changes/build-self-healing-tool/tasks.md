@@ -60,3 +60,12 @@
 
 - [x] 9.1 Engineer restores documented thesis context/cleaning/ranking mechanisms for click/fill and writes an explicit parity/deviation matrix. Verify old-selector/stable-attribute/duplicate/entity signals and bounded sanitized sparse fallback on independent fixtures. [CTX-005]
 - [x] 9.2 Engineer restores stable locator normalization and validator feedback across bounded retries. Verify rejected variants/counts, payload limits and provider fail-stop without new live calls; preserve D24 evidence. [HEAL-007]
+
+
+## 10. D26 authorized spec-aware evaluation
+
+- [x] 10.1 Implement bounded explicit consumer contract loading and no-spec compatibility checks. [INT-006]
+- [x] 10.2 Implement input parity, sanitization and budgets for context-only/enforced arms. [CTX-006]
+- [x] 10.3 Implement generic before-recovery admission and refusal/unknown tests on independent synthetic inputs. [HEAL-008]
+- [x] 10.4 Execute the bounded comparable regression study and post-freeze held-out study, retaining all outcomes and input/freeze audits. [EVAL-008]
+- [x] 10.5 Produce truthful comparison/limitations, traceability evidence, PR and Atlas checkpoint. [OBS-007]

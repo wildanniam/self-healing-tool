@@ -19,7 +19,7 @@ try {
   writeFileSync(join(consumer, 'smoke.mjs'), `import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import * as api from 'self-healing-tool';
-assert.deepEqual(Object.keys(api).sort(), ['ConfigurationError','DEFAULT_CONFIG','HealingFailure','ProviderError','configFromEnv','createHealingSession','createOpenAIProvider','createBudgetedOpenAIProvider','createLiveBudget','readLiveBudget','serializeRequest','renderReport','reportView','summarize','validateConfig','writeReport'].sort());
+assert.deepEqual(Object.keys(api).sort(), ['ConfigurationError','DEFAULT_CONFIG','HealingFailure','ProviderError','configFromEnv','createHealingSession','createOpenAIProvider','createBudgetedOpenAIProvider','createLiveBudget','readLiveBudget','serializeRequest','renderReport','reportView','summarize','validateConfig','writeReport','loadTargetSpec','validateTargetContract'].sort());
 const browser = await chromium.launch();
 try {
  const page = await browser.newPage();
@@ -30,7 +30,13 @@ try {
  assert.equal(await page.locator('#current').inputValue(), 'recovered');
  assert.equal(session.snapshot().events[1].actionExecuted, true);
  assert.equal(session.snapshot().provider, 'none');
- console.log('Clean tarball consumer: import, normal fill and ranker recovery passed');
+ const contract=api.validateTargetContract({schemaVersion:1,requirementId:'CONSUMER-01',revision:'v1',intent:'Edit display name',action:'fill',status:'active',allOf:[{sources:['nearestLabel'],anyOf:['Display name']}]});
+ const guarded=api.createHealingSession(page,{config:{actionTimeoutMs:1000},targetSpec:{mode:'enforce',contract,expectedRevision:'v1'}});
+ await guarded.fill('#previous', 'guarded',{description:'Display name'});
+ assert.equal(await page.locator('#current').inputValue(),'guarded');
+ assert.equal(guarded.snapshot().events[0].targetSpec.decision.outcome,'accepted');
+ assert.equal(typeof api.loadTargetSpec,'function');
+ console.log('Clean tarball consumer: import, normal fill, ranker recovery and target-contract gate passed');
 } finally { await browser.close(); }
 `);
   execFileSync(process.execPath, ['smoke.mjs'], { cwd: consumer, env, stdio: 'inherit' });

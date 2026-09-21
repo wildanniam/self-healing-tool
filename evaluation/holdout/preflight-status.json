@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "checks": 222,
+  "report": "evaluation/holdout/evidence/native-preflight-2026-09-14T08-06-17.929Z.json",
+  "reportSha256": "bb1ccfee14710fd07d73649c02a176c3d40f7651f771d6870ae4b402deedaf67",
+  "bundleSha256": "621956d78f68fa780f3cb7b10e24d93fd74a96dcbebe837ffd9d22c1048d499f",
+  "providerCalls": 0,
+  "healerRuns": 0
+}

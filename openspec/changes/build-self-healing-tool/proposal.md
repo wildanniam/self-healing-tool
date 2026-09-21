@@ -55,3 +55,8 @@ The same post-collection increment corrects duplicate wrong-effect summary count
 ## D25 method correction
 
 [Decision D25](../../../docs/decisions/2026-09-09-thesis-alignment.md) corrects unverified methodological simplification. Issue #11 restores thesis-informed cleaning, ranking, failure context, stable locator handling and validator feedback in a separate version. This refines the original research intent; earlier implementation checkpoints remain historical. Exact parity/deviations must be documented before claiming equivalence.
+
+
+## D26 authorized method-validation extension
+
+Execute the four owner-requested stages in issue #13. Extend the existing library-integration, context-selection, runtime-recovery and evaluation-protocol capabilities with optional consumer-provided target contracts, a context-only arm and a generic before-recovery admission arm. Preserve the no-contract 0.0.5 behavior. Run known private regression cases separately from independently authored synthetic holdout. Do not imply universal semantic verification or public release.

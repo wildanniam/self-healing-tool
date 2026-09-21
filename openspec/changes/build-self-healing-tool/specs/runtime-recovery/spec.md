@@ -89,3 +89,20 @@ Supported selector normalization SHALL preserve browser validation and record pr
 #### Scenario: HEAL-007-S2
 - **WHEN** Feedback makes the payload too large or a provider fails
 - **THEN** the method stops visibly within limits without dropping accounting or executing late output
+
+
+### Requirement: HEAL-008 Generic admission before recovery action
+
+An enforced session SHALL check applicability and all consumer-declared evidence clauses against the resolved candidate before recovery execution; retired, mismatched or insufficient evidence MUST stop semantic recovery without domain-specific branches or automatic goal changes.
+
+#### Scenario: HEAL-008-S1
+- **WHEN** A runtime-valid candidate fails one identity clause
+- **THEN** no recovery action is executed and the unmet clause is recorded
+
+#### Scenario: HEAL-008-S2
+- **WHEN** A candidate satisfies the declared generic policy
+- **THEN** normal bounded action execution remains possible and independent correctness is not assumed
+
+#### Scenario: HEAL-008-S3
+- **WHEN** The target contract is retired or revision mismatched
+- **THEN** recovery halts with a distinct refusal or unknown reason

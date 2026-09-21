@@ -1,0 +1,59 @@
+{
+  "id": "apsec-d26-spec-aware-2026-09-14-v1",
+  "model": "gpt-4o-mini",
+  "maxRequests": 980,
+  "maxCostUsd": 2,
+  "phases": {
+    "baseline": 180,
+    "development": 360,
+    "holdout": 432,
+    "smoke": 8
+  },
+  "price": {
+    "version": "openai-model-page-2026-09-14",
+    "inputUsdPerMillion": 0.15,
+    "outputUsdPerMillion": 0.6
+  },
+  "config": {
+    "mode": "full",
+    "model": "gpt-4o-mini",
+    "maxTokens": 500,
+    "temperature": 0,
+    "maxAttempts": 3,
+    "actionTimeoutMs": 3000,
+    "recoveryTimeoutMs": 45000,
+    "providerTimeoutMs": 15000,
+    "domMaxChars": 8000,
+    "payloadMaxChars": 12000,
+    "maxCandidates": 30
+  },
+  "regression": {
+    "cases": 20,
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "repeats": 3,
+    "slots": 180
+  },
+  "holdout": {
+    "cases": 16,
+    "applicationGroups": 2,
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "repeats": 3,
+    "slots": 144
+  },
+  "runOrder": "case blocks; rotate A/B/C by case index plus repeat; fresh context/reset before each arm",
+  "limits": [
+    "No production targets",
+    "No reusing historical ledgers",
+    "No automatic retry after unresolved billing",
+    "No holdout tuning after opening results",
+    "Synthetic transfer evidence only, not universal effectiveness"
+  ]
+}

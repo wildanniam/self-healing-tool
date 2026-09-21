@@ -1,7 +1,8 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { Run } from './types.js';
-import { escapeHtml, redact } from './privacy.js';
+import type { Run, SpecDecision, SpecEvent } from './types.js';
+import { cleanContextText, escapeHtml, redact } from './privacy.js';
+import { SPEC_EVIDENCE_SOURCES } from './spec.js';
 import { normalizeProviderMetadata } from './provider.js';
 
 export interface PriceAssumption { model: string; version: string; inputUsdPerMillion: number; outputUsdPerMillion: number }
@@ -16,6 +17,10 @@ export function summarize(run: Run, price?: PriceAssumption) {
   const outputTokens = billed.reduce((sum, a) => sum + (a.usage?.outputTokens ?? 0), 0);
   const observedCostUsd = billed.length === 0 ? 0 : price ? (inputTokens * price.inputUsdPerMillion + outputTokens * price.outputUsdPerMillion) / 1000000 : null;
   const correctRepairs = run.events.filter(e => e.recoveryTriggered && e.actionExecuted && e.semantic === 'correct' && !run.assessments.some(a => a.eventId === e.id && a.wrongEffect)).length;
+  const specEvents=run.events.filter(e=>e.targetSpec);
+  const accepted=specEvents.filter(e=>e.recoveryTriggered&&e.actionExecuted);
+  const assessed=accepted.filter(e=>e.semantic!=='unassessed');
+  const errors=assessed.filter(e=>e.semantic==='incorrect'||run.assessments.some(a=>a.eventId===e.id&&a.wrongEffect)).length;
   return { events: run.events.length, recoveries: run.events.filter(e => e.recoveryTriggered).length, correctRepairs,
     wrongEffects: new Set(run.assessments.filter(a => a.wrongEffect).map(a => a.eventId)).size,
     wrongEffectAttempts: new Set(run.assessments.filter(a => a.wrongEffect && a.attemptId).map(a => JSON.stringify([a.eventId, a.attemptId]))).size,
@@ -26,7 +31,22 @@ export function summarize(run: Run, price?: PriceAssumption) {
     costPerCorrectRepairUsd: correctRepairs === 0 || unknownUsageRequests || unknownDispatchInvocations || observedCostUsd === null ? null : observedCostUsd / correctRepairs,
     priceAssumption: price ?? null,
     evidenceKind: run.provider === 'openai' ? 'live-provider-run' : 'offline-mechanism-check',
+    ...(specEvents.length?{specAdmissions:specEvents.filter(e=>e.targetSpec?.decision?.outcome==='accepted').length,
+      specRefusals:specEvents.filter(e=>e.stopReason==='spec-refused').length,specUnknown:specEvents.filter(e=>e.stopReason==='spec-unknown').length,
+      acceptedRecoveryActions:accepted.length,assessedAcceptedRecoveryActions:assessed.length,acceptedRecoveryErrors:errors,
+      acceptedErrorRisk:accepted.length>0&&assessed.length===accepted.length?errors/accepted.length:null}:{}),
   };
+}
+function specDecisionView(decision:SpecDecision):SpecDecision{
+  return {outcome:decision.outcome,reason:cleanContextText(decision.reason),clauses:decision.clauses.map(c=>({index:c.index,matched:c.matched,source:c.source})),
+    ...(decision.observed?{observed:Object.fromEntries(SPEC_EVIDENCE_SOURCES.filter(source=>decision.observed?.[source]!==undefined).map(source=>{
+      const value=decision.observed![source]!;return [source,Array.isArray(value)?value.map(v=>cleanContextText(v)):cleanContextText(value)];
+    }))}:{})};
+}
+function specEventView(spec:SpecEvent):SpecEvent{
+  return {mode:spec.mode,requirementId:spec.requirementId?cleanContextText(spec.requirementId):null,revision:spec.revision?cleanContextText(spec.revision):null,
+    expectedRevision:cleanContextText(spec.expectedRevision),applicability:spec.applicability,decision:spec.decision?specDecisionView(spec.decision):null,
+    ...(spec.provenance?{provenance:{fileName:cleanContextText(spec.provenance.fileName),sha256:/^[a-f0-9]{64}$/.test(spec.provenance.sha256)?spec.provenance.sha256:''}}:{})};
 }
 /** Whitelist projection: deliberately excludes raw payloads, form values and browser/provider objects. */
 export function reportView(run: Run, price?: PriceAssumption) {
@@ -40,15 +60,17 @@ export function reportView(run: Run, price?: PriceAssumption) {
       actionExecuted: e.actionExecuted, stopReason: e.stopReason, semantic: e.semantic, failure: e.failure,
       timing: { originalMs: e.originalMs, internalMs: e.internalMs, retryMs: e.retryMs, totalMs: e.totalMs },
       contextCoverage: e.context?.coverage ?? null,
+      ...(e.targetSpec?{targetSpec:specEventView(e.targetSpec)}:{}),
       attempts: e.attempts.map(a => ({ id: a.id, number: a.number, selector: a.selector ? redact(a.selector) : null,
         candidateAccepted: a.candidateAccepted, actionExecuted: a.actionExecuted, failure: a.failure, reason: a.reason,
         providerMetadata: normalizeProviderMetadata(a.providerMetadata),
+        ...(a.specDecision?{specDecision:specDecisionView(a.specDecision)}:{}),
         proposedSelector: a.proposedSelector ? redact(a.proposedSelector) : null, validations: a.validations?.map(v => ({selector: redact(v.selector), count: v.count, reason: v.reason})) ?? [], inputSha256: a.inputSha256, inputCoverage: a.inputCoverage,
         providerCalled: a.providerCalled, transportAttempted: a.transportAttempted, usage: a.usage, durationMs: a.durationMs, providerMs: a.providerMs, actionMs: a.actionMs })),
     })),
     assessments: run.assessments.map(a => ({ eventId: a.eventId, attemptId: a.attemptId, semantic: a.semantic,
       wrongEffect: a.wrongEffect, targetInCandidates: a.targetInCandidates, evidenceRef: a.evidenceRef ? redact(a.evidenceRef) : undefined })),
-    limitations: 'Structural validation does not establish semantic correctness. Raw DOM and candidate payloads are omitted. Review this local report before sharing. Offline results are not model-effectiveness evidence.',
+    limitations: 'Structural validation does not establish semantic correctness. Raw DOM and candidate payloads are omitted. Review this local report before sharing. Offline results are not model-effectiveness evidence.'+(run.events.some(e=>e.targetSpec)?' Target-contract matching requires independent behavioral assessment; acceptance is not semantic proof. Zero or incompletely assessed accepted actions have undefined accepted-error risk.':''),
   };
 }
 export function renderReport(run: Run, price?: PriceAssumption): string {
