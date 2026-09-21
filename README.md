@@ -45,8 +45,6 @@ Use **Node.js 24 or 25** and npm. Chromium is the tested browser.
 ```sh
 git clone https://github.com/wildanniam/self-healing-tool.git
 cd self-healing-tool
-# Until this documentation increment is merged, use its development branch.
-git switch codex/31-readme-quickstart
 npm ci
 npx playwright install chromium
 npm run demo:offline
