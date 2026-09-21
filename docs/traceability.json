@@ -8,7 +8,8 @@
       "spec": "openspec/specs/audit-workflow/spec.md",
       "decisions": [
         "D16",
-        "D17"
+        "D17",
+        "D37"
       ],
       "scenarios": [
         "AUD-001-S1",
@@ -24,7 +25,22 @@
         "method": "Repository check and PR/decision review",
         "acceptance": "Traceable requirements"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D37-AUD-001-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/public-release-2026-09-21.md",
+          "summary": "Release-chain and truthful-status review: issue35, non-main branch, PR36, dated D37 decision, scenario/task records, negative audit fixtures and private Atlas checkpoint.",
+          "scenarios": [
+            "AUD-001-S1",
+            "AUD-001-S2"
+          ],
+          "command": "npm run check; npm run test:audit; D37 issue/PR/decision/Atlas review",
+          "environment": "macOS arm64 / Node25.8.2 / GitHub PR36 / local Atlas Vault",
+          "date": "2026-09-21",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "AUD-002",
@@ -32,7 +48,8 @@
       "spec": "openspec/specs/audit-workflow/spec.md",
       "decisions": [
         "D15",
-        "D17"
+        "D17",
+        "D37"
       ],
       "scenarios": [
         "AUD-002-S1",
@@ -48,7 +65,22 @@
         "method": "Repository check and PR/decision review",
         "acceptance": "Truthful completion states"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D37-AUD-002-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/public-release-2026-09-21.md",
+          "summary": "Release-chain and truthful-status review: issue35, non-main branch, PR36, dated D37 decision, scenario/task records, negative audit fixtures and private Atlas checkpoint.",
+          "scenarios": [
+            "AUD-002-S1",
+            "AUD-002-S2"
+          ],
+          "command": "npm run check; npm run test:audit; D37 issue/PR/decision/Atlas review",
+          "environment": "macOS arm64 / Node25.8.2 / GitHub PR36 / local Atlas Vault",
+          "date": "2026-09-21",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "AUD-003",
@@ -58,7 +90,8 @@
         "D05",
         "D06",
         "D16",
-        "D17"
+        "D17",
+        "D37"
       ],
       "scenarios": [
         "AUD-003-S1",
@@ -74,7 +107,22 @@
         "method": "Repository check and PR/decision review",
         "acceptance": "Reviewable change lifecycle"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D37-AUD-003-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/public-release-2026-09-21.md",
+          "summary": "Release-chain and truthful-status review: issue35, non-main branch, PR36, dated D37 decision, scenario/task records, negative audit fixtures and private Atlas checkpoint.",
+          "scenarios": [
+            "AUD-003-S1",
+            "AUD-003-S2"
+          ],
+          "command": "npm run check; npm run test:audit; D37 issue/PR/decision/Atlas review",
+          "environment": "macOS arm64 / Node25.8.2 / GitHub PR36 / local Atlas Vault",
+          "date": "2026-09-21",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "AUD-004",
@@ -84,7 +132,8 @@
         "D14",
         "D15",
         "D16",
-        "D17"
+        "D17",
+        "D37"
       ],
       "scenarios": [
         "AUD-004-S1",
@@ -100,7 +149,22 @@
         "method": "Repository check and PR/decision review",
         "acceptance": "Decision and evidence provenance"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "id": "EV-D37-AUD-004-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/public-release-2026-09-21.md",
+          "summary": "Release-chain and truthful-status review: issue35, non-main branch, PR36, dated D37 decision, scenario/task records, negative audit fixtures and private Atlas checkpoint.",
+          "scenarios": [
+            "AUD-004-S1",
+            "AUD-004-S2"
+          ],
+          "command": "npm run check; npm run test:audit; D37 issue/PR/decision/Atlas review",
+          "environment": "macOS arm64 / Node25.8.2 / GitHub PR36 / local Atlas Vault",
+          "date": "2026-09-21",
+          "result": "pass"
+        }
+      ]
     },
     {
       "id": "INT-001",
@@ -3525,6 +3589,16 @@
         "EV-D37-INT-001-CHECK",
         "EV-D37-INT-004-CHECK",
         "EV-D37-INT-005-CHECK",
+        "EV-D37-DEMO-005-CHECK"
+      ]
+    },
+    {
+      "task": "8.3",
+      "evidence": [
+        "EV-D37-AUD-001-CHECK",
+        "EV-D37-AUD-002-CHECK",
+        "EV-D37-AUD-003-CHECK",
+        "EV-D37-AUD-004-CHECK",
         "EV-D37-DEMO-005-CHECK"
       ]
     }

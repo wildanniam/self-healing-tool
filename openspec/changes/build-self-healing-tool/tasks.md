@@ -54,7 +54,7 @@
 
 - [x] 8.1 Engineer prepares usage/compatibility instructions and a reviewed package manifest; Wildan decides distribution eligibility/license. Verify a clean-consumer installation, package allowlist, secret/private-artifact exclusion and explicit private-evaluation reproducibility limitation. [INT-001, INT-004, INT-005, DEMO-005]
 - [ ] 8.2 Engineer and Wildan review proposed paper/demo claims against evidence. Verify any claimed causal context improvement has an appropriate ablation, any broad superiority claim has relevant comparisons, and historical/planned data are labeled accurately. [EVAL-003, EVAL-007, DEMO-005]
-- [ ] 8.3 Maintainer checks the complete decision-to-evidence chain and prepares release/closure for Wildan's review. Verify scenario evidence, task status, issue/PR references, unresolved scope updates and Atlas Vault checkpoint before any owner-approved publication or OpenSpec archive. [AUD-001, AUD-002, AUD-003, AUD-004, DEMO-005]
+- [x] 8.3 Maintainer checks the complete decision-to-evidence chain and prepares release/closure for Wildan's review. Verify scenario evidence, task status, issue/PR references, unresolved scope updates and Atlas Vault checkpoint before any owner-approved publication or OpenSpec archive. [AUD-001, AUD-002, AUD-003, AUD-004, DEMO-005]
 
 ## 9. D25 methodological correction
 
@@ -159,3 +159,6 @@ D33 continuation now completed 9 pilot + 108 main with primary and independent a
 - [x] 19.1 Implement optional Playwright fixture, teardown capture and failure-preserving attachments. [INT-007]
 - [x] 19.2 Implement suite index, retry metadata, operational summaries and bounded single local opener. [OBS-013]
 - [x] 19.3 Verify installed consumer, failures/retries/parallelism/audit-off, UI and regression checks; refresh runnable example and documentation. [INT-007, OBS-013]
+
+
+D37 release preparation completes tasks8.1 and8.3: reviewed MIT distribution, installed consumer, issue/PR/decision/evidence chain and Atlas checkpoint. This is not full research closure; tasks7.3–7.5 and8.2 remain pending. Public visibility and anonymous installation are separate deployment checks recorded after execution. See `docs/evidence/public-release-2026-09-21.md`.

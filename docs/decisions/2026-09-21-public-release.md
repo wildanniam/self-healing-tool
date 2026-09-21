@@ -12,4 +12,4 @@ Remove generated agent skills from the current tree and retain their MIT notice 
 
 ## Verification and closure
 
-Task 8.1 covers the MIT package inventory, consumer installation and content audit. Task 8.3 covers the reviewed release chain, pending-scope disclosure and public access verification. Existing paper/practitioner tasks do not become complete merely because the tool is public, and this change is not archived. Historical versions remain historical; the current package and quick-start archive use 0.1.0.
+Task 8.1 covers the MIT package inventory, consumer installation and content audit. Task 8.3 covers the prepublication release-chain review and pending-scope disclosure. Actual public access and anonymous installation are checked after the owner-authorized visibility change; candidate preparation does not claim those deployment checks complete. Existing paper/practitioner tasks do not become complete merely because the tool is public, and this change is not archived. Historical versions remain historical; the current package and quick-start archive use 0.1.0.
