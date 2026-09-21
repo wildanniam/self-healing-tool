@@ -36,7 +36,7 @@ A page change can break a test's locator while the intended button or field is s
 
 Navigation, setup and assertions remain in your Playwright tests. The library does not rewrite test files. An action completing does not, by itself, prove that it reached the intended target.
 
-**Package status:** development package; public distribution and licensing are pending. The instructions below use the repository and a local package archive, not an assumed npm release.
+**Release:** 0.1.0 · [MIT license](LICENSE). Install from the repository using the [quick start](docs/playwright.md). This version has not been published to npm; `private: true` prevents accidental registry publication.
 
 ## Quick start
 
@@ -68,6 +68,8 @@ With the Playwright fixture, enable `healingOptions: { audit: true }` before run
 See [audit setup and capture limits](docs/integration.md#local-action-audit-reports). Detailed reports can contain application context; review them before sharing.
 
 ## Documentation
+
+Use the [documentation index](docs/index.md) to find user guides, contributor instructions and research evidence. See [release notes](CHANGELOG.md) for the current version.
 
 | I want to… | Read |
 | --- | --- |

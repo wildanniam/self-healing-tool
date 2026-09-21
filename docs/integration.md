@@ -4,7 +4,7 @@ For the shortest Playwright Test setup, start with [automatic reports](playwrigh
 
 ## Package and compatibility
 
-Development package; distribution/license review is still pending. Use ESM, Node.js 24/25 and Playwright 1.62.1. Chromium is the tested browser. Other browser versions, CommonJS, frames and shadow-root extraction are not verified. Build a local archive with `npm pack` and install it into the consumer project. Playwright Test is an optional peer used only by the `/playwright` subpath.
+GitHub source release 0.1.0 under MIT; npm publication remains pending. Use ESM, Node.js 24/25 and Playwright 1.62.1. Chromium is the tested browser. Other browser versions, CommonJS, frames and shadow-root extraction are not verified. Build a local archive with `npm pack` and install it into the consumer project. Playwright Test is an optional peer used only by the `/playwright` subpath.
 
 ## Explicit integration
 

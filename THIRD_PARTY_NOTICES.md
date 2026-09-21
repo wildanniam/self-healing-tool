@@ -1,5 +1,7 @@
 # Third-party notices
 
-The generated Codex integration skills under `.agents/skills/` come from OpenSpec 1.12.0 and declare the MIT license. Its copyright and permission notice are retained in [LICENSES/OpenSpec-MIT.txt](LICENSES/OpenSpec-MIT.txt).
+Project-authored software and documentation are licensed under [MIT](LICENSE), copyright 2026 Wildan Syukri Niam.
 
-OpenSpec and its npm dependencies retain their own licenses. The project package is currently private and `UNLICENSED`; this does not replace or restrict the licenses of third-party materials. A license for future tool distribution has not been selected.
+Earlier repository revisions included generated Codex integration skills from OpenSpec 1.12.0 under `.agents/skills/`. They were removed from the current tree for the public release; the copyright and permission notice remains in [LICENSES/OpenSpec-MIT.txt](LICENSES/OpenSpec-MIT.txt) for those historical copies.
+
+OpenSpec, TypeScript, Playwright and other installed dependencies retain their own licenses and notices. Dependencies are installed through npm rather than vendored as project-authored source. The MIT project license does not relicense third-party materials or grant rights to private applications or historical reference artifacts excluded from this repository.

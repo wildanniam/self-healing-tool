@@ -52,7 +52,7 @@
 
 ## 8. Release candidate and closure
 
-- [ ] 8.1 Engineer prepares usage/compatibility instructions and a reviewed package manifest; Wildan decides distribution eligibility/license. Verify a clean-consumer installation, package allowlist, secret/private-artifact exclusion and explicit private-evaluation reproducibility limitation. [INT-001, INT-004, INT-005, DEMO-005]
+- [x] 8.1 Engineer prepares usage/compatibility instructions and a reviewed package manifest; Wildan decides distribution eligibility/license. Verify a clean-consumer installation, package allowlist, secret/private-artifact exclusion and explicit private-evaluation reproducibility limitation. [INT-001, INT-004, INT-005, DEMO-005]
 - [ ] 8.2 Engineer and Wildan review proposed paper/demo claims against evidence. Verify any claimed causal context improvement has an appropriate ablation, any broad superiority claim has relevant comparisons, and historical/planned data are labeled accurately. [EVAL-003, EVAL-007, DEMO-005]
 - [ ] 8.3 Maintainer checks the complete decision-to-evidence chain and prepares release/closure for Wildan's review. Verify scenario evidence, task status, issue/PR references, unresolved scope updates and Atlas Vault checkpoint before any owner-approved publication or OpenSpec archive. [AUD-001, AUD-002, AUD-003, AUD-004, DEMO-005]
 

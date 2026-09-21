@@ -213,3 +213,8 @@ Companion files under `evaluation/rm1/continuation/` preserve the original exper
 ## D36 Playwright consumer reporting (issue #33)
 
 Add optional `self-healing-tool/playwright` fixture and `self-healing-tool/reporter` exports. The fixture writes local action reports during teardown, with explicit audit opt-in and attachments; write/attachment failures are diagnostics and never replace the primary test error. The reporter collects final Playwright statuses and per-project/retry identities into one standalone suite index. Preserve immutable per-run directories; optional browser opening occurs once after the run and is disabled in CI. Index status is authoritative after all teardown; action execution and independent correctness remain separate. An action summary leads with original completion, executed recovery, stopped and failed counts. Ship a runnable local consumer example and current full-mode instructions. No recovery algorithm, historical evidence or paid collection changes.
+
+
+## D37 public distribution boundary
+
+The public GitHub artifact includes reviewed source/tests/examples, synthetic research evidence and provenance. The0.1.0 package remains allowlisted and private:true to prevent unintended npm publication; MIT applies to project-authored software. Generated agent skills leave the current tree, with historical attribution retained. Audit both tracked history and GitHub-visible records before changing visibility. Library algorithms and measured results remain unchanged. See docs/decisions/2026-09-21-public-release.md.
