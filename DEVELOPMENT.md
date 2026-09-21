@@ -87,3 +87,7 @@ The optional persisted live-budget API and package 0.0.1 enforce shared phase/re
 Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution subsequently completed after D22; see [pilot and provider-stop follow-up](docs/evidence/pilot-followup-2026-09-08.md).
 
 The D23 checkpoint prepares [the final evaluation review package](docs/evaluation/final-review-package.md): private native preflight and a draft protocol/budget. Final collection and its owner-review tasks remain pending.
+
+## D33 ranking study
+
+**D33 RM1 completed: 9 pilot and 108 main executions audited.** [Results and limitations](docs/evidence/rm1-continuation-results-2026-09-18.md): full thesis ranking and lexical baseline each 36/36 correct; ablation 30/36 with 3 wrong effects and 3 refusals. Original failed-request cost remains unknown. [Experiment instructions](evaluation/rm1/README.md).

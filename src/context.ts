@@ -1,9 +1,9 @@
 import type { Page, ElementHandle, JSHandle } from 'playwright';
-import type { Action, CandidateFeatures, Config, Context, SpecContext, Task } from './types.js';
+import type { Action, CandidateFeatures, Config, Context, ContextCollectionAudit, SpecContext, Task } from './types.js';
 import type { SpecEvidence } from './spec.js';
 import { cleanContextText, cleanDomText } from './privacy.js';
 import { serializeCandidates, serializeRequest } from './provider.js';
-import { rankThesis } from './ranking.js';
+import { rankCandidates } from './ranking.js';
 import { inspectDom } from './dom-context.js';
 
 /** Applied after all context/feedback changes; counts the actual complete request. */
@@ -12,7 +12,7 @@ export function fitContext(context: Context, config: Readonly<Config>): Context 
     const v = context.coverage;
     v.included = context.candidates.length; v.omitted = v.discovered - v.included;
     if (v.beforeBudget !== undefined) v.budgetOmitted = v.beforeBudget - v.included;
-    v.domChars = serializeCandidates(context.candidates).length + (context.cleanedDom?.length ?? 0);
+    v.domChars = serializeCandidates(context.candidates, config).length + (context.cleanedDom?.length ?? 0);
     for (let i = 0; i < 6; i++) v.payloadChars = serializeRequest(context, config).length;
   };
   measure();
@@ -46,11 +46,13 @@ async function verifiedLocators(page: Page, origins: JSHandle<Element[]>, order:
   return accepted;
 }
 
-export async function collectContext(page: Page, action: Action, task: Task, config: Readonly<Config>, omitted: readonly string[], originalSelector = '', targetSpec?: SpecContext): Promise<Context> {
+export async function collectContext(page: Page, action: Action, task: Task, config: Readonly<Config>, omitted: readonly string[], originalSelector = '', targetSpec?: SpecContext, onAudit?: (record: ContextCollectionAudit) => void): Promise<Context> {
+  const started = performance.now();
   // Node handles remain private to this call: no marker attributes or positional selectors enter the DOM/payload.
   const snapshot = await page.locator('html').evaluateHandle(inspectDom, { action, specMode: targetSpec !== undefined });
   try {
     const extracted = await snapshot.evaluate(({ candidates, cleanedDom, scanTruncated, scanned, ineligible }) => ({ candidates, cleanedDom, scanTruncated, scanned, ineligible }));
+    const extractedAt = performance.now();
     const clean = (s: string) => cleanContextText(s, omitted);
     const safeSelector = (s: string) => { const safe = clean(s); return safe === s && !/\[redacted/.test(s) ? safe : ''; };
     const candidates = extracted.candidates.map(c => {
@@ -65,7 +67,11 @@ export async function collectContext(page: Page, action: Action, task: Task, con
     });
     const cleanTask = { description: clean(task.description), ...(task.scope ? { scope: clean(task.scope) } : {}) };
     const failed = safeSelector(originalSelector);
-    const ranked = rankThesis(candidates, action, cleanTask, failed);
+    const sanitizedAt = performance.now();
+    const ranked = rankCandidates(candidates, action, cleanTask, failed, config.rankingExperiment);
+    const rankedAt = performance.now();
+    // Locator verification below mutates selected ranked objects; capture the full order first.
+    const rankedAudit = onAudit ? structuredClone(ranked) : undefined;
     const selected = ranked.slice(0, config.maxCandidates);
     const nodes = await snapshot.getProperty('nodes');
     const locatorCache = new Map<string, Promise<number>>();
@@ -75,6 +81,7 @@ export async function collectContext(page: Page, action: Action, task: Task, con
         candidate.selector = candidate.suggestedLocators[0] ?? '';
       }));
     } finally { await nodes.dispose(); }
+    const verifiedAt = performance.now();
     const cleaned = cleanDomText(extracted.cleanedDom, omitted);
     const context: Context = { action, task: cleanTask, method: 'owner-evidence-d29-v1', failure: { originalSelector: failed, classification: 'missing-locator' }, candidates: selected,
       ...(selected.length < 5 ? { cleanedDom: cleaned.slice(0, selected.length ? Math.floor(config.domMaxChars / 2) : config.domMaxChars) } : {}),
@@ -89,6 +96,16 @@ export async function collectContext(page: Page, action: Action, task: Task, con
       context.cleanedDom = cleaned.slice(0, context.candidates.length ? Math.floor(config.domMaxChars / 2) : config.domMaxChars);
       if (context.cleanedDom.length < cleaned.length) context.coverage.textTruncated = true;
       fitContext(context, config);
+    }
+    if (onAudit) {
+      const fittedAt = performance.now();
+      // The callback receives detached observations; mutation cannot alter selection or payload.
+      // Observer errors propagate as explicit collection failures rather than losing audit data.
+      onAudit(structuredClone({ schemaVersion: 1, ...(config.rankingExperiment ? { rankingExperiment: config.rankingExperiment } : {}),
+        preRank: candidates, ranked: rankedAudit!, cleanedDom: cleaned, context,
+        timingsMs: { extract: extractedAt - started, sanitize: sanitizedAt - extractedAt, rank: rankedAt - sanitizedAt,
+          verify: verifiedAt - rankedAt, fit: fittedAt - verifiedAt, total: fittedAt - started },
+      } satisfies ContextCollectionAudit));
     }
     return context;
   } finally { await snapshot.dispose(); }
