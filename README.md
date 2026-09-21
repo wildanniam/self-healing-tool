@@ -1,89 +1,162 @@
-# Self-healing tool
+<h1 align="center">Self-Healing Tool</h1>
 
-## Present the A/B/C comparison
+<h3 align="center">Recover broken locators. Inspect every attempt.</h3>
 
-```sh
-npm run demo                         # open retained results; no API calls
-npm run demo:walkthrough -- --step   # visible browser; recorded AI decisions
-```
+<p align="center">
+  A Playwright library for bounded, LLM-assisted locator recovery.<br />
+  Prepare DOM context, check replacement locators, and inspect the recorded process in a local HTML report.
+</p>
 
-The standalone report includes category-specific results, filters and an **Inspeksi** view for each case, A/B/C arm, repeat and recovery attempt. Follow the recorded DOM context and ranking, exact system/user request, available model output, locator validation, requirement clauses and independently assessed effects. Skipped and unrecorded stages are explicit. Private diagnostics require local opt-in and stay out of ordinary exports. The walkthrough pauses for discussion and saves a separate report. Read the [presentation guide](docs/presentation.md) and [D32 verification](docs/evidence/inspectable-report-2026-09-16.md); the research results below remain unchanged.
+<p align="center">
+  <img src="https://img.shields.io/badge/Playwright-1.62.1-2EAD33?style=for-the-badge" alt="Playwright 1.62.1" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" alt="TypeScript 5" />
+  <img src="https://img.shields.io/badge/Node.js-24%20%7C%2025-417E38?style=for-the-badge&amp;logo=nodedotjs&amp;logoColor=white" alt="Node.js 24 or 25" />
+  <img src="https://img.shields.io/badge/Status-Research%20Prototype-52667A?style=for-the-badge" alt="Research prototype" />
+</p>
 
-**Current checkpoint: D30 scoped evaluation complete on unchanged 0.0.8.** See [results, diagnosis and boundaries](docs/evidence/scoped-evaluation-2026-09-15.md). All 378 slots are retained; ordinary wording failures and six misleading-label wrong effects remain. The D29 paragraph below describes its earlier collection. No release or general-safety claim is made.
+<p align="center">
+  <a href="#what-it-does"><strong>Overview</strong></a> ·
+  <a href="#try-the-offline-demo">Quick Start</a> ·
+  <a href="#use-in-your-tests">Library Usage</a> ·
+  <a href="#inspect-the-report">Reports</a> ·
+  <a href="#documentation">Documentation</a>
+</p>
 
-A reusable Playwright locator-recovery development library with an independent synthetic local demo, prepared for a scoped software-engineering tool demonstration study.
+---
 
-**Historical result: 0.0.8 D29 evaluated; an ambiguity regression remains.** All 144 known synthetic slots completed. C correct recovery stays 15/24 while wrong effects rise 3→6. The nested-owner defect is fixed, but the increment is not an overall method improvement. See [D29 results and limitations](docs/evidence/owner-evidence-evaluation-2026-09-14.md). The following D27 numbers are historical; private Koderea was not rerun on 0.0.8.
+## What it does
 
-**Historical checkpoint: 0.0.7 D27 regression collected and audited; follow-up correction required.** See [the complete before/after evidence](docs/evidence/candidate-recovery-evaluation-2026-09-14.md). Contract-enforced recovery increased from 15/36 to 36/36 on the known private workload, with zero wrong effects there. On the known synthetic workload, recovery fell from 18/24 to 15/24 and three wrong effects occurred. The nested-group context task is reopened; passing engineering checks does not establish general safety. Owner interpretation and public release remain pending. The working name, distribution eligibility and license remain undecided; private application source and E2E tests are not distributed here.
+A page change can break a test's locator while the intended button or field is still available. Self-Healing Tool wraps selected Playwright `click` and `fill` actions to attempt recovery when the original locator finds no element and times out.
 
-D25 corrects methodological drift: [method matrix](docs/implementation/thesis-method-alignment.md). D24 evaluated the earlier simplified variant, not an exact replay of the TA method.
+1. **Try the original locator.** Successful actions continue without calling AI.
+2. **Prepare page context.** Extract and clean DOM candidates, retain labels and surrounding context, rank candidates, and fit the input limits.
+3. **Propose a replacement.** In full mode, an LLM returns a locator or no selection, within bounded attempts.
+4. **Check before acting.** Validate the locator on the current page and optionally check explicit target rules supplied by the integrator.
+5. **Inspect the evidence.** A local report shows candidates, recorded AI input/output, checks, and action outcomes.
 
-Historical D24 [findings and limits](docs/evidence/final-evaluation-2026-09-09.md): the earlier full and ranker-only variants both achieved 33/36 recoverable cases; absent-target refusal 0/12 vs 3/12. These are different versions/protocols from D26 and must not be pooled or presented as current 0.0.6 performance. No LLM superiority or reliable unattended healing is established.
+Navigation, setup and assertions remain in your Playwright tests. The library does not rewrite test files. An action completing does not, by itself, prove that it reached the intended target.
 
-## Inspect a library run
+**Package status:** development package; public distribution and licensing are pending. The instructions below use the repository and a local package archive, not an assumed npm release.
 
-Enable `audit: true` on `createHealingSession`, then call `writeReport(healing.snapshot(), { directory: './output/healing', audit: healing.audit() })`. Open the generated `report.html`: choose an action and inspect DOM context, AI input/output, checks and outcome. English and Bahasa Indonesia are available; source evidence is unchanged. Detailed capture is local and explicit; summary exports omit request/output payloads. See the [integration guide](docs/integration.md#local-action-audit-reports).
+## Try the offline demo
 
-## Start here
-
-1. [Proposal](openspec/changes/build-self-healing-tool/proposal.md) — what the tool will do and why.
-2. [Design](openspec/changes/build-self-healing-tool/design.md) — boundaries, recovery flow, alternatives and evaluation design.
-3. [Implementation tasks](openspec/changes/build-self-healing-tool/tasks.md) — ordered work with owner, requirement IDs and completion evidence.
-4. [Decision register](docs/decisions/2026-09-07-foundation.md) — agreed direction, assumptions and pending decisions.
-5. [Audit workflow](docs/audit-workflow.md) and [traceability register](docs/traceability.json) — how changes and evidence are linked.
-6. [Verification plan](docs/verification-plan.md) and [bootstrap evidence](docs/evidence/openspec-bootstrap.md) — planned behavioral checks versus checks actually performed.
-
-## Check the specification workspace
-
-Install Node.js 24 (recommended for this workspace) and npm. OpenSpec `1.12.0` is an exact development dependency and requires Node.js at least `20.19.0`; the library supports Node 24/25 and Playwright 1.62.1 (Chromium), with evidence and limitations in the integration guide.
-
-```sh
-npm ci --ignore-scripts
-export OPENSPEC_TELEMETRY=0
-export OPENSPEC_NO_UPDATE_CHECK=1
-npm run check
-./node_modules/.bin/openspec status --change build-self-healing-tool
-```
-
-The checks validate OpenSpec structure and traceability, not recovery effectiveness. No model credential is required for offline verification.
-
-## Local API configuration
-
-A blank-key environment template and [local setup guide](docs/local-api-setup.md) now document the owner-selected reference settings. Fill `OPENAI_API_KEY` only in your ignored local `.env`; preserve any existing file. Environment loading is explicit in the live demo; offline commands do not load a key. The adapter has offline transport checks and a bounded live demo/pilot; read the dated evidence for outcomes and missing usage.
-
-## Specification map
-
-| Capability | Requirement prefix | Status |
-|---|---|---|
-| [Audit workflow](openspec/specs/audit-workflow/spec.md) | AUD | Repository process baseline |
-| [Library integration](openspec/changes/build-self-healing-tool/specs/library-integration/spec.md) | INT | Development package verified; release pending |
-| [Runtime recovery](openspec/changes/build-self-healing-tool/specs/runtime-recovery/spec.md) | HEAL | Initial offline behavior verified |
-| [Context selection](openspec/changes/build-self-healing-tool/specs/context-selection/spec.md) | CTX | Synthetic checks and private final study audited |
-| [Recovery reporting](openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md) | OBS | Offline report checks verified |
-| [Local demo](openspec/changes/build-self-healing-tool/specs/local-demo/spec.md) | DEMO | Offline/live demo verified; release pending |
-| [Evaluation protocol](openspec/changes/build-self-healing-tool/specs/evaluation-protocol/spec.md) | EVAL | Technical collection complete; interpretation/practitioner study pending |
-
-Codex integrations are checked in under `.agents/skills/`. Use `$openspec-propose` for a new proposal, `$openspec-update-change` for a revision and `$openspec-apply-change` when starting an authorized implementation increment. Keep the foundation change open while its tasks are incomplete.
-
-The first implementation increment covers tasks 1.1–5.3. D21 authorizes one bounded live batch; task 5.4 now has actual independent live-demo evidence. The five-case pilot follows separate private-host integration and case review. See [integration instructions](docs/integration.md), [component inventory](docs/implementation/component-inventory.md) and [runtime evidence](docs/evidence/offline-runtime-2026-09-08.md).
-
-## Try the independent demo
+Use **Node.js 24 or 25** and npm. Chromium is the tested browser.
 
 ```sh
-npm ci --ignore-scripts
+git clone https://github.com/wildanniam/self-healing-tool.git
+cd self-healing-tool
+# Until this documentation increment is merged, use its development branch.
+git switch codex/31-readme-quickstart
+npm ci
 npx playwright install chromium
 npm run demo:offline
 ```
 
-The command prints the path to a local HTML/JSON report. It runs controls, a profile locator drift and an ambiguous entity action in its own synthetic local app. It does not contact a model or the private evaluation application.
+This runs the independent synthetic application and creates an HTML/JSON report. It uses **ranker-only recovery**, requires no API key, and makes no AI requests. Open `report.html` in the output directory printed by the command.
 
-Development checks: `npm run typecheck`, `npm run test:unit`, `npm run test:browser`, `npm run test:consumer`, `npm run check`, `npm run test:audit`. Runtime results from fake providers/ranking establish mechanism checks only.
+To inspect retained research results instead:
 
-OpenSpec reference: [official setup guide](https://openspec.dev/docs/setup). Contribution rules: [AGENTS.md](AGENTS.md).
+```sh
+npm run demo
+```
 
-The optional persisted live-budget API and package 0.0.1 enforce shared phase/request reservations across instances. See [D20/D21](docs/decisions/2026-09-08-live-pilot.md) and [integration instructions](docs/integration.md).
+This opens a report in your default browser; it does not rerun the experiments. A fresh clone includes only the portable evidence. Missing private or local archives are shown as unavailable. See the [presentation guide](docs/presentation.md) for a browser walkthrough using recorded AI decisions.
 
-Latest: [live batch checkpoint](docs/evidence/live-batch-2026-09-08.md), 21/30 tasks complete; private live execution subsequently completed after D22; see [pilot and provider-stop follow-up](docs/evidence/pilot-followup-2026-09-08.md).
+## Use in your tests
 
-The D23 checkpoint prepares [the final evaluation review package](docs/evaluation/final-review-package.md): private native preflight and a draft protocol/budget. Final collection and its owner-review tasks remain pending.
+First build and package this checkout:
+
+```sh
+npm pack
+```
+
+In your own Playwright project, install the generated archive and the supported Playwright version. Replace the archive path with its actual location:
+
+```sh
+npm install /absolute/path/to/self-healing-tool-0.0.8.tgz playwright@1.62.1
+npm install --save-dev @playwright/test@1.62.1
+npx playwright install chromium
+```
+
+The example below uses **ranker-only mode** so you can try the integration without an AI key. Adapt the app URL, selectors and assertion to your application, save it as a Playwright test, and run it with `npx playwright test`.
+
+```ts
+import { test, expect } from '@playwright/test';
+import { createHealingSession, writeReport } from 'self-healing-tool';
+
+test('update display name', async ({ page }) => {
+  await page.goto('http://127.0.0.1:3100'); // Start your own app first.
+  const healing = createHealingSession(page, { audit: true });
+
+  try {
+    await healing.fill('#previous-display-name', 'Synthetic User', {
+      description: 'Fill display name',
+    });
+    await healing.click('button[type="submit"]', {
+      description: 'Save profile',
+    });
+    await expect(page.getByLabel('Display name')).toHaveValue('Synthetic User');
+  } finally {
+    const directory = await writeReport(healing.snapshot(), {
+      directory: './output/healing',
+      audit: healing.audit(),
+    });
+    console.log(`Open ${directory}/report.html`);
+  }
+});
+```
+
+With this setup, the report is written after the actions even when an action or assertion fails. Open the generated HTML in a browser. This library report is separate from Playwright's built-in report; a passing assertion is not automatically recorded as a semantic assessment in the library.
+
+For **LLM-assisted recovery**, explicitly configure full mode and a provider with a request cap. See [provider configuration](docs/integration.md#configuration-and-provider) and [local API setup](docs/local-api-setup.md). The default session does not call an LLM.
+
+## Inspect the report
+
+The report supports **English and Bahasa Indonesia**. Select an action and attempt, then inspect:
+
+| Stage | What you can inspect |
+| --- | --- |
+| DOM context | Retained candidates, context fields, and available ranking scores |
+| AI input and output | Captured request and returned text for the selected attempt |
+| Checks | Locator validation and optional target-rule decisions |
+| Outcome | Execution status and independent effect assessments when supplied |
+
+Enable `audit: true` before running and pass `healing.audit()` to `writeReport` for detailed capture. Original evidence is not translated when switching the interface language. No-AI actions and unavailable records are labeled explicitly. Custom providers must supply the capture hook for their actual request bodies.
+
+See [audit setup and capture limits](docs/integration.md#local-action-audit-reports). Detailed reports can contain application context; review them before sharing.
+
+## Documentation
+
+| I want to… | Read |
+| --- | --- |
+| Integrate the library and configure recovery | [Integration guide](docs/integration.md) |
+| Configure a live provider | [Local API setup](docs/local-api-setup.md) |
+| Explore results or demonstrate recorded recovery | [Presentation guide](docs/presentation.md) |
+| Understand DOM preparation and ranking | [Method alignment](docs/implementation/thesis-method-alignment.md) |
+| Review report verification | [Bilingual report evidence](docs/evidence/bilingual-library-report-2026-09-20.md) |
+| Inspect research history and development decisions | [Development and research records](DEVELOPMENT.md) |
+
+## Scope and limitations
+
+- Explicit string-selector `click` and `fill` wrappers; ESM, Node 24/25, Playwright 1.62.1 and Chromium are the verified integration scope.
+- Recovery handles supported zero-match timeouts. Other failures, such as invalid selectors or disabled elements, retain their original error.
+- Optional target rules check declared observable conditions; they do not establish complete requirement satisfaction. Misleading labels can still lead to wrong actions.
+- Keep your own assertions. Inspect stopped, failed and unassessed outcomes as well as successful actions.
+- Raw DOM before cleansing and individual score contributions are not automatically captured in the action audit.
+
+## Development
+
+```sh
+npm run typecheck
+npm run check
+npm run test:consumer
+```
+
+The consumer check installs a local package archive into a temporary project and exercises it in a browser without paid inference. Further verification commands, historical results and decision records are in [DEVELOPMENT.md](DEVELOPMENT.md).
+
+---
+
+<p align="center">
+  <strong>Self-Healing Tool</strong><br />
+  DOM context preparation · Bounded recovery · Inspectable outcomes
+</p>

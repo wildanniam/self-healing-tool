@@ -65,3 +65,7 @@ D26 explicitly authorizes the four-stage spec-aware method evaluation: restored 
 D26 collection is complete: 180 known private slots and 144 synthetic holdout slots, with all 516 actual provider requests settled. See `docs/evidence/spec-aware-evaluation-2026-09-14.md`. Retained ledgers are closed study evidence, not authority for further calls. A later change must preserve these outcomes and use fresh independent tasks for transfer claims. Spec context also adds DOM observations, so do not attribute A/B differences exclusively to specification prose.
 
 D27 (docs/decisions/2026-09-14-candidate-recovery.md) explicitly authorizes the diagnosed candidate/locator fixes and a fresh bounded regression rerun under issue15. Preserve D26; all A/B/C arms use the corrected declared core. Reused synthetic tasks are known regression evidence. Run offline checks before freeze/live collection; no release or merge is included.
+
+## User-facing documentation
+
+Keep README usage-first: overview, development-package setup, supported click/fill integration and report access. Keep research checkpoints in DEVELOPMENT.md and linked evidence files. Label ranker-only, recorded replay and live inference distinctly. Do not claim a public npm release, automatic browser opening for all library consumers or semantic correctness from action completion. Recheck README commands and anchors when changing the integration contract.
