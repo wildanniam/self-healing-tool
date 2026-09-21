@@ -118,3 +118,12 @@ D31 presentation verification is complete; retained D30 results and research/rel
 - [x] 15.3 Verify source/result parity, control/recovery/refusal/retry paths, exports, escaping, keyboard/mobile behavior and unchanged archives; document evidence and Atlas checkpoint. [OBS-010]
 
 D32 inspector verification is complete; see `docs/evidence/inspectable-report-2026-09-16.md`. Historical inputs/results remain unchanged; raw evidence gaps stay explicit. No paid API calls were made.
+
+
+## 16. D34 report simplification
+
+- [x] 16.1 Implement a read-only D33 adapter and separate study identity, scope, denominators and private-safe filtered exports. [OBS-011]
+- [x] 16.2 Implement results-first presentation and generic library reports, four process groups, selected-run navigation and paired attempt evidence. [OBS-011]
+- [x] 16.3 Verify archive parity, missing/replay/control/unassessed states, escaping, attempt pairing, keyboard/mobile/desktop and document evidence and Atlas checkpoint. [OBS-011]
+
+D34 verification is complete; see `docs/evidence/report-simplification-2026-09-18.md`. Source data and recovery behavior are unchanged.

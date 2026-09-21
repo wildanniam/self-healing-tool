@@ -2731,6 +2731,52 @@
           "result": "pass"
         }
       ]
+    },
+    {
+      "id": "OBS-011",
+      "capability": "recovery-reporting",
+      "spec": "openspec/changes/build-self-healing-tool/specs/recovery-reporting/spec.md",
+      "decisions": [
+        "D34"
+      ],
+      "scenarios": [
+        "OBS-011-S1",
+        "OBS-011-S2",
+        "OBS-011-S3",
+        "OBS-011-S4",
+        "OBS-011-S5"
+      ],
+      "owner": "engineer",
+      "status": "verified",
+      "tasks": [
+        "16.1",
+        "16.2",
+        "16.3"
+      ],
+      "verification": {
+        "id": "V-OBS-011",
+        "method": "Record parity and real browser checks",
+        "acceptance": "Honest four-group inspection, separate studies and filtered private-safe exports"
+      },
+      "evidence": [
+        {
+          "id": "EV-D34-OBS-011-CHECK",
+          "kind": "verification",
+          "ref": "docs/evidence/report-simplification-2026-09-18.md",
+          "scenarios": [
+            "OBS-011-S1",
+            "OBS-011-S2",
+            "OBS-011-S3",
+            "OBS-011-S4",
+            "OBS-011-S5"
+          ],
+          "summary": "Separate D33/D30 reports, four-group inspection, exact run/attempt identity, filtered safe exports and safe generic reports verified with retained archives and browser checks.",
+          "command": "npm run test:presentation; npm run typecheck; npm run test:unit; npm run test:browser; npm run test:consumer; npm run check; npm run test:audit; npm run demo:walkthrough -- --headless --no-open --pause 0; retained archive read-only parity check",
+          "environment": "macOS arm64; Node25.8.2; Playwright1.62.1 / Chromium",
+          "date": "2026-09-18",
+          "result": "pass"
+        }
+      ]
     }
   ],
   "completedTasks": [
@@ -3075,6 +3121,24 @@
       "task": "15.3",
       "evidence": [
         "EV-D32-OBS-010-CHECK"
+      ]
+    },
+    {
+      "task": "16.1",
+      "evidence": [
+        "EV-D34-OBS-011-CHECK"
+      ]
+    },
+    {
+      "task": "16.2",
+      "evidence": [
+        "EV-D34-OBS-011-CHECK"
+      ]
+    },
+    {
+      "task": "16.3",
+      "evidence": [
+        "EV-D34-OBS-011-CHECK"
       ]
     }
   ]

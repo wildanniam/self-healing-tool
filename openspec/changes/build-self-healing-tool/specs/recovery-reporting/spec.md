@@ -157,3 +157,28 @@ Reports SHALL support readable inspection of one case, arm, repetition and attem
 #### Scenario: OBS-010-S6
 - **WHEN** a subsequent replay or live demonstration is recorded
 - **THEN** request/response capture is available to the same inspector with accurate evidence mode and without altering method inputs or historical results
+
+
+### Requirement: OBS-011 Results-first reports with separate studies
+
+Reports SHALL lead with observed outcomes, expose four process groups with paired attempt input/output, and retain progressive access to recorded evidence. RM1 and RM2 SHALL have separate adapters, scope, arms and denominators. Generic library reports MUST preserve their allowlisted projection and explicitly label unavailable raw evidence and unassessed correctness.
+
+#### Scenario: OBS-011-S1
+- **WHEN** D33 and D30 archives are loaded
+- **THEN** ranking and target-rule comparisons retain their own records and denominators without pooled accuracy or changed source files
+
+#### Scenario: OBS-011-S2
+- **WHEN** a result or a later attempt is selected
+- **THEN** the inspector opens that case, arm and repetition with the same attempt's input, output and checks, with raw and parsed evidence distinguished
+
+#### Scenario: OBS-011-S3
+- **WHEN** controls, missing raw evidence, replay or unassessed library runs are shown
+- **THEN** no AI invocation, reconstructed output or semantic success is fabricated; four groups and on-demand sources remain clear
+
+#### Scenario: OBS-011-S4
+- **WHEN** a filtered summary is exported or hostile/private evidence is rendered
+- **THEN** exported rows match visible filters, private diagnostics are excluded from summary exports, and markup remains inert
+
+#### Scenario: OBS-011-S5
+- **WHEN** the report is used with keyboard at desktop or mobile sizes
+- **THEN** navigation, four-group inspection, focus return and readable evidence work without page overflow
