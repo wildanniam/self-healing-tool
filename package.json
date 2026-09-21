@@ -1,0 +1,20 @@
+{
+  "name": "self-healing-tool",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Specification-first workspace for a reusable Playwright self-healing library.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "spec:validate": "openspec validate --all --strict --no-interactive",
+    "spec:list": "openspec list --json",
+    "audit:check": "node scripts/check-traceability.mjs",
+    "check": "npm run spec:validate && npm run audit:check",
+    "test:audit": "node --test scripts/check-traceability.test.mjs"
+  },
+  "devDependencies": {
+    "@fission-ai/openspec": "1.12.0"
+  }
+}

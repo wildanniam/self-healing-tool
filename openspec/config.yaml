@@ -1,0 +1,32 @@
+schema: spec-driven
+context: |
+  Write repository artifacts in English; explain decisions to Wildan in Indonesian.
+  This is a specification-first TypeScript/Playwright library project. Runtime code is not yet extracted.
+  Read docs/decisions/2026-09-07-foundation.md and docs/audit-workflow.md.
+  Public artifacts are a reusable library and independent synthetic localhost demo.
+  The real evaluation application's source and E2E suite remain in a separate private repository.
+  Scope: explicit click/fill wrappers, bounded locator recovery, inspectable context and reports.
+  Locator acceptance, action execution, semantic correctness, and wrong effects are different facts.
+  Five pilot cases precede a provisional 20-case evaluation; case counts, participants and model budgets are not results.
+  Never copy private application artifacts, production sessions, secrets, or old experiment results.
+  No source auto-patching, automatic GitHub actions by the runtime, SaaS, or universal effectiveness claim is in the initial scope.
+rules:
+  proposal:
+    - Identify the linked issue, affected capabilities, decision IDs, non-goals, and unresolved assumptions.
+  specs:
+    - Give every requirement a stable ID and concrete WHEN/THEN scenarios including relevant failure paths.
+    - Separate runtime responsibilities from evaluator responsibilities and design intent from measured evidence.
+  design:
+    - Explain alternatives, compatibility, data boundaries, migration, validation, and explicit release gates.
+  tasks:
+    - Give each task a stable number, requirement IDs, ownership boundary, and verifiable completion evidence.
+    - Keep unimplemented tasks unchecked; distinguish private-host work from work in this repository.
+operations:
+  apply:
+    guidance:
+      - Follow AGENTS.md, use an issue branch, update evidence and task status together, and run relevant checks.
+      - Update the proposal/spec/design before implementing a material scope change.
+  archive:
+    guidance:
+      - Do not archive incomplete implementation or treat structural validation as feature verification.
+      - Preserve the issue, PR, decisions, scenario evidence, and release status in the audit record.
