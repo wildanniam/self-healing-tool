@@ -38,7 +38,7 @@ export interface Event {
   id: string; action: Action; originalSelector: string; task: Task;
   originalFailure: { name: string; classification: string } | null;
   recoveryTriggered: boolean; actionExecuted: boolean;
-  stopReason: 'original-success' | 'nonrecoverable' | 'recovered' | 'attempt-limit' | 'time-limit' | 'abstained' | 'context-failure';
+  stopReason: 'original-success' | 'nonrecoverable' | 'recovered' | 'attempt-limit' | 'time-limit' | 'abstained' | 'context-failure' | 'provider-failure';
   failure: FailureKind; originalMs: number; internalMs: number; retryMs: number; totalMs: number;
   context: Context | null; attempts: Attempt[]; semantic: SemanticOutcome;
 }

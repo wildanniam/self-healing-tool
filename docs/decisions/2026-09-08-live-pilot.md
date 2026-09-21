@@ -11,3 +11,12 @@ Wildan explicitly approved proposal P01: use the configured OpenAI key/model for
 Prepare and verify the batch limiter and payload audit before dispatch. Preserve failed/incomplete runs and unknown usage; an unreconciled request stops further spending. Record all outcomes without success-driven reruns. Offline engineering and baseline runs remain independently authorized by D19. Final evaluation, additional spending beyond this batch, merge, release, participant contact and submission are separate decisions; none is implied here.
 
 Use the local environment file only in the execution process; never print or commit the key. The private host retains its app source, auth helpers, raw context and reports. No production target or top-up is authorized. See Atlas Vault's pilot approval/budget note for conversation provenance and the official pricing source.
+
+
+### D22 — Specific private UI-context disclosure approved
+
+After a concrete disclosure question, Wildan explicitly replied that he approved the requested action. The local private pilot may send UI labels/explanatory descriptions, candidate-selector structure and synthetic names to the OpenAI API. Email, form values, cookies/sessions and evaluator answers remain excluded. This resolves the consent gap identified by the prior automatic approval rejection; do not ask again for the same scope. The earlier rejected command dispatched nothing. D21 phase, request and cost caps remain unchanged; no final study or public disclosure is implied.
+
+### D23 — Staged autonomous evaluation preparation locked
+
+Wildan explicitly instructed: lock the discussed approach and execute autonomously. The immediate goal is a completed/audited pilot, justified engineering corrections and approximately twenty concrete evaluation conditions plus a final-protocol review package. The larger direction includes final collection, analysis and paper drafting after the agreed protocol/budget checkpoint. Do not optimize a study by adding cases until results look favorable. Retain development versions, failed runs and reasons for every later extension. Final protocol owner review, additional API spending, participants, merge and public release remain separate applicable decisions. Atlas Vault's Autonomous Evaluation Scope note retains the exact conversation and scope.

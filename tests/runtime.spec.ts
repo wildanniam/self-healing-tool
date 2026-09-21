@@ -235,3 +235,47 @@ test('CTX oracle-marked ARIA label references cannot leak unmarked answer text',
   const context = await collectContext(page, 'click', {description:'Open'}, validateConfig(), []);
   expect(JSON.stringify(context)).not.toContain('ANSWER_TEXT_WITHOUT_RESERVED_WORDS');
 });
+
+
+test('HEAL-006 terminal provider failures stop after one invocation with truthful dispatch/usage', async ({ page }) => {
+  await page.setContent(form);
+  const cases = [
+    { reason: 'provider_budget_unreconciled', dispatched: false, usage: null },
+    { reason: 'request_limit_exhausted', dispatched: false, usage: null },
+    { reason: 'provider_http_429', dispatched: true, usage: null },
+    { reason: 'provider_missing_output', dispatched: true, usage: { inputTokens: 17, outputTokens: 3 } },
+  ];
+  for (const item of cases) {
+    let calls = 0;
+    const configuration = validateConfig({ ...config, mode: 'full' });
+    const provider: Provider = {kind:'openai',configuration,async select() {
+      calls++; throw new ProviderError(item.reason,item.usage,item.dispatched);
+    }};
+    const session = createHealingSession(page,{config:configuration,provider});
+    await expect(session.fill('#missing','Never apply',{description:'Display name'})).rejects.toBeInstanceOf(HealingFailure);
+    const event = session.snapshot().events[0]!;
+    expect(calls).toBe(1); expect(event.attempts).toHaveLength(1);
+    expect(event.stopReason).toBe('provider-failure'); expect(event.failure).toBe('provider');
+    expect(renderReport(session.snapshot())).toContain('<code>no selector</code>');
+    expect(renderReport(session.snapshot())).not.toContain('<code>abstained</code>');
+    expect(event.attempts[0]).toMatchObject({reason:item.reason,transportAttempted:item.dispatched,usage:item.usage,actionExecuted:false});
+    await expect(page.locator('#display')).toHaveValue('');
+  }
+});
+
+test('HEAL-006 timed-out provider cannot retry or apply a late valid answer', async ({ page }) => {
+  await page.setContent(form); let calls=0; let finish!:()=>void;
+  const configuration=validateConfig({...config,mode:'full',providerTimeoutMs:30,recoveryTimeoutMs:2000});
+  const provider:Provider={kind:'openai',configuration,select: async context => {
+    calls++;
+    return new Promise(resolve=>{finish=()=>resolve({output:JSON.stringify({selector:context.candidates[0]!.selector}),usage:{inputTokens:10,outputTokens:4},transportAttempted:true});});
+  }};
+  const session=createHealingSession(page,{config:configuration,provider});
+  await expect(session.fill('#missing','Late answer',{description:'Display name'})).rejects.toBeInstanceOf(HealingFailure);
+  const before=session.snapshot(); expect(calls).toBe(1);
+  expect(before.events[0]).toMatchObject({failure:'provider',stopReason:'provider-failure',actionExecuted:false});
+  expect(before.events[0]!.attempts).toHaveLength(1);
+  expect(before.events[0]!.attempts[0]).toMatchObject({transportAttempted:null,usage:null});
+  finish(); await page.evaluate(()=>Promise.resolve());
+  expect(session.snapshot()).toEqual(before); await expect(page.locator('#display')).toHaveValue('');
+});

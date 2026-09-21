@@ -3,7 +3,9 @@ context: |
   Write repository artifacts in English; explain decisions to Wildan in Indonesian.
   This is a specification-first TypeScript/Playwright library project. Initial runtime code is newly implemented; read dated evidence and task status for verified scope.
   Read docs/decisions/2026-09-07-foundation.md, docs/decisions/2026-09-08-local-api.md, and docs/audit-workflow.md.
-  D19 authorizes autonomous engineering with later owner review; live budget/release remain separate.
+  D19/D23 authorize autonomous engineering through pilot, corrections and a concrete final-protocol review package.
+  D20 accepts five pilot cases; D21 caps their live batch; D22 approves its specified private UI disclosure. The pilot has executed with one unknown-usage failure; retain its halted ledger.
+  Final protocol/budget review and release remain separate checkpoints.
   D18 selects the initial gpt-4o-mini profile (output 500, temperature 0, healing limit 3, DOM chars 8000); final budget/protocol remain open.
   Public artifacts are a reusable library and independent synthetic localhost demo.
   The real evaluation application's source and E2E suite remain in a separate private repository.
