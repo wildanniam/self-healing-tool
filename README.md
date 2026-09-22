@@ -17,6 +17,7 @@
 <p align="center">
   <a href="#what-it-does"><strong>Overview</strong></a> ·
   <a href="docs/playwright.md">Quick Start</a> ·
+  <a href="https://youtu.be/vz3v4WI9_CI">Demo Video</a> ·
   <a href="#use-in-your-tests">Library Usage</a> ·
   <a href="#inspect-the-report">Reports</a> ·
   <a href="#documentation">Documentation</a>
@@ -43,6 +44,10 @@ Navigation, setup and assertions remain in your Playwright tests. The library do
 Start with the **[Playwright quick start](docs/playwright.md)**. It takes you from an empty directory through prerequisites, package installation, configuration, a complete test, and the automatic HTML report.
 
 The first test creates its own small page, recovers a broken field locator, clicks Save, and checks the result. It uses **ranker-only recovery**: no separate application, API key or AI request is needed. The guide then explains how to use your own application and [enable LLM-assisted recovery](docs/playwright.md#optional-enable-llm-assisted-recovery).
+
+## Demo video
+
+Watch the **[APSEC 2026 tool demonstration](https://youtu.be/vz3v4WI9_CI)** for a walkthrough of library usage, LLM-assisted recovery on a synthetic profile page, and the HTML audit report. The video also shows a separate recorded example of optional target-rule checks. Installation instructions are in the [quick start](docs/playwright.md).
 
 ## Use in your tests
 
