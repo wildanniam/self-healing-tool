@@ -9,6 +9,10 @@
 
 The main quick start requires no private application or model credential. Full mode is optional and requires the user's own provider configuration. The package is installed from a local archive; it is not published to npm yet.
 
+## Demo video
+
+[Watch the APSEC 2026 tool demonstration](https://youtu.be/vz3v4WI9_CI): library usage, recovery on a synthetic profile page, report inspection, and a separate recorded target-rule example. Follow the [quick start](playwright.md) to try the library yourself.
+
 ## Repository map
 
 | Location | Purpose |
