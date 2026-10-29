@@ -6,7 +6,7 @@ On 29 October 2026 the owner approved a three-part plan after an evaluation of i
 
 ## Installation and quick start (issue #38)
 
-v0.1.0 pinned Playwright to exactly 1.62.1, so projects on newer releases failed with `ERESOLVE`, and installing from Git produced a package without `dist/`. Peer dependencies now accept `>=1.62.1 <2`, a `prepare` script builds the package on Git installation, and Node.js 22 is supported after the full suite passed on 22.23.4. CI checks the packaged library on Node.js 22 and 24 with Playwright 1.62.1 and the newest 1.x release. The README holds the canonical quick start; `docs/playwright.md` continues from it and documents how to reproduce v0.1.0.
+v0.1.0 pinned Playwright to exactly 1.62.1, so projects on newer releases failed with `ERESOLVE`, and installing from Git produced a package without `dist/`. Peer dependencies now accept `>=1.62.1 <2` and are both optional, so npm keeps the Playwright version that `@playwright/test` brings; a `prepare` script builds the package on Git installation, and Node.js 22 is supported after the full suite passed on 22.23.4. CI checks the packaged library on Node.js 22 and 24 with Playwright 1.62.1 and the newest 1.x release. The README holds the canonical quick start; `docs/playwright.md` continues from it and documents how to reproduce v0.1.0.
 
 ## Boundaries
 

@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Peer dependencies accept Playwright `>=1.62.1 <2` instead of exactly 1.62.1, so projects on newer releases no longer fail with `ERESOLVE`.
+- Peer dependencies accept Playwright `>=1.62.1 <2` instead of exactly 1.62.1, so projects on newer releases no longer fail with `ERESOLVE`. Both peers are optional, so npm keeps the single Playwright version that `@playwright/test` brings instead of adding another.
 - Installing from GitHub builds the package (`prepare`), so `npm install --save-dev github:wildanniam/self-healing-tool` works in one step.
 - Node.js 22 is supported (22–25).
 - CI checks the packaged library on Node.js 22 and 24 with Playwright 1.62.1 and the newest 1.x release; `npm test` runs the full offline suite.
