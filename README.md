@@ -34,7 +34,7 @@
 > **Research prototype, accepted for presentation at APSEC 2026 (Tool Demonstration track).** Keep your own assertions: an action that completes after recovery is not, by itself, proof that it reached the intended element.
 
 <p align="center">
-  <img src="docs/assets/readme/report-action.png" width="100%" alt="Action report for a recovered fill: the original locator #previous-display-name, its replacement #display-name, the four inspection stages, and the DOM context with one ranked candidate scored 62" />
+  <img src="docs/assets/readme/report-action.png" width="100%" alt="Action report for a recovered fill: Recovered, ranker-only and live-check chips, the original locator #previous-display-name next to its replacement #display-name, the recovery timeline, and the four inspection stages" />
 </p>
 <p align="center"><sub>Action report produced by the <a href="#quick-start">quick start</a> below, in ranker-only mode with no API key. Captured on 29 October 2026.</sub></p>
 
@@ -141,10 +141,10 @@ The fill times out on the old locator, the library selects and checks `#display-
 ### 5. Open the report
 
 <p align="center">
-  <img src="docs/assets/readme/report-index.png" width="100%" alt="Suite index of the report: suite passed, one test, one recorded attempt, and an Inspect actions link for the profile test" />
+  <img src="docs/assets/readme/report-index.png" width="100%" alt="Suite index: suite passed, one of one test passed, one locator recovered, and the profile test card listing the recovered fill and the original Save click" />
 </p>
 
-Choose **Inspect actions** to compare the recovered fill with the Save action, which worked without recovery. Next steps: [use your own application](docs/playwright.md#use-your-own-application), [turn on LLM-assisted recovery](#turn-on-llm-assisted-recovery), or read the [Playwright guide](docs/playwright.md).
+Choose **Open report**. It opens on the recovered fill; the Save action, which worked without recovery, is next in the action list. Next steps: [use your own application](docs/playwright.md#use-your-own-application), [turn on LLM-assisted recovery](#turn-on-llm-assisted-recovery), or read the [Playwright guide](docs/playwright.md).
 
 ## How it works
 
@@ -170,7 +170,7 @@ Navigation, setup and assertions stay in your tests. The library does not rewrit
 
 ## Inspect every recovery
 
-Every test gets an action report with four stages, in English or Bahasa Indonesia:
+Every test gets an action report that starts with the result: the original and replacement locator, whether AI was used, whether the live checks passed, and a recovery timeline. Four stages, in English or Bahasa Indonesia, hold the evidence:
 
 | Stage | What you can inspect |
 | --- | --- |
@@ -180,11 +180,11 @@ Every test gets an action report with four stages, in English or Bahasa Indonesi
 | Outcome | Execution status and independent effect assessments when supplied |
 
 <p align="center">
-  <img src="docs/assets/readme/report-ai.png" width="100%" alt="AI input and output stage: the recorded request with SHA-256 integrity, expandable system and user messages, the provider output {&quot;selector&quot;:&quot;#display-name&quot;} and the parsed locator" />
+  <img src="docs/assets/readme/report-ai.png" width="100%" alt="AI input and output stage of a live run: the recorded request with SHA-256 integrity, expandable system and user messages, the provider output {&quot;selector&quot;:&quot;#display-name&quot;} and the parsed locator" />
 </p>
-<p align="center"><sub>Full mode with <code>gpt-4o-mini</code> on the same synthetic page: the recorded request, the raw response and the parsed locator. Recorded on 22 September 2026 for the APSEC demonstration.</sub></p>
+<p align="center"><sub>Full mode with <code>gpt-4o-mini</code> on the same synthetic page: the recorded request, the raw response and the parsed locator. Recorded on 22 September 2026 for the APSEC demonstration and shown in the current report layout.</sub></p>
 
-The action status and the test status stay separate. An action marked `unassessed` completed, but no independent check of its effect was supplied. Detailed reports can contain application context, so review them before sharing. See [audit setup and capture limits](docs/integration.md#local-action-audit-reports).
+The action status and the test status stay separate, and correctness is shown on its own. *Correctness: not assessed* means the action completed but no independent check of its effect was supplied. Detailed reports can contain application context, so review them before sharing. See [audit setup and capture limits](docs/integration.md#local-action-audit-reports).
 
 ## Turn on LLM-assisted recovery
 

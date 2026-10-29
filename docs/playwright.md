@@ -4,7 +4,7 @@ Start with the [quick start](../README.md#quick-start). It installs the library 
 
 ## Read the report
 
-Open the passing test from the suite index. For the quick-start test, the action summary shows **one recovery action completed** (fill), **one original action completed** (click), and no stopped or failed actions. Inspect the fill action to see the outdated locator, the retained DOM candidates, the replacement locator and the checks. In ranker-only mode the AI panel records that no model was used.
+Start at the suite index. For the quick-start test, the test card lists the recovered fill (`#previous-display-name` → `#display-name`, chosen by the ranker) and the Save click that worked as written. **Open report** shows the recovered fill first: the original and replacement locators, the recovery timeline, and four stages with the retained DOM candidates, the checks and the outcome. In ranker-only mode the AI stage records that no model was used.
 
 The index shows the final Playwright status, project, file and retry number. When retries are enabled, a failed attempt and a passing retry both remain visible. Reports are kept after assertion or recovery failures. Skipped tests or setup failures without a fixture report are explicitly marked unavailable; forced process termination may prevent report generation.
 
@@ -103,4 +103,4 @@ Then add the same two files as in the quick start.
 | Empty AI input/output | The original action succeeded, ranker-only mode is selected, capture was disabled, or a custom provider omitted the capture hook. |
 | Browser did not open | Check `open`, `CI` and whether the OS can open files. Open the printed `index.html` path manually if needed. |
 | Report write failed | Fix permissions or a file blocking the output directory. The original test outcome remains intact; report unavailability is shown separately. |
-| Action completed but correctness unassessed | No independent `healing.assess` result was supplied. This is not an execution failure. |
+| Action shows *Correctness: not assessed* | No independent `healing.assess` result was supplied. This is not an execution failure. |

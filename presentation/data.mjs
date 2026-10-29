@@ -5,19 +5,19 @@ import { buildAudit } from './audit.mjs';
 
 export const ARMS = {
   A: {
-    title: 'Tanpa aturan requirement',
-    short: 'LLM',
+    title: 'Tanpa aturan target',
+    short: 'Tanpa aturan',
     description: 'DOM dan tujuan tes diberikan ke model. Kandidat diperiksa secara struktural.',
   },
   B: {
-    title: 'Requirement sebagai konteks',
-    short: 'LLM + konteks',
+    title: 'Aturan hanya diberikan ke AI',
+    short: 'Aturan di prompt',
     description:
       'Aturan requirement ikut diberikan ke model. Belum ada pemeriksaan aturan sebelum aksi.',
   },
   C: {
-    title: 'Requirement diperiksa sebelum aksi',
-    short: 'LLM + pemeriksaan',
+    title: 'Aturan diberikan ke AI dan diperiksa sebelum aksi',
+    short: 'Aturan + cek sebelum aksi',
     description:
       'Konteks model sama dengan B, ditambah pemeriksaan aturan pada elemen sebelum pemulihan.',
   },

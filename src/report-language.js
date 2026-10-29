@@ -359,15 +359,17 @@ export const UI_TEXT = {
   dari: 'of',
   'slot sumber.': 'source slots.',
   Dibuat: 'Generated',
-  'Tanpa aturan requirement': 'Without target rules',
+  'Tanpa aturan target': 'No target rules',
+  'Tanpa aturan': 'No rules',
   'DOM dan tujuan tes diberikan ke model. Kandidat diperiksa secara struktural.':
     'DOM and test intent are supplied to the model. Candidates undergo structural checks.',
-  'Requirement sebagai konteks': 'Requirements as context',
-  'LLM + konteks': 'LLM + context',
+  'Aturan hanya diberikan ke AI': 'Rules supplied only to the AI',
+  'Aturan di prompt': 'Rules in prompt',
   'Aturan requirement ikut diberikan ke model. Belum ada pemeriksaan aturan sebelum aksi.':
     'Target rules are supplied to the model, without runtime rule enforcement.',
-  'Requirement diperiksa sebelum aksi': 'Requirements checked before action',
-  'LLM + pemeriksaan': 'LLM + checks',
+  'Aturan diberikan ke AI dan diperiksa sebelum aksi':
+    'Rules supplied to the AI and checked before execution',
+  'Aturan + cek sebelum aksi': 'Rules + pre-execution checks',
   'Konteks model sama dengan B, ditambah pemeriksaan aturan pada elemen sebelum pemulihan.':
     'Same model context as B, with target-rule checks before recovery actions.',
   'Tanpa perubahan': 'No change',
@@ -443,6 +445,7 @@ export function languageClient(dictionary, initial = 'en') {
   const reverse = Object.fromEntries(Object.entries(dictionary).map(([id, en]) => [en, id]));
   const listeners = [],
     bindings = [];
+  const switches = () => document.querySelectorAll('#report-language [data-language]');
   function word(value) {
     const key = dictionary[value] !== undefined ? value : reverse[value];
     return key === undefined ? value : language === 'en' ? dictionary[key] : key;
@@ -471,8 +474,8 @@ export function languageClient(dictionary, initial = 'en') {
   }
   function update() {
     document.documentElement.lang = language;
-    const select = document.getElementById('report-language');
-    if (select) select.value = language;
+    for (const button of switches())
+      button.setAttribute('aria-pressed', String(button.dataset.language === language));
     for (const [node, attribute, original] of bindings) {
       if (attribute) node.setAttribute(attribute, text(original));
       else node.nodeValue = text(original);
@@ -498,10 +501,10 @@ export function languageClient(dictionary, initial = 'en') {
     });
     update();
   }
-  const select = document.getElementById('report-language');
-  if (select)
-    select.addEventListener('change', () => {
-      language = select.value === 'id' ? 'id' : 'en';
+  for (const button of switches())
+    button.addEventListener('click', () => {
+      if (button.dataset.language === language) return;
+      language = button.dataset.language === 'id' ? 'id' : 'en';
       update();
       for (const callback of listeners) callback();
     });
@@ -531,4 +534,28 @@ Object.assign(UI_TEXT, {
 Object.assign(UI_TEXT, {
   'Hasil tes': 'Test results',
   'Status tes terpisah dari ketepatan aksi.': 'Test status is separate from action correctness.',
+});
+
+Object.assign(UI_TEXT, {
+  'JSON bukti': 'Evidence JSON',
+  'Ringkasan JSON': 'Summary JSON',
+  Cetak: 'Print',
+  'Arsip evaluasi': 'Evaluation archive',
+  'Tes lulus': 'Test passed',
+  'Tes gagal': 'Test failed',
+  'Tes melewati batas waktu': 'Test timed out',
+  'Tes terhenti': 'Test interrupted',
+  'Tes dilewati': 'Test skipped',
+  'Tidak ada aksi self-healing yang direkam pada run ini.':
+    'No self-healing actions were recorded in this run.',
+  'Mengubah batas pemesanan stok gudang Harbor': 'Set the reorder level for Harbor warehouse',
+  'Membuka editor alamat tujuan pengiriman CN-804':
+    'Open the destination address editor for shipment CN-804',
+  'Mengisi identitas sertifikat': 'Fill in the certificate identity',
+  'Mencari materi pembelajaran': 'Search for learning material',
+  'Membuka menu pembelajaran': 'Open the learning menu',
+  'Memilih entitas pada daftar': 'Select an entity in a list',
+  'Alur platform pembelajaran': 'Learning platform flow',
+  'AI tidak memilih locator; pemulihan berhenti tanpa menjalankan kandidat.':
+    'The AI selected no locator; recovery stopped without running a candidate.',
 });

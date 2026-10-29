@@ -147,7 +147,7 @@ test('four-group UI preserves selected identity, filtered exports, study isolati
     await page.route('http**://**/*', (r) => r.abort());
     await page.goto(pathToFileURL(file).href);
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    await page.locator('#report-language').selectOption('id');
+    await page.locator('#report-language [data-language="id"]').click();
     assert.equal(await page.locator('#stats strong').first().textContent(), '1');
     const opener = page.getByRole('button', { name: /S-S-L R1 ulangan 2:/ });
     await opener.click();
@@ -230,7 +230,6 @@ test('generic library report stays collapsed, private-safe and honest about unas
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.setContent(html);
     assert.equal(await page.locator('details[open]').count(), 0);
-    await page.getByRole('button', { name: 'Inspect action' }).click();
     assert.equal(await page.locator('.stage-nav button').count(), 4);
     await page.locator('#stage-ai').click();
     assert.match(await page.locator('.stage-panel').innerText(), /provider was not called/i);

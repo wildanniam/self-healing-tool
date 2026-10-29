@@ -130,7 +130,7 @@ test('offline report renders, filters, opens detail, downloads and escapes hosti
     await page.route('http**://**/*', (route) => route.abort());
     await page.goto(pathToFileURL(file).href);
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    await page.locator('#report-language').selectOption('id');
+    await page.locator('#report-language [data-language="id"]').click();
     assert.equal(await page.locator('#stats strong').first().textContent(), '198');
     assert.equal(await page.locator('#case-rows tr').count(), 12);
     await page.locator('#next').click();
@@ -144,9 +144,9 @@ test('offline report renders, filters, opens detail, downloads and escapes hosti
     assert.equal(await page.locator('#case-rows tr').count(), 1);
     await page.getByRole('button', { name: / C ulangan 1:/ }).click();
     assert.equal(await page.locator('#inspector-root').isVisible(), true);
-    assert.match(await page.locator('.run-verdict').innerText(), /Berhenti dengan tepat/);
+    assert.match(await page.locator('.run-verdict').innerText(), /Dinilai: berhenti tepat/);
     await page.locator('#audit-arm-A').click();
-    assert.match(await page.locator('.run-verdict').innerText(), /Efek salah/);
+    assert.match(await page.locator('.run-verdict').innerText(), /Dinilai: aksi salah/);
     await page.locator('#audit-back').click();
     const download = page.waitForEvent('download');
     await page.locator('#download').click();

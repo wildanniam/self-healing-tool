@@ -53,9 +53,9 @@ try {
  const output=await api.writeReport(audited.snapshot(),{directory:await mkdtemp(join(tmpdir(),'installed-report-')),audit:audited.audit()});
  const summary=await readFile(join(output,'report.json'),'utf8');assert(!summary.includes('messages'));
  await page.goto(pathToFileURL(join(output,'report.html')).href);
- await page.getByRole('button',{name:'Inspect action'}).click();await page.locator('#stage-ai').click();
+ await page.locator('#stage-ai').click();
  assert((await page.locator('.stage-panel').innerText()).includes('SHA-256 matches'));
- await page.locator('#report-language').selectOption('id');assert.equal(await page.locator('#stage-title').innerText(),'Input dan jawaban AI');
+ await page.locator('#report-language [data-language="id"]').click();assert.equal(await page.locator('#stage-title').innerText(),'Input dan jawaban AI');
  assert.equal(await page.locator('.method-switch').isVisible(),false);
  console.log('Packaged local audit: recorded request/output, English/Indonesian, no study controls passed');
  console.log('Clean tarball consumer: import, normal fill, ranker recovery and target-contract gate passed');

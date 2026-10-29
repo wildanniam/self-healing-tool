@@ -258,7 +258,6 @@ test('HEAL-006 terminal provider failures stop after one invocation with truthfu
     expect(event.stopReason).toBe('provider-failure'); expect(event.failure).toBe('provider');
     const reportPage=await page.context().newPage();
     await reportPage.setContent(renderReport(session.snapshot()));
-    await reportPage.getByRole('button',{name:'Inspect action'}).click();
     await reportPage.locator('#stage-ai').click();
     await expect(reportPage.locator('.paired-block').last()).toContainText('Not recorded');
     await expect(reportPage.locator('.paired-block').last()).not.toContainText('null — no locator selected');

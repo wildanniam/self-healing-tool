@@ -19,7 +19,7 @@ D25/0.0.5 independently restores documented method components; reference source 
 
 ## Shared reporting modules
 
-`src/report-inspector.js`, `report-language.js`, `report-style.js` and `library-report.js` are packaged offline UI modules shared with the research presentation. `audit-capture.ts` records opt-in bounded provider evidence, and `report-adapter.ts` maps library actions without study controls. They introduce no dependency on archived research files. JavaScript browser clients use `allowJs` for emission and declarations; behavior is verified in browser and installed-package tests.
+`src/report-inspector.js`, `report-language.js`, `report-theme.js` and `library-report.js` are packaged offline UI modules shared with the research presentation. `audit-capture.ts` records opt-in bounded provider evidence, and `report-adapter.ts` maps library actions without study controls. They introduce no dependency on archived research files. JavaScript browser clients use `allowJs` for emission and declarations; behavior is verified in browser and installed-package tests.
 
 
 ## D37 public release review

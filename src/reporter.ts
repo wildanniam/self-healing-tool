@@ -9,7 +9,13 @@ import type {
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join, resolve, relative } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { renderSuite, escapeHtml, type SuiteRow } from './suite-report.js';
+import {
+  renderSuite,
+  escapeHtml,
+  summarizeActions,
+  type ActionSummary,
+  type SuiteRow,
+} from './suite-report.js';
 import { openReport, shouldOpen, type OpenPolicy } from './report-open.js';
 import { redact } from './privacy.js';
 
@@ -20,6 +26,7 @@ export interface HealingReporterOptions {
 }
 export default class HealingReporter implements Reporter {
   private rows: SuiteRow[] = [];
+  private actions: Record<string, ActionSummary[]> = {};
   private tests: TestCase[] = [];
   private root = '';
   private directory = '';
@@ -87,10 +94,31 @@ export default class HealingReporter implements Reporter {
             (await readFile(join(record.directory, 'report.json'), 'utf8'));
           const folder = `actions/${randomUUID()}`;
           await mkdir(join(this.directory, folder), { recursive: true, mode: 0o700 });
-          const banner = `<aside style="padding:16px 32px;border-bottom:1px solid #d4ddd7"><a href="../../index.html">← <span>Test results</span></a><p data-evidence>${escapeHtml(row.title)}</p><p>Playwright: <strong>${escapeHtml(row.status)}</strong> · <span data-evidence>${escapeHtml(row.project || 'default')}</span> · retry ${row.retry}. <span>Test status is separate from action correctness.</span></p></aside>`;
+          const pill =
+            row.status === 'passed'
+              ? ['is-pass', 'Test passed']
+              : ['failed', 'timedOut', 'interrupted'].includes(row.status)
+                ? [
+                    'is-fail',
+                    row.status === 'failed'
+                      ? 'Test failed'
+                      : row.status === 'timedOut'
+                        ? 'Test timed out'
+                        : 'Test interrupted',
+                  ]
+                : ['', 'Test skipped'];
+          const crumbs = `<a href="../../index.html">Test results</a><span class="sep">/</span><b data-evidence>${escapeHtml(row.title)}</b>${row.retry ? `<span class="sep">·</span><span data-evidence>retry ${row.retry}</span>` : ''}`;
           await writeFile(
             join(this.directory, folder, 'report.html'),
-            html.replace('<!--playwright-test-status-->', banner),
+            html
+              .replace(
+                /<!--playwright-test-crumbs-->[\s\S]*?<!--\/playwright-test-crumbs-->/,
+                crumbs,
+              )
+              .replace(
+                '<!--playwright-test-status-->',
+                `<span class="status-pill ${pill[0]}">${pill[1]}</span>`,
+              ),
             { flag: 'wx', mode: 0o600 },
           );
           await writeFile(join(this.directory, folder, 'report.json'), summary, {
@@ -98,6 +126,11 @@ export default class HealingReporter implements Reporter {
             mode: 0o600,
           });
           row.report = folder + '/report.html';
+          try {
+            this.actions[row.report] = summarizeActions(JSON.parse(summary));
+          } catch {
+            // The index still links the report; only the inline action list is omitted.
+          }
         } catch {
           row.reportError = 'Report files could not be read or copied.';
         }
@@ -140,7 +173,10 @@ export default class HealingReporter implements Reporter {
         mode: 0o600,
       });
       const index = join(this.directory, 'index.html');
-      await writeFile(index, renderSuite(data, this.options.language), { flag: 'wx', mode: 0o600 });
+      await writeFile(index, renderSuite(data, this.options.language, this.actions), {
+        flag: 'wx',
+        mode: 0o600,
+      });
       console.log(`\nSelf-healing report: ${index}`);
       if (shouldOpen(this.options.open, result.status !== 'passed')) await openReport(index);
     } catch {

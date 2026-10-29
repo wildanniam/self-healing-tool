@@ -20,12 +20,12 @@ test('suite index escapes metadata, refuses unsafe report links and retains retr
   assert(!html.includes('<script>alert(1)</script>'));
   assert(!html.includes('href="javascript:'));
   assert(html.includes('lulus setelah retry'));
-  assert(html.includes('data-en="Recorded attempts"'));
+  assert(html.includes('data-en="Locators recovered"'));
 });
 test('reporter waits for report copying and keeps final test status separate from action HTML', async t => {
   const temp=await mkdtemp(join(tmpdir(),'healing-reporter-'));t.after(()=>rm(temp,{recursive:true,force:true}));
   const source=join(temp,'source');await mkdir(source);
-  await writeFile(join(source,'report.html'),'<body><!--playwright-test-status-->Action completed; correctness unassessed</body>');
+  await writeFile(join(source,'report.html'),'<body><!--playwright-test-crumbs--><b>Report</b><!--/playwright-test-crumbs--><!--playwright-test-status-->Action completed; correctness unassessed</body>');
   await writeFile(join(source,'report.json'),'{}');
   const reporter=new HealingReporter({outputDir:join(temp,'reports'),open:'never'});
   const testcase={id:'test',titlePath:()=>['root','<test>'],location:{file:join(temp,'test.spec.ts')},parent:{project:()=>({name:'chromium'})},expectedStatus:'passed',outcome:()=> 'unexpected'};
@@ -36,7 +36,7 @@ test('reporter waits for report copying and keeps final test status separate fro
   const data=JSON.parse(await readFile(join(temp,'reports',run,'results.json'),'utf8'));
   assert.equal(data.rows[0].status,'failed');assert.equal(data.rows[0].outcome,'unexpected');
   const html=await readFile(join(temp,'reports',run,data.rows[0].report),'utf8');
-  assert(html.includes('<strong>failed</strong>'));assert(html.includes('correctness unassessed'));assert(!html.includes('<test>'));
+  assert(html.includes('>Test failed</span>'));assert(html.includes('correctness unassessed'));assert(html.includes('&lt;test&gt;'));assert(!html.includes('<test>'));
 });
 test('reporter I/O failure does not throw or change the suite exit status', async t => {
   const temp=await mkdtemp(join(tmpdir(),'healing-reporter-error-'));t.after(()=>rm(temp,{recursive:true,force:true}));
