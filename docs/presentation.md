@@ -10,7 +10,7 @@ npm run demo
 
 This creates a new `output/presentation/historical-*/results.json` and `report.html`, then opens the HTML in the default browser. It does not rerun research, load `.env`, or call an AI provider. Output refuses overwrite. Add `-- --no-open` to suppress the browser opener.
 
-The default portable snapshot contains 198 independent D30 executions. The owner's ignored local configuration adds 180 private-host D30 executions and the 108 archived D33 main executions. Missing sources are stated explicitly; a configured but unreadable source fails instead of silently replacing it. D33 pilot records are excluded.
+The default portable snapshot contains 198 independent D30 executions. The owner's ignored local configuration adds 180 private-host D30 executions and the 108 archived D33 main executions. Missing sources are stated explicitly, and the portable snapshot opens with a note on which runs it contains; a configured but unreadable source fails instead of silently replacing it. D33 pilot records are excluded.
 
 ```sh
 npm run demo -- --ranking /path/to/d33/main/records --synthetic /path/to/d30/results.json --private /path/to/private/run-directory
@@ -32,7 +32,7 @@ Private diagnostics require explicit local opt-in: `--private-audit` or `"privat
 
 ## Inspect the selected execution
 
-Click a specific result, for example **S-S-L / R1 / repeat 2**. The inspector opens that exact identity, not an arbitrary default C run. Switch arm, repeat or attempt to compare related evidence. The original locator and that attempt's replacement appear next to the outcome. Four groups organize the process:
+Click a specific result, for example **S-S-L / R1 / repeat 2**. The inspector opens that exact identity, not an arbitrary default C run. Switch arm, repeat or attempt to compare related evidence. A result card comes first: the run's status, AI and check chips, the assessed outcome, the original locator next to the final replacement or the proposal that was not executed, and a timeline from the recorded durations. Four groups organize the process:
 
 1. **Konteks DOM**: initial action/failure, retained coverage and candidate order, selected DOM fields, and available raw/cleaned DOM. D33 target rank, top-30 and post-budget annotations are evaluator evidence, not AI inputs.
 2. **Input dan jawaban AI**: paired request/response from one attempt. Expand system/user messages or download/copy the stored request. Model, limits, hashes and response metadata are collapsed; raw response and parsed locator remain distinct.
@@ -45,7 +45,7 @@ Useful examples: **F-C01** is a native control with no AI call; **S-A-L/R1** los
 
 Capture limits are preserved. D30 lacks pre-cleansing raw DOM and per-feature score contributions. Its 180 independent requests retain parsed responses only; 144 private-host requests retain raw output. D33 main retains all 108 original request bodies and raw outputs plus raw DOM, but not individual feature-score contributions. Byte/hash agreement verifies consistency with the retained fingerprint, not provider attestation. No missing response or internal AI reasoning is reconstructed. Replay stays explicitly labeled.
 
-Library reports produced by `writeReport()` use the same packaged four-stage inspector. With explicit session capture and supplied local audit, consumers can inspect recorded requests/outputs and retained candidate context. Normal summary JSON remains safe. Library reports have action/attempt navigation without research controls. See [local audit setup](integration.md#local-action-audit-reports). Both interfaces default to English and support Bahasa Indonesia; original evidence remains unchanged.
+Library reports produced by `writeReport()` use the same packaged four-stage inspector. With explicit session capture and supplied local audit, consumers can inspect recorded requests/outputs and retained candidate context. Normal summary JSON remains safe. Library reports open on the first action that needed recovery and list every action in a sidebar, without research controls. See [local audit setup](integration.md#local-action-audit-reports). Both interfaces default to English and support Bahasa Indonesia; original evidence remains unchanged.
 
 ## Walk through browser actions
 
