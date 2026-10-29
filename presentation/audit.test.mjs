@@ -121,7 +121,7 @@ test('inspector explains controls, B context, C decisions and real input with ac
     await page.route('http**://**/*', (r) => r.abort());
     await page.goto(pathToFileURL(file).href);
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    await page.locator('#report-language').selectOption('id');
+    await page.locator('#report-language [data-language="id"]').click();
     await page.locator('#search').fill('h1-01');
     await page.getByRole('button', { name: / C ulangan 1:/ }).click();
     assert.match(await page.locator('.run-verdict').innerText(), /Tidak ada DOM recovery/);
@@ -135,7 +135,7 @@ test('inspector explains controls, B context, C decisions and real input with ac
     );
     await page.locator('#audit-case').selectOption('warehouse/h1-02');
     await page.locator('#stage-context').click();
-    assert.ok((await page.locator('.candidate-list>details').count()) > 0);
+    assert.ok((await page.locator('.cand-list .cand').count()) > 0);
     await page.locator('#stage-ai').click();
     assert.match(await page.locator('.stage-panel').innerText(), /SHA-256 cocok/);
     const original = data.rows.find((r) => r.caseId === 'h1-02' && r.arm === 'C' && r.repeat === 1)
@@ -210,7 +210,7 @@ test('multiple attempts stay separate and changing an attempt selects its own in
     const page = await browser.newPage();
     await page.goto(pathToFileURL(file).href);
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-    await page.locator('#report-language').selectOption('id');
+    await page.locator('#report-language [data-language="id"]').click();
     await page.locator('#search').fill('h1-02');
     await page.getByRole('button', { name: / C ulangan 1:/ }).click();
     await page.locator('#stage-ai').click();
@@ -259,7 +259,7 @@ test('OBS-012 English/Indonesian share exact request evidence and preserve selec
       .locator('pre')
       .nth(1)
       .textContent();
-    await page.locator('#report-language').selectOption('id');
+    await page.locator('#report-language [data-language="id"]').click();
     assert.equal(await page.locator('#audit-repeat').inputValue(), '2');
     assert.equal(await page.locator('#stage-title').innerText(), 'Input dan jawaban AI');
     assert.equal(
@@ -270,7 +270,7 @@ test('OBS-012 English/Indonesian share exact request evidence and preserve selec
       await page.locator('.paired-block').first().locator('details').nth(1).getAttribute('open'),
       '',
     );
-    await page.locator('#report-language').selectOption('en');
+    await page.locator('#report-language [data-language="en"]').click();
     assert.equal(await page.locator('#stage-title').innerText(), 'AI input and output');
     const next = page.waitForEvent('download');
     await page.locator('#audit-request-download').click();

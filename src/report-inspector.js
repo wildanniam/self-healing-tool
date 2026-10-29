@@ -1,5 +1,5 @@
 /** Embedded in a standalone HTML report. No network or application execution. */
-export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
+export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, ICONS, language }) {
   const t = language.text,
     ui = language.html;
   const library = data.library === true;
@@ -76,6 +76,12 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
     returnFocus = null;
   const currentRows = () => groups.get(selectedKey) ?? [];
   const selectedRow = () => currentRows().find((r) => r.arm === arm && r.repeat === repeat);
+  function selectCase(key) {
+    selectedKey = key;
+    if (!currentRows().some((r) => r.arm === arm)) arm = currentRows()[0].arm;
+    repeat = currentRows().find((r) => r.arm === arm)?.repeat ?? 1;
+    attemptNumber = null;
+  }
   function download(filename, text, type = 'application/json') {
     const url = URL.createObjectURL(new Blob([text], { type }));
     const a = document.createElement('a');
@@ -85,9 +91,10 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   function close() {
+    if (library) return;
     root.hidden = true;
     overview.hidden = false;
-    rail.style.display = '';
+    if (rail) rail.style.display = '';
     document.body.classList.remove('inspecting');
     (returnFocus?.isConnected
       ? returnFocus
@@ -110,7 +117,8 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
       attempt = attempts.find((a) => a.number === attemptNumber) ?? attempts[0];
     attemptNumber = attempt?.number ?? null;
     let request = null,
-      input = null;
+      input = null,
+      copyable = null;
     try {
       request = JSON.parse(attempt?.request?.body ?? 'null');
       const message = request?.messages?.find((m) => m.role === 'user');
@@ -132,117 +140,330 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
           ? 'B'
           : 'A'
       : arm;
+    const STOPS = ['abstained', 'spec-refused', 'spec-unknown'];
+    const L = (en, id) => (language.current === 'id' ? id : en);
+    const locale = language.current === 'id' ? 'id-ID' : 'en-US';
+    const num = (x) => (Number.isFinite(x) ? x : null);
+    const secs = (ms) => (Number.isFinite(ms) ? (ms / 1000).toFixed(2) + ' s' : '—');
+    const count = (x) => (Number.isFinite(x) ? x.toLocaleString(locale) : '—');
+    const chip = (text, tone) => `<span class="chip ${tone}">${esc(text)}</span>`;
+    const kindOf = (r) =>
+      !r
+        ? 'missing'
+        : r.executed
+          ? r.recovery
+            ? 'recovered'
+            : 'original'
+          : r.operational
+            ? 'failed'
+            : !(r.audit?.event || r.detail) ||
+                STOPS.includes(r.audit?.event?.stopReason ?? r.detail?.stop)
+              ? 'stopped'
+              : 'failed';
+    const kind = kindOf(row);
+    const final = attempts.find((a) => a.actionExecuted) ?? attempts[attempts.length - 1];
+    const requests = attempts.filter((a) => a.providerCalled).length;
+    const refused = final?.specDecision && final.specDecision.outcome !== 'accepted';
+    const KIND = {
+      recovered: [L('Recovered', 'Pulih'), 'b-teal', ICONS.check],
+      original: [L('Original locator worked', 'Locator asli berhasil'), 'b-slate', ''],
+      stopped: [L('Stopped before acting', 'Berhenti sebelum aksi'), 'b-amber', ICONS.stop],
+      failed: [
+        row?.operational
+          ? L('Operational failure', 'Gangguan operasional')
+          : L('Not recovered', 'Tidak pulih'),
+        'b-red',
+        ICONS.cross,
+      ],
+      missing: [L('Run unavailable', 'Run tidak tersedia'), 'b-slate', ''],
+    };
+    const SHORT = {
+      recovered: [L('Recovered', 'Pulih'), 'b-teal', ICONS.check],
+      original: [L('Original', 'Locator asli'), 'b-slate', ''],
+      stopped: [L('Stopped', 'Berhenti'), 'b-amber', ICONS.stop],
+      failed: [L('Failed', 'Gagal'), 'b-red', ICONS.cross],
+      missing: [L('Unavailable', 'Tidak tersedia'), 'b-slate', ''],
+    };
+    const verdict = !row
+      ? ''
+      : row.wrong
+        ? chip(L('Assessed: wrong action', 'Dinilai: aksi salah'), 'c-bad')
+        : row.assessed === false
+          ? chip(L('Correctness: not assessed', 'Ketepatan: belum dinilai'), 'c-neutral')
+          : row.correct
+            ? chip(
+                row.executed
+                  ? L('Assessed: correct', 'Dinilai: benar')
+                  : L('Assessed: correct stop', 'Dinilai: berhenti tepat'),
+                'c-ok',
+              )
+            : chip(L('Assessed: goal not met', 'Dinilai: tujuan tidak tercapai'), 'c-bad');
+    const aiChip =
+      native || !row || !audit
+        ? ''
+        : requests
+          ? chip(
+              `${L('AI-assisted', 'Dibantu AI')} · ${requests} ${requests === 1 ? 'request' : L('requests', 'request')}`,
+              'c-ai',
+            )
+          : audit.config?.mode === 'ranker-only'
+            ? chip(L('Ranker only · no AI', 'Hanya ranker · tanpa AI'), 'c-neutral')
+            : row.recovery
+              ? chip(L('No AI request', 'Tanpa request AI'), 'c-neutral')
+              : '';
+    const checksChip =
+      native || !final
+        ? ''
+        : refused
+          ? chip(L('Target rule not satisfied', 'Aturan target tidak terpenuhi'), 'c-warn')
+          : final.candidateAccepted
+            ? chip(L('Live checks passed', 'Cek halaman lolos'), 'c-ok')
+            : final.validations?.length
+              ? chip(L('Rejected by live checks', 'Ditolak cek halaman'), 'c-bad')
+              : '';
     function status(id) {
-      if (!row) return t('Slot tidak tersedia');
-      if (!audit) return t('Bukti belum dimuat');
-      if (['start', 'outcome', 'source'].includes(id)) return t('Terekam');
-      if (native) return t('Dilewati');
-      if (id === 'ai')
-        return !attempt?.providerCalled
-          ? t('Tidak dipanggil')
-          : attempt?.request?.body && typeof attempt?.response?.text === 'string'
-            ? t('Pasangan terekam')
-            : attempt?.request?.body
-              ? t('Input recorded; output unavailable')
-              : typeof attempt?.response?.text === 'string'
-                ? t('Output recorded; input unavailable')
-                : t('Evidence incomplete');
-      if (id === 'checks')
-        return attempt?.candidateAccepted ? t('Lolos teknis') : t('Lihat keputusan');
-      if (id === 'context') return observed ? t('Terekam') : t('Tidak direkam');
-      if (id === 'request')
-        return attempt?.request?.body
-          ? attempt.request.status === 'redacted'
-            ? t('Salinan direduksi')
-            : attempt.request.integrity === 'verified'
-              ? t('Hash cocok')
-              : t('Periksa integritas')
-          : called
-            ? t('Tidak direkam')
-            : t('Tidak dipanggil');
-      if (id === 'response')
-        return !called
-          ? t('Tidak dipanggil')
-          : attempt?.response?.text
-            ? t('Terekam')
-            : t('Hasil parsing');
-      if (id === 'validation')
-        return attempt?.candidateAccepted
-          ? t('Lolos teknis')
-          : attempt?.validations?.length
-            ? t('Ditolak')
-            : t('Belum lolos');
-      if (id === 'rules')
-        return arm !== 'C'
-          ? t('Tidak diberlakukan')
-          : decision
-            ? decision.outcome === 'accepted'
-              ? t('Diizinkan')
-              : t('Dihentikan')
-            : t('Belum tercapai');
-    }
-    const result = !row
-      ? t('Slot tidak tersedia')
-      : row.operational
-        ? t('Gangguan operasional')
-        : row.wrong
-          ? t('Efek salah tercatat')
+      if (!row) return [t('Slot tidak tersedia'), 'slate'];
+      if (!audit) return [t('Bukti belum dimuat'), 'slate'];
+      if (id === 'outcome') {
+        const done = row.executed
+          ? L('Executed', 'Dijalankan')
+          : L('Not executed', 'Tidak dijalankan');
+        return row.wrong
+          ? [`${done} · ${L('wrong action', 'aksi salah')}`, 'red']
           : row.assessed === false
-            ? t('Ketepatan belum dinilai')
-            : row.category === 'quality' && !row.executed
-              ? t('Berhenti: acuan tidak cukup')
-              : row.correct
-                ? !row.executed
-                  ? t('Berhenti dengan tepat')
-                  : row.recovery
-                    ? t('Pulih ke sasaran benar')
-                    : t('Aksi awal benar')
-                : t('Tujuan belum tercapai');
+            ? [`${done} · ${L('not assessed', 'belum dinilai')}`, 'slate']
+            : row.correct
+              ? [`${done} · ${L('correct', 'benar')}`, 'teal']
+              : [`${done} · ${L('goal not met', 'tujuan tidak tercapai')}`, 'red'];
+      }
+      if (native) return [t('Dilewati'), 'slate'];
+      if (id === 'context') {
+        const sent = num(coverage?.included);
+        return !observed && !coverage
+          ? [t('Tidak direkam'), 'slate']
+          : sent === null
+            ? [t('Terekam'), 'teal']
+            : [
+                `${count(sent)} ${sent === 1 ? L('candidate', 'kandidat') : L('candidates', 'kandidat')} ${called ? L('sent', 'dikirim') : L('kept', 'disimpan')}`,
+                'teal',
+              ];
+      }
+      if (id === 'ai') {
+        if (!called)
+          return audit.config?.mode === 'ranker-only'
+            ? [L('Ranker only · no AI', 'Hanya ranker · tanpa AI'), 'slate']
+            : [t('Tidak dipanggil'), 'slate'];
+        const input = Boolean(attempt.request?.body),
+          output = typeof attempt.response?.text === 'string';
+        return input && output
+          ? [
+              attempt.request.integrity === 'verified'
+                ? L('1 request · verified', '1 request · terverifikasi')
+                : L('1 request · recorded', '1 request · terekam'),
+              'ai',
+            ]
+          : output
+            ? [L('Output recorded; input unavailable', 'Output terekam; input tidak ada'), 'amber']
+            : input
+              ? [
+                  L('Input recorded; output unavailable', 'Input terekam; output tidak ada'),
+                  'amber',
+                ]
+              : [L('Parsed output only', 'Hanya hasil parsing'), 'amber'];
+      }
+      if (attempt?.specDecision && attempt.specDecision.outcome !== 'accepted')
+        return [L('Stopped by target rule', 'Dihentikan aturan target'), 'amber'];
+      return attempt?.candidateAccepted
+        ? [L('Basic checks passed', 'Cek dasar lolos'), 'teal']
+        : attempt?.validations?.length
+          ? [L('Rejected', 'Ditolak'), 'red']
+          : [L('Not reached', 'Belum tercapai'), 'slate'];
+    }
     const methodCopy = t(ARMS[arm]?.description ?? '');
+    const original = e?.originalSelector ?? row?.detail?.original;
+    const proposal = final?.proposedSelector ?? final?.selector ?? null;
+    const loc = (tone, label, value, sub) =>
+      `<div class="loc ${tone}"><span class="loc-label">${esc(label)}</span>` +
+      (value === undefined ? '' : `<code>${esc(value ?? t('Tidak direkam'))}</code>`) +
+      `<span class="loc-sub">${esc(sub)}</span></div>`;
+    const failedFirst = e?.originalFailure
+      ? e.originalFailure.classification === 'missing-locator'
+        ? `${L('No element matched', 'Tidak ada elemen yang cocok')} · ${e.originalFailure.name}`
+        : e.originalFailure.name
+      : L('The original action failed', 'Aksi awal gagal');
+    const locators = !row
+      ? note(t('Eksekusi untuk pilihan ini tidak tersedia. Tidak ada hasil yang diasumsikan.'))
+      : native || kind === 'original'
+        ? `<div class="xform is-single">${loc('same', L('Original locator', 'Locator asli'), original, t('Locator awal berhasil. Tidak ada DOM recovery, request AI, atau pemeriksaan kandidat pengganti.'))}</div>`
+        : `<div class="xform">${loc('old', L('Original locator', 'Locator asli'), original, failedFirst)}<span class="xform-arrow">${ICONS.arrow}<span class="sr-only">${L('then', 'lalu')}</span></span>` +
+          (kind === 'recovered'
+            ? loc(
+                'new',
+                L('Replacement', 'Pengganti'),
+                final?.selector,
+                requests
+                  ? L(
+                      'Proposed by AI · accepted by live checks',
+                      'Diusulkan AI · lolos cek halaman',
+                    )
+                  : L(
+                      'Selected by the ranker · accepted by live checks',
+                      'Dipilih ranker · lolos cek halaman',
+                    ),
+              )
+            : kind === 'stopped'
+              ? loc(
+                  'prop',
+                  L('Proposed · not executed', 'Diusulkan · tidak dijalankan'),
+                  proposal ?? t('null — tidak ada locator yang dipilih'),
+                  refused
+                    ? final.candidateAccepted
+                      ? L(
+                          'Passed basic checks · failed target rule',
+                          'Lolos cek dasar · gagal aturan target',
+                        )
+                      : L('Stopped by target rule', 'Dihentikan aturan target')
+                    : explain(e?.stopReason),
+                )
+              : loc(
+                  'fail',
+                  proposal
+                    ? L('Last proposal · not executed', 'Usulan terakhir · tidak dijalankan')
+                    : L('No replacement', 'Tanpa pengganti'),
+                  proposal ?? undefined,
+                  explain(e?.stopReason),
+                )) +
+          `</div>`;
+    const usage = attempts.filter((a) => a.usage);
+    const facts = row
+      ? `<div class="result-facts">` +
+        (native
+          ? ''
+          : `<span><b>${attempts.length}</b> ${attempts.length === 1 ? L('attempt', 'percobaan') : L('attempts', 'percobaan')}</span>`) +
+        (usage.length && requests
+          ? `<span><b>${count(usage.reduce((s, a) => s + (a.usage.inputTokens ?? 0), 0))} → ${count(usage.reduce((s, a) => s + (a.usage.outputTokens ?? 0), 0))}</b> ${L('tokens', 'token')}</span>`
+          : '') +
+        `<span>${L('total', 'total')} <b>${secs(row.totalMs ?? e?.totalMs)}</b></span>` +
+        `<label class="attempt-pick" ${attempts.length > 1 ? '' : 'hidden'}>${L('Showing', 'Menampilkan')} <select id="audit-attempt" ${attempts.length ? '' : 'disabled'}>${attempts.map((a) => `<option value="${a.number}" ${a.number === attemptNumber ? 'selected' : ''}>${L('attempt', 'percobaan')} ${a.number}</option>`).join('')}</select></label></div>`
+      : '';
+    function timeline() {
+      const total = num(e?.totalMs) ?? num(row?.totalMs);
+      if (!e || total === null) return '';
+      const ai = attempts.reduce((s, a) => s + (num(a.providerMs) ?? 0), 0),
+        timeout = num(audit?.config?.actionTimeoutMs);
+      const parts = native
+        ? [['t-ok', L('Original action', 'Aksi awal'), num(e.originalMs) ?? total, '']]
+        : [
+            [
+              't-orig',
+              L('Original attempt', 'Percobaan awal'),
+              num(e.originalMs),
+              timeout ? `timeout ${secs(timeout)}` : '',
+            ],
+            [
+              't-recovery',
+              L('Recovery', 'Pemulihan'),
+              num(e.internalMs),
+              ai ? `AI ${secs(ai)}` : '',
+            ],
+            ...(kind === 'recovered'
+              ? [
+                  [
+                    't-retry',
+                    L('Retry with replacement', 'Ulang dengan pengganti'),
+                    num(e.retryMs),
+                    '',
+                  ],
+                ]
+              : []),
+          ];
+      const end =
+        kind === 'stopped'
+          ? ['t-stop', L('Stopped · no retry', 'Berhenti · tanpa ulang')]
+          : kind === 'failed'
+            ? ['t-fail', L('Not recovered', 'Tidak pulih')]
+            : null;
+      return (
+        `<section class="timeline"><div class="tl-head"><h2>${native ? L('Action timeline', 'Linimasa aksi') : L('Recovery timeline', 'Linimasa pemulihan')}</h2><b>${secs(total)}</b></div>` +
+        `<div class="tl-bar" aria-hidden="true">${parts
+          .filter(([, , ms]) => ms > 0)
+          .map(([tone, , ms]) => `<i class="${tone}" style="flex-grow:${ms}"></i>`)
+          .join('')}${end ? `<i class="${end[0]} tl-end"></i>` : ''}</div>` +
+        `<ul class="tl-legend">${parts.map(([tone, label, ms, extra]) => `<li><i class="${tone}"></i>${esc(label)} <b>${secs(ms)}</b>${extra ? `<small>${esc(extra)}</small>` : ''}</li>`).join('')}${end ? `<li><i class="${end[0]}"></i>${esc(end[1])}</li>` : ''}</ul></section>`
+      );
+    }
+    function sidebar() {
+      const live = data.evidenceKind === 'live-provider-run',
+        config = row?.audit?.config ?? fallback?.audit?.config,
+        recorded = new Date(data.createdAt);
+      return (
+        `<aside class="side"><h2 class="side-title">${L('Actions', 'Aksi')} · ${keys.length}</h2><nav class="side-list" aria-label="${L('Actions', 'Aksi')}">` +
+        keys
+          .map((k) => {
+            const r = groups.get(k)[0],
+              [label, tone, icon] = SHORT[kindOf(r)],
+              used = (r.audit?.attempts ?? []).some((a) => a.providerCalled);
+            return `<button type="button" class="side-item" id="action-${esc(r.caseId)}" data-key="${esc(k)}" aria-current="${k === selectedKey}"><span class="badge ${tone}">${icon}${esc(label)}</span><b>${esc(r.title)}</b><span>${esc(r.audit?.event?.action ?? '')} · ${used ? 'AI' : L('no AI', 'tanpa AI')} · ${secs(r.totalMs)}</span></button>`;
+          })
+          .join('') +
+        `</nav><dl class="run-box"><div><dt>${L('Run', 'Run')}</dt><dd>${data.evidenceKind === 'live-provider-run' ? L('Live AI run', 'Run AI langsung') : L('Offline mechanism check', 'Cek mekanisme offline')}</dd></div>` +
+        (live && config?.model
+          ? `<div><dt>${L('Model', 'Model')}</dt><dd>${esc(config.model)}</dd></div>`
+          : '') +
+        (config?.mode
+          ? `<div><dt>${L('Mode', 'Mode')}</dt><dd>${esc(config.mode)}</dd></div>`
+          : '') +
+        (Number.isNaN(recorded.getTime())
+          ? ''
+          : `<div><dt>${L('Recorded', 'Direkam')}</dt><dd>${esc(recorded.toLocaleString(locale, { dateStyle: 'medium', timeStyle: 'short' }))}</dd></div>`) +
+        `</dl><button type="button" id="audit-download" ${audit ? '' : 'disabled'}>${ICONS.download}${L('Action evidence JSON', 'JSON bukti aksi')}</button></aside>`
+      );
+    }
+    function toolbar() {
+      return (
+        ui`<div class="inspect-top"><button id="audit-back">← Semua hasil</button>` +
+        `<span class="evidence-kind">${esc(audit?.privateHost ? t('AUDIT LOKAL · BUKTI APLIKASI PRIVAT') : (row?.evidenceKind ?? data.evidenceKind) === 'replay' ? t('REPLAY · KEPUTUSAN AI TERSIMPAN') : (row?.evidenceKind ?? data.evidenceKind) === 'live-demo' ? t('DEMO LIVE · PANGGILAN BARU') : row?.studyId === 'rm1' ? t('BUKTI TERSIMPAN · D33 MAIN') : t('BUKTI TERSIMPAN · D30'))}</span>` +
+        ui`<button id="audit-download" ${audit ? '' : 'disabled'}>Unduh bukti run</button></div>` +
+        ui`<div class="run-toolbar"><label class="case-select">Pindah kasus<select id="audit-case">${keys
+          .map((k) => {
+            const r = groups.get(k)[0];
+            return ui`<option value="${esc(k)}" ${k === selectedKey ? 'selected' : ''}>${esc(r.caseId + ' · ' + t(r.title))}</option>`;
+          })
+          .join('')}</select></label>` +
+        ui`<div class="method-switch" role="group" aria-label="Konfigurasi">${availableArms.map((a) => ui`<button id="audit-arm-${a}" data-arm="${a}" aria-pressed="${arm === a}">` + ui`<b>${a}</b><span>${esc(t(ARMS[a]?.short ?? a))}</span></button>`).join('')}</div>` +
+        ui`<label>Pengulangan<select id="audit-repeat">${[
+          ...new Set(currentRows().map((r) => r.repeat)),
+        ]
+          .sort((a, b) => a - b)
+          .map(
+            (n) => ui`<option value="${n}" ${n === repeat ? 'selected' : ''}>Ulangan ${n}</option>`,
+          )
+          .join('')}</select></label></div>` +
+        `<p class="method-explainer">${esc(methodCopy)}</p>`
+      );
+    }
+    const [kindLabel, kindTone, kindIcon] = KIND[kind];
+    const nextStage = stages[(stages.findIndex((x) => x[0] === stage) + 1) % stages.length];
     root.innerHTML =
-      ui`<div class="inspect-shell">
-      <div class="inspect-top"><button id="audit-back">← Semua hasil</button>` +
-      ui`<span>${library ? t(data.evidenceKind === 'offline-mechanism-check' ? 'Offline · mechanism check' : 'Local action evidence') : audit?.privateHost ? t('AUDIT LOKAL · BUKTI APLIKASI PRIVAT') : (row?.evidenceKind ?? data.evidenceKind) === 'replay' ? t('REPLAY · KEPUTUSAN AI TERSIMPAN') : (row?.evidenceKind ?? data.evidenceKind) === 'live-demo' ? t('DEMO LIVE · PANGGILAN BARU') : row?.studyId === 'rm1' ? t('BUKTI TERSIMPAN · D33 MAIN') : t('BUKTI TERSIMPAN · D30')}</span>` +
-      ui`<button id="audit-download" ${audit ? '' : 'disabled'}>Unduh bukti run</button>` +
-      ui`</div>
-      <div class="inspect-heading"><div><p class="eyebrow">${esc(t(GROUPS[fallback.group]))} / ${esc(t(CATEGORIES[fallback.category]))}</p>` +
-      ui`<h1><span>${esc(fallback.caseId)}</span>${esc(fallback.title)}</h1></div>
-      <label class="case-select">${library ? t('Pindah aksi') : t('Pindah kasus')}<select id="audit-case">${keys
-        .map((k) => {
-          const r = groups.get(k)[0];
-          return ui`<option value="${esc(k)}" ${k === selectedKey ? 'selected' : ''}>${esc(r.caseId + ' · ' + r.title)}</option>`;
+      `<div class="inspect-shell ${library ? 'is-library' : 'is-archive'}">` +
+      (library ? sidebar() : toolbar()) +
+      `<div class="inspect-main"><section class="result-card run-verdict ${row?.wrong ? 'is-wrong' : row?.correct ? 'is-correct' : 'is-unknown'}">` +
+      `<div class="result-chips"><span class="badge ${kindTone}">${kindIcon}${esc(kindLabel)}</span>${aiChip}${checksChip}<span class="result-verdict">${verdict}</span></div>` +
+      `<h1 class="result-title"><span>${esc(t(fallback.title))}</span>${e?.action ? `<span class="tag">${esc(e.action)}</span>` : ''}${library ? '' : `<small>${esc(fallback.caseId)} · ${esc(t(GROUPS[fallback.group] ?? ''))} · ${esc(t(CATEGORIES[fallback.category] ?? ''))} · ${esc(arm)} · ${L('repeat', 'ulangan')} ${esc(repeat)}</small>`}</h1>` +
+      locators +
+      facts +
+      timeline() +
+      `</section><nav class="stage-nav" aria-label="${L('Execution stages', 'Tahap eksekusi')}">${stages
+        .map(([id, title], i) => {
+          const [text, tone] = status(id);
+          return `<button id="stage-${id}" data-stage="${id}" aria-current="${stage === id ? 'step' : 'false'}"><span class="stage-index">${i + 1}</span><span class="stage-text"><b>${esc(t(title))}</b><small><i class="dot dot-${tone}"></i>${esc(text)}</small></span></button>`;
         })
-        .join('')}</select>` +
-      ui`</label></div>
-      <div class="run-toolbar"><div class="method-switch" ${library ? 'hidden' : ''} role="group" aria-label="Konfigurasi">${availableArms.map((a) => ui`<button id="audit-arm-${a}" data-arm="${a}" aria-pressed="${arm === a}">` + ui`<b>${a}</b><span>${esc(t(ARMS[a]?.short ?? a))}</span></button>`).join('')}</div>
-      <label ${library ? 'hidden' : ''}>Pengulangan<select id="audit-repeat">${[
-        ...new Set(currentRows().map((r) => r.repeat)),
-      ]
-        .sort((a, b) => a - b)
-        .map(
-          (n) => ui`<option value="${n}" ${n === repeat ? 'selected' : ''}>Ulangan ${n}</option>`,
-        )
-        .join('')}</select>` +
-      ui`</label>
-      <label>Percobaan healing<select id="audit-attempt" ${attempts.length ? '' : 'disabled'}>${attempts.length ? attempts.map((a) => ui`<option value="${a.number}" ${a.number === attemptNumber ? 'selected' : ''}>Attempt ${a.number}</option>`).join('') : t('<option>Tidak ada attempt</option>')}</select>` +
-      ui`</label></div>
-      <p class="method-explainer">${esc(methodCopy)}</p>
-      <div class="run-verdict ${row?.wrong ? 'is-wrong' : row?.correct ? 'is-correct' : 'is-unknown'}">` +
-      ui`<div><small>HASIL RUN INI</small><strong>${esc(result)}</strong><p>${esc(native ? t('Locator awal berhasil. Tidak ada DOM recovery, request AI, atau pemeriksaan kandidat pengganti.') : e ? explain(e.stopReason) : t('Buka bukti hasil untuk melihat penilaian yang tersedia.'))}</p>` +
-      ui`</div><dl>${fact('API calls', row?.usage?.requests ?? '—')}${fact(t('Durasi langkah'), row?.totalMs == null ? '—' : (row.totalMs / 1000).toFixed(2) + ' s')}${fact(t('Aksi dijalankan'), row ? yes(row.executed) : '—')}</dl>` +
-      ui`</div><p class="locator-pair"><span>Awal: <code>${esc(e?.originalSelector ?? row?.detail?.original ?? t('Tidak direkam'))}</code>` +
-      ui`</span><span>Pengganti attempt ini: <code>${esc(native ? t('Tidak diperlukan') : (attempt?.selector ?? attempt?.proposedSelector ?? t('Tidak ada pilihan terekam')))}</code>` +
-      ui`</span></p>
-      <div class="inspection-layout"><nav class="stage-nav" aria-label="Tahap eksekusi">${stages.map(([id, title], i) => ui`<button id="stage-${id}" data-stage="${id}" aria-current="${stage === id ? 'step' : 'false'}">` + ui`<span class="stage-index">${String(i + 1).padStart(2, '0')}</span><span>` + ui`<b>${t(title)}</b><small>${esc(status(id))}</small></span></button>`).join('')}</nav>
-      <section class="stage-panel" aria-labelledby="stage-title">` +
-      ui`<div class="stage-title"><span class="eyebrow">${esc(status(stage))}</span>` +
-      ui`<h2 id="stage-title">${t(stages.find((s) => s[0] === stage)[1])}</h2></div>${groupContent()}</section>` +
-      ui`</div>
-      <details class="evidence-details"><summary>Detail bukti, sumber dan konfigurasi</summary>${content('source')}</details>` +
-      ui`<footer class="inspect-footer"><span>Hasil tes, keputusan pemeriksa, dan usulan AI adalah bukti yang berbeda.</span>` +
-      ui`<button id="audit-next-stage">${stage === 'outcome' ? t('Kembali ke konteks DOM') : t('Tahap berikutnya →')}</button>` +
-      ui`</footer>
-    </div>`;
+        .join('')}</nav>` +
+      `<section class="stage-panel" aria-labelledby="stage-title"><h2 id="stage-title">${esc(t(stages.find((s) => s[0] === stage)[1]))}</h2>${groupContent()}` +
+      `<footer class="panel-foot"><span class="info-note">${ICONS.info}${esc(t('Hasil tes, keputusan pemeriksa, dan usulan AI adalah bukti yang berbeda.'))}</span>` +
+      `<button id="audit-next-stage" class="primary">${stage === 'outcome' ? esc(t('Kembali ke konteks DOM')) : `${L('Next', 'Berikutnya')}: ${esc(t(nextStage[1]))}${ICONS.arrow}`}</button></footer></section>` +
+      `<details class="evidence-details"><summary>${L('About this evidence · sources and configuration', 'Tentang bukti ini · sumber dan konfigurasi')}</summary>${content('source')}</details>` +
+      `</div></div>`;
     function groupContent() {
       if (stage === 'ai')
         return (
@@ -253,13 +474,15 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
           '</div>'
         );
       if (stage === 'checks')
-        return content('validation') + t('<h3>Aturan target</h3>') + content('rules');
+        return (
+          content('validation') + t('<h3 class="sec-label">Aturan target</h3>') + content('rules')
+        );
       if (stage === 'context')
         return (
-          t('<details><summary>Aksi awal dan locator yang gagal</summary>') +
+          content('context') +
+          t('<details class="evidence-row"><summary>Aksi awal dan locator yang gagal</summary>') +
           content('start') +
-          '</details>' +
-          content('context')
+          '</details>'
         );
       return content(stage);
     }
@@ -378,15 +601,55 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
             ui`<small>Anotasi evaluator sesudah pengumpulan; bukan jawaban yang diberikan ke AI.</small>` +
             ui`</div>`
           : '';
-        const funnel = [
-          [t('Dipindai'), 'scanned'],
-          [t('Tidak eligible'), 'ineligible'],
-          [t('Kandidat ditemukan'), 'discovered'],
-          [t('Masuk konteks'), 'included'],
-        ];
+        const c = coverage ?? {},
+          shown = 8,
+          arrow = `<span class="fn-arrow" aria-hidden="true">${ICONS.arrow}</span>`;
+        const meter = (label, used, limit, unit = '') =>
+          Number.isFinite(used) && Number.isFinite(limit) && limit > 0
+            ? `<div class="meter"><div class="m-top"><span>${esc(label)}</span><b>${count(used)} <small>/ ${count(limit)}${unit}</small></b></div>` +
+              `<div class="m-bar" aria-hidden="true"><i style="width:${Math.min(100, (used / limit) * 100).toFixed(1)}%"></i></div></div>`
+            : '';
+        const card = (x, i) =>
+          `<article class="cand"><span class="rank">#${i + 1}</span><div class="c-body"><div class="c-title"><b>${esc(x.label || x.features?.text || x.features?.name || x.tag)}</b>` +
+          `<code>${esc(x.selector || t('Tidak ada locator terverifikasi'))}</code></div><div class="c-meta">${x.tag ? `<span class="tag">${esc(x.tag)}</span>` : ''}` +
+          `${x.container ? `<span>${esc(x.container)}</span>` : ''}${x.duplicateCount > 1 ? chip(`${x.duplicateCount} ${L('similar elements', 'elemen serupa')}`, 'c-warn') : ''}</div></div>` +
+          `<div class="score"><small>${L('score', 'skor')}</small><b>${esc(x.score ?? '—')}</b></div></article>`;
+        if (typeof observed.cleanedDom === 'string') copyable = observed.cleanedDom;
         return (
           ranking +
-          ui`<p class="stage-intro">Elemen disaring sesuai aksi, informasinya dibersihkan, lalu kandidat diberi skor dan dibatasi sebelum dikirim ke AI.</p>` +
+          (audit.config?.mode === 'ranker-only'
+            ? `<p class="stage-intro">${L('Elements are filtered for the action, cleaned and ranked. Without a model, the top candidate is checked on the page.', 'Elemen disaring sesuai aksi, dibersihkan, lalu diberi peringkat. Tanpa model, kandidat teratas langsung diperiksa di halaman.')}</p>`
+            : ui`<p class="stage-intro">Elemen disaring sesuai aksi, informasinya dibersihkan, lalu kandidat diberi skor dan dibatasi sebelum dikirim ke AI.</p>`) +
+          `<div class="funnel"><div class="fn"><b>${count(c.scanned)}</b><span>${L('Elements scanned', 'Elemen dipindai')}</span></div>${arrow}` +
+          `<div class="fn"><b>${count(c.discovered)}</b><span>${L('Candidates found', 'Kandidat ditemukan')}${Number.isFinite(c.ineligible) ? ` <small>(${count(c.ineligible)} ${L('ineligible', 'tidak eligible')})</small>` : ''}</span></div>${arrow}` +
+          `<div class="fn hl"><b>${count(c.included)}</b><span>${called ? L('Sent to AI', 'Dikirim ke AI') : L('Included in context', 'Masuk konteks')}${Number.isFinite(c.omitted) ? ` · ${count(c.omitted)} ${L('omitted', 'dibuang')}` : ''}</span></div></div>` +
+          `<h3 class="sec-label">${L('Input limits used', 'Batas input terpakai')}${c.textTruncated ? chip(L('text truncated', 'teks dipotong'), 'c-warn') : ''}</h3>` +
+          `<div class="meters">${meter(L('Candidates', 'Kandidat'), c.included, c.candidateLimit)}${meter(L('Page context', 'Konteks halaman'), c.domChars, c.domLimit, ' ' + L('chars', 'karakter'))}` +
+          `${meter(L('Full request', 'Request lengkap'), c.payloadChars, c.payloadLimit, ' ' + L('chars', 'karakter'))}</div>` +
+          `<h3 class="sec-label">${L('Candidates in ranked order', 'Kandidat sesuai peringkat')}${chip(String(candidates.length), 'c-neutral')}</h3>` +
+          (candidates.length
+            ? `<div class="cand-list">${candidates.slice(0, shown).map(card).join('')}</div>` +
+              (candidates.length > shown
+                ? `<details class="evidence-row"><summary>${L('Show', 'Tampilkan')} ${candidates.length - shown} ${L('more candidates', 'kandidat lagi')}</summary><div class="cand-list">${candidates
+                    .slice(shown)
+                    .map((x, i) => card(x, i + shown))
+                    .join('')}</div></details>`
+                : '')
+            : note(
+                L(
+                  'No candidates were recorded for this attempt.',
+                  'Tidak ada kandidat yang terekam untuk attempt ini.',
+                ),
+              )) +
+          ui`<p class="audit-muted">Skor di bawah adalah hasil ranking yang disimpan, bukan skor yang dihitung ulang oleh report. Rincian bobot per fitur tidak direkam.</p>` +
+          (typeof observed.cleanedDom === 'string'
+            ? `<h3 class="sec-label">${L('Cleaned page excerpt', 'Cuplikan halaman yang dibersihkan')} · ${count(observed.cleanedDom.length)} ${L('chars', 'karakter')}</h3>` +
+              `<div class="codebox"><div class="code-head"><span>HTML</span><button type="button" id="audit-copy-dom">${L('Copy', 'Salin')}</button></div><pre class="audit-code">${esc(observed.cleanedDom)}</pre></div>`
+            : note(
+                t(
+                  'Tidak ada HTML tambahan pada konteks ini. Informasi DOM dikirim sebagai daftar kandidat dan atribut yang sudah dipilih; bukan berarti proses pemilihan/pembersihan DOM tidak berjalan.',
+                ),
+              )) +
           note(
             attempt?.inputContext
               ? t(
@@ -394,19 +657,8 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
                 )
               : t('Ini konteks awal event; konteks khusus attempt tidak tersedia.'),
           ) +
-          ui`<div class="audit-funnel">${funnel.map(([k, v]) => ui`<article><strong>${esc(coverage?.[v] ?? '—')}</strong><span>${k}</span></article>`).join('')}</div>` +
+          json(candidates, t('Fitur, owner, duplikasi dan usulan locator')) +
           json(coverage, t('Seluruh hitungan, batas karakter dan pemotongan')) +
-          (ui`<h3>Urutan kandidat yang terekam <small>${candidates.length} kandidat</small>` +
-            ui`</h3><p class="audit-muted">Skor di bawah adalah hasil ranking yang disimpan, bukan skor yang dihitung ulang oleh report. Rincian bobot per fitur tidak direkam.</p>` +
-            ui`<details><summary>Kandidat pada konteks attempt</summary><div class="candidate-list">${candidates.map((c, i) => ui`<details><summary><span class="candidate-rank">${i + 1}</span><span class="candidate-name">${esc(c.label || c.features?.text || c.features?.name || c.tag)}<small>${esc(c.selector || t('Tidak ada locator terverifikasi'))}</small>` + ui`</span><span class="candidate-score">${esc(c.score)}<small>skor</small>` + ui`</span></summary>${code(c.selector ?? '')}${json(c, t('Fitur, owner, duplikasi dan usulan locator'))}</details>`).join('')}</div>` +
-            ui`</details><h3>HTML hasil cleansing / tambahan</h3>`) +
-          (typeof observed.cleanedDom === 'string'
-            ? code(observed.cleanedDom)
-            : note(
-                t(
-                  'Tidak ada HTML tambahan pada konteks ini. Informasi DOM dikirim sebagai daftar kandidat dan atribut yang sudah dipilih; bukan berarti proses pemilihan/pembersihan DOM tidak berjalan.',
-                ),
-              )) +
           (audit.dom
             ? json(audit.dom.raw, t('DOM mentah yang direkam')) +
               json(audit.dom.cleaned, t('DOM setelah cleansing yang direkam')) +
@@ -497,6 +749,17 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
       if (stage === 'validation') {
         return (
           ui`<p class="stage-intro">Pemeriksaan dasar memastikan usulan bisa dipakai pada elemen yang tepat secara struktur: satu target, terlihat, aktif, dan cocok dengan aksi.</p>` +
+          `<h3 class="sec-label">${L('Basic checks', 'Cek dasar')} · ${attempt?.candidateAccepted ? L('all passed', 'semua lolos') : attempt?.validations?.length ? L('rejected', 'ditolak') : L('not reached', 'belum tercapai')}</h3>` +
+          (attempt?.candidateAccepted
+            ? `<ul class="check-grid">${[
+                L('One match', 'Tepat satu elemen'),
+                L('Visible', 'Terlihat'),
+                L('Enabled', 'Aktif'),
+                `${L('Accepts', 'Menerima')} ${e?.action ?? L('the action', 'aksi')}`,
+              ]
+                .map((x) => `<li>${ICONS.check}${esc(x)}</li>`)
+                .join('')}</ul>`
+            : '') +
           ui`<dl class="audit-facts">${fact(t('Usulan awal'), attempt?.proposedSelector)}${fact(t('Locator yang diterima'), attempt?.selector)}${fact(t('Lolos validasi dasar'), yes(attempt?.candidateAccepted))}${fact(t('Aksi recovery dijalankan'), yes(attempt?.actionExecuted))}</dl>` +
           note(
             attempt?.candidateAccepted
@@ -536,24 +799,48 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
         const contract = spec?.contract;
         let html = ui`<p class="stage-intro">${ruleMode === 'B' ? t('Aturan ini diberikan kepada AI sebagai konteks. Tidak ada keputusan pemeriksa kode yang diberlakukan pada B.') : t('Kode membandingkan bukti elemen terpilih dengan setiap syarat yang dideklarasikan sebelum klik / fill.')}</p>`;
         html += ui`<dl class="audit-facts">${fact(t('Tujuan requirement'), contract?.intent)}${fact(t('ID / revisi'), contract ? contract.requirementId + ' / ' + contract.revision : e?.targetSpec?.requirementId)}${fact(t('Status fitur'), contract?.status)}${fact(t('Aksi yang diizinkan'), contract?.action)}${fact(t('Kesesuaian acuan'), spec?.applicability ?? e?.targetSpec?.applicability)}</dl>`;
-        if (ruleMode === 'C')
-          html += note(
-            decision
-              ? explain(decision.reason)
-              : t(
-                  'Pemeriksa aturan belum tercapai pada attempt ini. Misalnya AI tidak memilih kandidat, atau validasi dasar belum lolos.',
-                ),
-          );
-        html += ui`<div class="rule-list">${(contract?.allOf ?? [])
+        html += `<div class="rule-list">${(contract?.allOf ?? [])
           .map((rule, i) => {
             const result = decision?.clauses?.find((c) => c.index === i);
+            const [tone, badge] =
+              result?.matched === true
+                ? ['ok', 'b-teal']
+                : result?.matched === false
+                  ? ['fail', 'b-red']
+                  : ['open', ruleMode === 'B' ? 'b-slate' : 'b-amber'];
+            const seen = decision?.observed
+              ? rule.sources
+                  .filter((src) => ![undefined, null, ''].includes(decision.observed[src]))
+                  .map(
+                    (src) =>
+                      `<span class="obs">${esc(src)} <code>${esc([].concat(decision.observed[src]).join(' · '))}</code></span>`,
+                  )
+                  .join('')
+              : '';
             return (
-              ui`<article><div class="rule-heading"><h3>Syarat ${i + 1}</h3><span class="pill ${result?.matched === true ? 'good' : result?.matched === false ? 'bad' : 'warn'}">${result ? (result.matched ? t('Cocok') : t('Belum cocok')) : ruleMode === 'B' ? t('Konteks AI') : t('Belum diperiksa')}</span>` +
-              ui`</div><p>Cari salah satu frasa: <b>${esc(rule.anyOf.join(' · '))}</b></p>` +
-              ui`<p>Pada: ${esc(rule.sources.join(', '))}</p>${result ? ui`<p>Sumber yang cocok: ${esc(result.source ?? t('Tidak ditemukan'))}</p>` : ''}${decision?.observed ? json(Object.fromEntries(rule.sources.map((s) => [s, decision.observed[s] ?? null])), t('Bukti elemen untuk syarat ini')) : ''}</article>`
+              `<article class="rule ${tone}"><div class="rule-head"><h4>${L('Clause', 'Syarat')} ${i + 1} · ${L('must mention', 'harus memuat')} “${esc(rule.anyOf.join(' / '))}”</h4>` +
+              `<span class="badge ${badge}">${esc(result ? (result.matched ? t('Cocok') : t('Belum cocok')) : ruleMode === 'B' ? t('Konteks AI') : t('Belum diperiksa'))}</span></div>` +
+              `<dl><div><dt>${L('Looked in', 'Dicari di')}</dt><dd>${esc(rule.sources.join(', '))}</dd></div>` +
+              (result
+                ? `<div><dt>${L('Matched in', 'Cocok di')}</dt><dd>${esc(result.source ?? t('Tidak ditemukan'))}</dd></div>`
+                : '') +
+              (seen
+                ? `<div><dt>${L('Observed', 'Teramati')}</dt><dd class="obs-list">${seen}</dd></div>`
+                : '') +
+              `</dl>${decision?.observed ? json(Object.fromEntries(rule.sources.map((s) => [s, decision.observed[s] ?? null])), t('Bukti elemen untuk syarat ini')) : ''}</article>`
             );
           })
           .join('')}</div>`;
+        if (ruleMode === 'C')
+          html += !decision
+            ? note(
+                t(
+                  'Pemeriksa aturan belum tercapai pada attempt ini. Misalnya AI tidak memilih kandidat, atau validasi dasar belum lolos.',
+                ),
+              )
+            : decision.outcome === 'accepted'
+              ? `<div class="verdict ok">${ICONS.check}<div><b>${L('Allowed by target rules', 'Diizinkan aturan target')}</b><p>${esc(explain(decision.reason))}</p></div></div>`
+              : `<div class="verdict stop">${ICONS.warning}<div><b>${L('Stopped before acting', 'Berhenti sebelum aksi')}</b><p>${esc(explain(decision.reason))}</p></div></div>`;
         return (
           html +
           json(spec ?? e?.targetSpec, t('Aturan, versi dan provenance yang tersedia')) +
@@ -593,22 +880,38 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
           render(b.id);
         }),
     );
-    document.getElementById('audit-case').onchange = (e) => {
-      selectedKey = e.target.value;
-      if (!currentRows().some((r) => r.arm === arm)) arm = currentRows()[0].arm;
-      repeat = currentRows().find((r) => r.arm === arm)?.repeat ?? 1;
+    root.querySelectorAll('[data-key]').forEach(
+      (b) =>
+        (b.onclick = () => {
+          selectCase(b.dataset.key);
+          render(b.id);
+        }),
+    );
+    const change = (id, fn) => {
+      const el = document.getElementById(id);
+      if (el)
+        el.onchange = (event) => {
+          fn(event.target.value);
+          render(id);
+        };
+    };
+    change('audit-case', selectCase);
+    change('audit-repeat', (value) => {
+      repeat = Number(value);
       attemptNumber = null;
-      render('audit-case');
-    };
-    document.getElementById('audit-repeat').onchange = (e) => {
-      repeat = Number(e.target.value);
-      attemptNumber = null;
-      render('audit-repeat');
-    };
-    document.getElementById('audit-attempt').onchange = (e) => {
-      attemptNumber = Number(e.target.value);
-      render('audit-attempt');
-    };
+    });
+    change('audit-attempt', (value) => {
+      attemptNumber = Number(value);
+    });
+    bind('audit-copy-dom', async () => {
+      const button = document.getElementById('audit-copy-dom');
+      try {
+        await navigator.clipboard.writeText(copyable ?? '');
+        button.textContent = L('Copied', 'Tersalin');
+      } catch {
+        button.textContent = L('Copy unavailable', 'Tidak bisa menyalin');
+      }
+    });
     bind('audit-next-stage', () => {
       stage = stages[(stages.findIndex((x) => x[0] === stage) + 1) % stages.length][0];
       render('stage-' + stage);
@@ -641,644 +944,1028 @@ export function inspectorClient(data, { ARMS, CATEGORIES, GROUPS, language }) {
     }
   });
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !root.hidden) close();
+    if (event.key === 'Escape' && !root.hidden && !library) close();
   });
   return {
     open(key, selection = {}) {
       if (!groups.has(key)) return;
-      returnFocus = document.activeElement;
+      if (!library) returnFocus = document.activeElement;
       selectedKey = key;
       arm =
         selection.arm ?? (currentRows().some((r) => r.arm === 'C') ? 'C' : currentRows()[0].arm);
       repeat = selection.repeat ?? currentRows().find((r) => r.arm === arm)?.repeat ?? 1;
       attemptNumber = selection.attempt ?? null;
       stage = selection.stage ?? 'context';
-      overview.hidden = true;
-      rail.style.display = 'none';
       root.hidden = false;
       document.body.classList.add('inspecting');
       render();
+      if (library) return;
+      overview.hidden = true;
+      if (rail) rail.style.display = 'none';
       window.scrollTo(0, 0);
       document.getElementById('audit-back').focus();
     },
   };
 }
 export const INSPECTOR_CSS = `
-[hidden] {
-  display: none !important;
+.inspect-shell.is-library {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
-.inspecting {
-  background: #f5f5f0;
+.inspect-main {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
 }
-.inspect-shell {
-  max-width: 1450px;
-  margin: auto;
-  padding: 25px 44px 0;
+.side {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.side-title {
+  margin: 4px 4px 2px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.side-list {
+  display: grid;
+  gap: 8px;
+}
+.side-item {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  width: 100%;
+  height: auto;
+  padding: 12px 14px;
+  text-align: left;
+  border: 1px solid transparent;
+  border-radius: var(--r);
+  background: transparent;
+}
+.side-item b {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.side-item > span:last-child {
+  color: var(--muted);
+  font-size: 13px;
+}
+.side-item[aria-current='true'] {
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+}
+.run-box {
+  margin: 12px 0 0;
+  padding: 14px 4px 0;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.run-box div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+}
+.run-box dt {
+  color: var(--muted);
+}
+.run-box dd {
+  margin: 0;
+  color: var(--ink-2);
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.side > button {
+  justify-self: start;
+  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.inspect-shell.is-archive {
+  display: grid;
+  gap: 16px;
 }
 .inspect-top {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
-  padding-bottom: 22px;
-  border-bottom: 1px solid var(--line);
+  gap: 12px;
 }
-.inspect-top > span {
-  font-size: 10px;
-  letter-spacing: 1.3px;
+.inspect-top .evidence-kind {
+  flex: 1;
   color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
-.inspect-top button {
-  background: #fffef9;
-}
-.inspect-heading {
+.run-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 40px;
-  padding: 27px 0 20px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
 }
-.inspect-heading h1 {
-  font:
-    31px/1.3 Georgia,
-    serif;
-  letter-spacing: -0.5px;
-  margin: 8px 0;
-  max-width: 760px;
-}
-.inspect-heading h1 > span {
-  display: block;
-  color: var(--teal);
-  font:
-    13px/1.7 "SFMono-Regular",
-    Consolas,
-    monospace;
-  letter-spacing: 0;
+.run-toolbar label {
+  display: grid;
+  gap: 4px;
 }
 .case-select {
-  width: 290px;
-  min-width: 210px;
+  flex: 1 1 320px;
+  min-width: 0;
 }
 .case-select select {
   width: 100%;
 }
-.run-toolbar {
-  display: flex;
-  align-items: end;
-  gap: 20px;
-  flex-wrap: wrap;
-  padding: 18px 0 0;
-}
 .method-switch {
   display: flex;
-  gap: 6px;
-  margin-right: auto;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .method-switch button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 17px;
-  min-height: 53px;
-  background: #fffef9;
-  border-color: var(--line);
-  text-align: left;
+  gap: 8px;
+  font-size: 14px;
 }
-.method-switch b {
-  font:
-    21px Georgia,
-    serif;
+.method-switch button b {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--slate-bg);
+  color: var(--slate);
+  font-size: 13px;
 }
-.method-switch button[aria-pressed="true"] {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: white;
+.method-switch button[aria-pressed='true'] {
+  border-color: var(--navy);
+  box-shadow: inset 0 0 0 1px var(--navy);
+  color: var(--ink);
 }
-.method-switch span {
-  font-size: 11px;
+.method-switch button[aria-pressed='true'] b {
+  background: var(--navy);
+  color: var(--on-navy);
 }
 .method-explainer {
-  font-size: 12px;
+  margin: 0;
   color: var(--muted);
-  margin: 15px 0 20px;
-  max-width: 840px;
-  line-height: 1.65;
+  font-size: 14px;
 }
-.run-verdict {
+.result-card {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  min-width: 0;
+}
+.result-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.result-verdict {
+  margin-left: auto;
+}
+.result-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 14px 0 18px;
+  font-size: 26px;
+  letter-spacing: -0.3px;
+}
+.result-title > span:first-child {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.result-title small {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.xform {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 12px;
+}
+.xform.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+.xform-arrow {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+.loc {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid;
+  border-radius: var(--r);
+}
+.loc-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.loc code {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.loc-sub {
+  font-size: 13.5px;
+}
+.loc.old {
+  background: var(--red-bg);
+  border-color: var(--red-line);
+  color: var(--red);
+}
+.loc.old code {
+  color: #7a1b13;
+}
+.loc.new {
+  background: var(--teal-bg);
+  border-color: var(--teal-line);
+  color: var(--teal);
+}
+.loc.new code {
+  color: #0b4f49;
+}
+.loc.prop {
+  background: var(--amber-bg);
+  border-color: var(--amber-line);
+  color: var(--amber);
+}
+.loc.prop code {
+  color: #6e3504;
+}
+.loc.fail {
+  background: var(--surface-2);
+  border-color: var(--red-line);
+  border-style: dashed;
+  color: var(--red);
+}
+.loc.fail code {
+  color: var(--ink-2);
+}
+.loc.same {
+  background: var(--slate-bg);
+  border-color: var(--slate-line);
+  color: var(--slate);
+}
+.loc.same code {
+  color: var(--ink);
+}
+.result-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.result-facts b {
+  color: var(--ink);
+  font-weight: 650;
+}
+.attempt-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: 13px;
+}
+.timeline {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-2);
+}
+.tl-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-  padding: 21px 25px;
-  background: #fffef9;
-  border: 1px solid var(--line);
-  border-left: 4px solid #a08b47;
-  margin-bottom: 29px;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
 }
-.run-verdict.is-correct {
-  border-left-color: var(--teal);
-}
-.run-verdict.is-wrong {
-  border-left-color: var(--red);
-}
-.run-verdict small {
-  font-size: 9px;
-  letter-spacing: 1.3px;
+.tl-head h2 {
+  margin: 0;
   color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
-.run-verdict strong {
-  display: block;
-  font:
-    24px/1.4 Georgia,
-    serif;
+.tl-head b {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 }
-.run-verdict p {
-  font-size: 12px;
-  color: var(--muted);
-  margin: 5px 0 0;
-  max-width: 630px;
-}
-.run-verdict dl {
+.tl-bar {
   display: flex;
-  gap: 28px;
-  margin: 0;
-  flex-shrink: 0;
+  gap: 3px;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 999px;
 }
-.run-verdict dt {
-  font-size: 10px;
-  margin: 0;
+.tl-bar i {
+  display: block;
+  min-width: 6px;
+  flex-basis: 0;
 }
-.run-verdict dd {
-  font-size: 14px;
-  margin: 6px 0 0;
+.tl-bar .tl-end {
+  flex: 0 0 32px;
 }
-.inspection-layout {
-  display: grid;
-  grid-template-columns: 218px minmax(0, 1fr);
-  gap: 35px;
-  align-items: start;
+.t-orig {
+  background: var(--red-fill);
+}
+.t-recovery {
+  background: var(--ai-fill);
+}
+.t-retry {
+  background: var(--teal-fill);
+}
+.t-ok {
+  background: var(--slate-fill);
+}
+.t-stop {
+  background: repeating-linear-gradient(135deg, var(--amber-fill) 0 6px, #fbd38d 6px 12px);
+}
+.t-fail {
+  background: repeating-linear-gradient(135deg, var(--red-fill) 0 6px, #fbc4bd 6px 12px);
+}
+.tl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+.tl-legend li {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.tl-legend i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.tl-legend small {
+  color: var(--muted);
+  font-size: 12.5px;
 }
 .stage-nav {
-  position: sticky;
-  top: 24px;
   display: grid;
-  gap: 5px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
 }
 .stage-nav button {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  height: auto;
+  min-height: 60px;
+  padding: 10px 14px;
   text-align: left;
-  border: 1px solid transparent;
-  padding: 13px 12px;
-  background: transparent;
-  border-radius: 5px;
+  border-radius: var(--r);
 }
 .stage-index {
-  font:
-    11px "SFMono-Regular",
-    Consolas,
-    monospace;
-  color: #839995;
-}
-.stage-nav b {
-  font-size: 12px;
-  font-weight: 600;
-  display: block;
-}
-.stage-nav small {
-  display: block;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-.stage-nav button[aria-current="step"] {
-  background: #e2ece4;
-  border-color: #c6d8cc;
-}
-.stage-panel {
-  background: #fffefb;
-  border: 1px solid #d9e0d8;
-  min-height: 510px;
-  padding: 30px 34px;
-  border-radius: 8px;
-  min-width: 0;
-}
-.stage-title {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 20px;
-  margin-bottom: 22px;
-}
-.stage-title h2 {
-  font-size: 28px;
-  margin-top: 6px;
-}
-.stage-intro {
-  font-size: 14px;
-  line-height: 1.8;
-  max-width: 800px;
-}
-.audit-note {
-  background: #eef2ec;
-  border-left: 3px solid #a1b7a8;
-  color: #415d57;
-  padding: 14px 18px;
-  font-size: 12px;
-  line-height: 1.8;
-  margin: 20px 0;
-  overflow-wrap: anywhere;
-}
-.audit-note.skipped {
-  background: #f1f0e8;
-  border-color: #bcb596;
-}
-.audit-note.integrity-mismatch {
-  background: #fae9e2;
-  border-color: var(--red);
-}
-.audit-code,
-.audit-raw pre {
-  font:
-    12px/1.75 "SFMono-Regular",
-    Consolas,
-    monospace;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  tab-size: 2;
-  background: #f2f4ed;
-  border: 1px solid #e0e6da;
-  border-radius: 5px;
-  padding: 18px 21px;
-  max-height: 510px;
-  overflow: auto;
-  letter-spacing: 0;
-}
-.audit-raw {
-  margin: 16px 0;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: #fffefb;
-  min-width: 0;
-}
-.audit-raw > summary {
-  padding: 13px 17px;
-  font-size: 12px;
-  color: var(--teal);
-  overflow-wrap: anywhere;
-}
-.audit-raw pre {
-  margin: 0;
-  border: 0;
-  border-top: 1px solid var(--line);
-  border-radius: 0 0 5px 5px;
-}
-.audit-facts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 28px;
-  margin: 12px 0 20px;
-}
-.audit-facts > div {
-  padding: 12px 0;
-  border-bottom: 1px solid #e6e9df;
-  min-width: 0;
-}
-.audit-facts dt {
-  font-size: 11px;
-  margin: 0;
-}
-.audit-facts dd {
-  font-size: 13px;
-  margin: 6px 0 0;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-.audit-facts.compact {
-  grid-template-columns: repeat(4, 1fr);
-}
-.audit-muted {
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--muted);
-}
-.stage-panel h3 {
-  font-size: 14px;
-  margin-top: 25px;
-}
-.stage-panel h3 > small {
-  font-weight: 400;
-  color: var(--muted);
-  margin-left: 13px;
-  font-size: 11px;
-}
-.audit-funnel {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin: 22px 0;
-}
-.audit-funnel article {
-  border-bottom: 2px solid #cadacd;
-  padding: 10px 0;
-}
-.audit-funnel strong {
-  display: block;
-  font:
-    29px Georgia,
-    serif;
-}
-.audit-funnel span {
-  font-size: 10px;
-  color: var(--muted);
-}
-.candidate-list {
-  border-top: 1px solid var(--line);
-}
-.candidate-list > details {
-  border-bottom: 1px solid var(--line);
-}
-.candidate-list > details > summary {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 14px 5px;
-  list-style: none;
-  font-size: 12px;
-}
-.candidate-rank {
-  font:
-    13px Georgia,
-    serif;
-  border: 1px solid #cedbd0;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
   display: grid;
   place-items: center;
-  flex-shrink: 0;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--slate-bg);
+  color: var(--slate);
+  font-size: 13px;
+  font-weight: 700;
 }
-.candidate-name {
-  flex: 1;
-  overflow-wrap: anywhere;
+.stage-text {
   min-width: 0;
 }
-.candidate-name small {
+.stage-text b {
   display: block;
-  font:
-    10px/1.6 "SFMono-Regular",
-    Consolas,
-    monospace;
-  color: var(--muted);
-  margin-top: 4px;
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.25;
 }
-.candidate-score {
+.stage-text small {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translateY(-1px);
+}
+.dot-teal {
+  background: var(--teal-fill);
+}
+.dot-ai {
+  background: var(--ai-fill);
+}
+.dot-amber {
+  background: var(--amber-fill);
+}
+.dot-red {
+  background: var(--red-fill);
+}
+.dot-slate {
+  background: var(--slate-fill);
+}
+.stage-nav button[aria-current='step'] {
+  border-color: var(--navy);
+  box-shadow: inset 0 0 0 1px var(--navy);
+  background: var(--surface);
+}
+.stage-nav button[aria-current='step'] .stage-index {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+.stage-panel {
+  min-width: 0;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.stage-panel > h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+.stage-intro {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+.stage-panel h3:not(.sec-label) {
+  margin: 22px 0 10px;
   font-size: 16px;
 }
-.candidate-score small {
-  display: block;
-  font-size: 9px;
-  color: var(--muted);
-}
-.audit-actions {
+.funnel {
   display: flex;
-  gap: 10px;
-  margin: 18px 0;
-}
-.rule-list article {
-  border: 1px solid var(--line);
-  padding: 18px 21px;
-  border-radius: 5px;
-  margin: 15px 0;
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-.rule-heading {
-  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
-.rule-heading h3 {
+.fn {
+  min-width: 150px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.fn b {
+  display: block;
+  font-size: 26px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.fn span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.fn.hl {
+  background: var(--ai-bg);
+  border-color: var(--ai-line);
+}
+.fn.hl b {
+  color: var(--ai);
+}
+.fn-arrow {
+  color: #8fa1aa;
+}
+.meters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.meter {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.m-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin-bottom: 10px;
+}
+.m-top span {
+  color: var(--ink-2);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.m-top b {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.m-top small {
+  color: var(--muted);
+  font-weight: 500;
+}
+.m-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line-2);
+}
+.m-bar i {
+  display: block;
+  height: 100%;
+  min-width: 6px;
+  border-radius: 999px;
+  background: var(--ai-fill);
+}
+.cand-list {
+  display: grid;
+  gap: 8px;
+}
+.cand {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.rank {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: var(--on-navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+.c-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+.c-title b {
+  overflow-wrap: anywhere;
+}
+.c-title code {
+  color: var(--teal);
+  font-size: 13.5px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.c-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.score {
+  text-align: right;
+}
+.score small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.score b {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
   margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.check-grid li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--teal-line);
+  border-radius: var(--r);
+  background: var(--teal-bg);
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 600;
+}
+.check-grid svg {
+  flex: none;
+}
+.rule-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+.rule {
+  padding: 16px 16px 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.rule.ok {
+  border-color: var(--teal-line);
+  box-shadow: inset 4px 0 0 var(--teal-fill);
+}
+.rule.fail {
+  border-color: var(--red-line);
+  box-shadow: inset 4px 0 0 var(--red-fill);
+}
+.rule.open {
+  box-shadow: inset 4px 0 0 var(--slate-line);
+}
+.rule-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 12px;
+}
+.rule-head h4 {
+  margin: 0;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.rule dl {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+  font-size: 14px;
+}
+.rule dl div {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 14px;
+}
+.rule dt {
+  color: var(--muted);
+}
+.rule dd {
+  margin: 0;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.obs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+.obs code {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--slate-bg);
+  font-size: 13px;
+}
+.verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid;
+  border-radius: var(--r);
+}
+.verdict svg {
+  flex: none;
+  margin-top: 2px;
+}
+.verdict b {
+  display: block;
+  font-size: 16px;
+}
+.verdict p {
+  margin: 4px 0 0;
+}
+.verdict.stop {
+  background: var(--amber-bg);
+  border-color: var(--amber-line);
+  color: #6e3504;
+}
+.verdict.stop b,
+.verdict.stop svg {
+  color: var(--amber);
+}
+.verdict.ok {
+  background: var(--teal-bg);
+  border-color: var(--teal-line);
+  color: #0b4f49;
+}
+.verdict.ok b,
+.verdict.ok svg {
+  color: var(--teal);
+}
+.target-proof {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--ai-line);
+  border-radius: var(--r);
+  background: var(--ai-bg);
+  color: var(--ink-2);
+}
+.target-proof p {
+  margin: 4px 0;
+}
+.target-proof small {
+  color: var(--muted);
 }
 .proof-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin: 25px 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
 }
 .proof-grid article {
+  padding: 14px 16px;
   border: 1px solid var(--line);
-  padding: 17px;
-  border-radius: 5px;
-  min-width: 0;
+  border-radius: var(--r);
+  background: var(--surface-2);
 }
 .proof-grid small {
   display: block;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 .proof-grid strong {
-  display: block;
   font-size: 17px;
-  margin-top: 9px;
+}
+.paired-block {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.paired-block + .paired-block {
+  margin-top: 12px;
+  border-color: var(--ai-line);
+}
+.paired-block > h3 {
+  margin: 0 0 10px !important;
+}
+.audit-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 20px;
+  margin: 12px 0;
+}
+.audit-facts dt {
+  color: var(--muted);
+  font-size: 13px;
+}
+.audit-facts dd {
+  margin: 2px 0 0;
+  color: var(--ink-2);
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
-.audit-limits {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.8;
-  padding-left: 20px;
+.audit-note {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-left: 3px solid var(--slate-line);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 14px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
 }
-.audit-limits li {
+.audit-note.skipped {
+  border-left-color: var(--slate-fill);
+}
+.audit-note.integrity-verified {
+  border-left-color: var(--teal-fill);
+}
+.audit-note.integrity-mismatch {
+  border-left-color: var(--red-fill);
+}
+.audit-muted {
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.audit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+.audit-limits {
+  margin: 8px 0;
+  padding-left: 20px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.inspect-main details:not(.evidence-details) {
+  margin-top: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+}
+.inspect-main details > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 600;
+  list-style: none;
+}
+.inspect-main details > summary::-webkit-details-marker {
+  display: none;
+}
+.inspect-main details > summary::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(-45deg);
+}
+.inspect-main details[open] > summary::before {
+  transform: rotate(45deg);
+}
+.inspect-main details[open]:not(.evidence-details) {
   padding-bottom: 12px;
 }
-.inspect-footer {
+.audit-raw pre,
+.audit-code {
+  margin: 0;
+  max-height: 420px;
+  overflow: auto;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.codebox .audit-code {
+  border-radius: 0;
+  background: transparent;
+  color: var(--code-ink);
+  font-size: 13px;
+}
+.panel-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
-  letter-spacing: 0;
-  padding: 25px 0 32px;
-  font-size: 11px;
+  gap: 12px 16px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-2);
 }
-.inspect-footer button {
-  flex-shrink: 0;
+.panel-foot .info-note {
+  font-size: 13.5px;
 }
-@media (max-width: 1050px) {
-  .inspect-shell {
-    padding-inline: 25px;
-  }
-  .inspection-layout {
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 20px;
-  }
-  .stage-panel {
-    padding: 24px;
-  }
-  .run-verdict {
-    align-items: start;
-    flex-direction: column;
-    gap: 17px;
-  }
-  .run-verdict dl {
-    flex-wrap: wrap;
-  }
-  .inspect-heading {
-    align-items: start;
-    flex-direction: column;
-    gap: 15px;
-  }
-  .case-select {
-    width: 100%;
-    max-width: 600px;
-  }
-  .method-switch {
-    width: 100%;
-  }
-  .method-switch button {
-    flex: 1;
-  }
-  .audit-facts.compact {
-    grid-template-columns: 1fr 1fr;
-  }
+.panel-foot button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-weight: 600;
 }
-@media (max-width: 700px) {
-  .inspect-shell {
-    padding: 18px 16px 0;
+.evidence-details {
+  padding: 0 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.evidence-details[open] {
+  padding-bottom: 16px;
+}
+@media (max-width: 960px) {
+  .inspect-shell.is-library {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
-  .inspect-top {
-    flex-wrap: wrap;
-    gap: 12px;
+  .side {
+    position: static;
   }
-  .inspect-top > span {
-    order: 3;
-    width: 100%;
-    font-size: 9px;
+  .side-title,
+  .run-box,
+  .side > button {
+    display: none;
   }
-  .inspect-heading h1 {
-    font-size: 25px;
-  }
-  .method-switch {
-    gap: 4px;
-  }
-  .method-switch button {
-    padding: 10px;
+  .side-list {
+    display: flex;
     gap: 8px;
-    align-items: start;
+    overflow-x: auto;
+    padding-bottom: 4px;
   }
-  .method-switch span {
-    font-size: 10px;
-  }
-  .run-toolbar {
-    gap: 14px;
-  }
-  .run-toolbar label {
-    flex: 1;
-    min-width: 0;
-  }
-  .run-toolbar select {
-    width: 100%;
-  }
-  .run-verdict {
-    padding: 17px;
-  }
-  .run-verdict strong {
-    font-size: 22px;
-  }
-  .run-verdict dl {
-    gap: 17px;
-  }
-  .inspection-layout {
-    grid-template-columns: 1fr;
-    gap: 17px;
+  .side-item {
+    flex: 0 0 220px;
+    background: var(--surface);
+    border-color: var(--line);
   }
   .stage-nav {
-    position: static;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px;
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
   }
   .stage-nav button {
-    padding: 9px 8px;
-    gap: 10px;
-    border-color: var(--line);
-    min-width: 0;
-  }
-  .stage-nav b {
-    font-size: 10px;
-  }
-  .stage-nav small {
-    font-size: 9px;
-  }
-  .stage-index {
-    font-size: 9px;
-  }
-  .stage-panel {
-    padding: 21px 17px;
-    min-height: 350px;
-  }
-  .stage-title h2 {
-    font-size: 24px;
-  }
-  .audit-facts {
-    grid-template-columns: 1fr;
-  }
-  .audit-funnel {
-    gap: 9px;
-  }
-  .audit-funnel strong {
-    font-size: 23px;
-  }
-  .audit-funnel span {
-    font-size: 9px;
-  }
-  .proof-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .proof-grid article {
-    padding: 14px;
-  }
-  .proof-grid strong {
-    font-size: 15px;
-  }
-  .audit-code,
-  .audit-raw pre {
-    padding: 14px;
-    font-size: 11px;
-  }
-  .inspect-footer {
-    align-items: start;
-    gap: 15px;
-  }
-  .inspect-footer span {
-    font-size: 10px;
-  }
-  .audit-actions {
-    flex-wrap: wrap;
+    flex: 0 0 200px;
   }
 }
-@media print {
-  .inspect-top,
-  .stage-nav,
-  .run-toolbar,
-  .case-select,
-  .inspect-footer {
-    display: none !important;
-  }
-  .inspection-layout {
-    display: block;
-  }
-  .inspect-shell {
-    padding: 0;
-  }
+@media (max-width: 760px) {
+  .result-card,
   .stage-panel {
-    border: 0;
-    padding: 15px 0;
+    padding: 16px;
   }
-  .audit-code,
-  .audit-raw pre {
-    max-height: none;
+  .result-title {
+    font-size: 21px;
   }
-  .run-verdict {
-    break-inside: avoid;
+  .result-verdict {
+    margin-left: 0;
+  }
+  .xform {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .xform-arrow {
+    transform: rotate(90deg);
+    height: 24px;
+  }
+  .loc code {
+    font-size: 17px;
+  }
+  .attempt-pick {
+    margin-left: 0;
+  }
+  .meters,
+  .check-grid,
+  .proof-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .fn {
+    flex: 1 1 40%;
+    min-width: 0;
+  }
+  .fn-arrow {
+    display: none;
+  }
+  .cand {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 12px;
+  }
+  .rule dl div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .panel-foot button {
+    width: 100%;
+    justify-content: center;
   }
 }
 `;

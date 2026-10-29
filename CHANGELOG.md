@@ -7,6 +7,7 @@
 - Node.js 22 is supported (22–25).
 - CI checks the packaged library on Node.js 22 and 24 with Playwright 1.62.1 and the newest 1.x release; `npm test` runs the full offline suite.
 - The README quick start is now the canonical first run, with report screenshots. The Playwright guide covers next steps and reproducing v0.1.0.
+- Redesigned reports. The suite index lists each test's actions with their locator changes. Action reports open on the first recovered or stopped action and show the original and replacement locator, AI and check status, a recovery timeline, and candidates and input limits without expanding sections; correctness stays separate. The evaluation explorer explains the public bundle's scope and uses the paper's configuration names. Report JSON is unchanged.
 
 ## 0.1.0 — 2026-09-21
 

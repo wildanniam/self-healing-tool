@@ -8,6 +8,10 @@ On 29 October 2026 the owner approved a three-part plan after an evaluation of i
 
 v0.1.0 pinned Playwright to exactly 1.62.1, so projects on newer releases failed with `ERESOLVE`, and installing from Git produced a package without `dist/`. Peer dependencies now accept `>=1.62.1 <2` and are both optional, so npm keeps the Playwright version that `@playwright/test` brings; a `prepare` script builds the package on Git installation, and Node.js 22 is supported after the full suite passed on 22.23.4. CI checks the packaged library on Node.js 22 and 24 with Playwright 1.62.1 and the newest 1.x release. The README holds the canonical quick start; `docs/playwright.md` continues from it and documents how to reproduce v0.1.0.
 
+## Report redesign (issue #42)
+
+Reports now lead with each action's result: the original and replacement locator, AI use, the check result and a separate correctness status, followed by a recovery timeline from recorded timings. Action reports open on the first action that needed recovery and list every action in a sidebar; the suite index shows each test's actions, derived from the copied report summaries. The evaluation explorer replaces developer notices with a data-scope note and uses the paper's configuration names. Recorded data, JSON outputs, downloads and the four stages are unchanged; `DESIGN.md` records the visual rules.
+
 ## Boundaries
 
-v0.1.0 remains the version evaluated in the APSEC 2026 paper and stays tagged. These changes alter packaging, CI and documentation only; recovery behavior, ranking, prompts and frozen research outcomes are unchanged. Versions inside the peer range other than those checked in CI are accepted but not individually verified.
+v0.1.0 remains the version evaluated in the APSEC 2026 paper and stays tagged. These changes alter packaging, CI, documentation and report presentation; recovery behavior, ranking, prompts and frozen research outcomes are unchanged. Versions inside the peer range other than those checked in CI are accepted but not individually verified.

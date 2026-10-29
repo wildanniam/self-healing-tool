@@ -1,7 +1,7 @@
 import { ARMS, CATEGORIES, GROUPS } from './data.mjs';
 import { RANKING_ARMS } from './ranking-data.mjs';
 import { inspectorClient, INSPECTOR_CSS } from './inspector.mjs';
-import { REPORT_POLISH as POLISH } from '../dist/report-style.js';
+import { BRAND, ICONS, THEME_CSS, languageSwitch } from '../dist/report-theme.js';
 import { UI_TEXT, languageClient } from '../dist/report-language.js';
 import { CSS } from './report-style.mjs';
 const embed = (x) =>
@@ -23,22 +23,18 @@ export function renderReport(data) {
   const view = { ...data, studies, rows: studies.flatMap((s) => s.rows) };
   return (
     `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
-    `<title>Self-healing · Hasil dan bukti</title><style>${CSS}${INSPECTOR_CSS}${POLISH}</style>` +
+    `<title>Self-healing · Hasil dan bukti</title><style>${THEME_CSS}${CSS}${INSPECTOR_CSS}</style>` +
     `</head><body>
-  <div class="language-bar"><label for="report-language">Language / Bahasa</label>` +
-    `<select id="report-language"><option value="en">English</option><option value="id">Bahasa Indonesia</option>` +
-    `</select></div><nav class="rail" aria-label="Report"><strong>Self-healing · Hasil dan bukti</strong>` +
-    `<span id="generated"></span></nav>
-  <main id="overview-view"><header>` +
-    `<div class="topline"><div><p id="mode" class="eyebrow"></p><h1>Hasil pemulihan locator</h1>` +
-    `</div><div class="actions"><button id="download">Unduh ringkasan JSON</button>` +
-    `<button id="print">Cetak</button></div></div>
+  <header class="topbar"><div class="topbar-in">${BRAND}<nav class="crumbs" aria-label="Breadcrumb"><b>Arsip evaluasi</b></nav>` +
+    `<div class="top-actions"><button id="download">${ICONS.download}<span>Ringkasan JSON</span></button><button id="print">Cetak</button>${languageSwitch()}</div></div></header>
+  <main id="overview-view" class="page"><header class="title-row"><div><h1>Hasil pemulihan locator</h1>` +
+    `<p class="meta"><span id="mode"></span> · <span id="generated"></span></p></div></header>
   <div class="report-navigation">` +
     `<label id="study-label">Studi<select id="study">${studies.map((s) => `<option value="${s.studyId}">${s.studyId === 'rm1' ? 'RM1 · Pemeringkatan DOM' : 'RM2 · Aturan target'}</option>`).join('')}</select>` +
-    `</label><div role="group" aria-label="Tampilan"><button id="view-results" aria-pressed="true">Hasil eksekusi</button> <button id="view-comparison" aria-pressed="false">Perbandingan studi</button>` +
+    `</label><div class="view-switch" role="group" aria-label="Tampilan"><button id="view-results" aria-pressed="true">Hasil eksekusi</button><button id="view-comparison" aria-pressed="false">Perbandingan studi</button>` +
     `</div></div>
   <div id="coverage" role="status"></div><p id="scope" class="caption">` +
-    `</p><div class="stats" id="stats"></div></header>
+    `</p><div class="kpis" id="stats"></div>
   <section id="cases">` +
     `<div class="filters"><label class="search-label">Cari kasus<input id="search" type="search" placeholder="ID atau tujuan tes">` +
     `</label><label>Aplikasi<select id="group"><option value="all">Semua aplikasi</option>${Object.entries(
@@ -66,8 +62,8 @@ export function renderReport(data) {
   <details class="provenance">` +
     `<summary>Sumber dan batas interpretasi</summary><p id="limitations"></p>` +
     `<pre id="provenance"></pre></details><footer>Hasil teknis, jawaban model, keputusan pemeriksa dan efek aplikasi adalah bukti yang berbeda.</footer>` +
-    `</main><main id="inspector-root" hidden></main>
-  <script>const language=(${languageClient.toString()})(${embed(UI_TEXT)},'en');language.bindStatic(document.documentElement);const data=${embed(view)};(${client.toString()})(data,${embed({ ARMS: { ...ARMS, ...RANKING_ARMS }, CATEGORIES, GROUPS })},${inspectorClient.toString()},language);</script>` +
+    `</main><main id="inspector-root" class="page" hidden></main>
+  <script>const language=(${languageClient.toString()})(${embed(UI_TEXT)},'en');language.bindStatic(document.documentElement);const data=${embed(view)};(${client.toString()})(data,${embed({ ARMS: { ...ARMS, ...RANKING_ARMS }, CATEGORIES, GROUPS, ICONS })},${inspectorClient.toString()},language);</script>` +
     `</body></html>`
   );
 }
@@ -83,6 +79,19 @@ function client(data, labels, createInspector, language) {
         (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
       );
   const inspector = createInspector(data, labels);
+  const L = (en, id) => (language.current === 'id' ? id : en);
+  // Coverage notices are recorded in Indonesian; translate the known patterns for display only.
+  const notice = (n) =>
+    language.current === 'id'
+      ? n
+      : n
+          .replace(/^(.+): sumber belum dimuat$/, '$1: source not loaded')
+          .replace(/^(.+): (\d+)\/(\d+) eksekusi selesai$/, '$1: $2/$3 runs completed')
+          .replace(/^Slot tidak tersedia: (.+)$/, 'Slot unavailable: $1')
+          .replace(
+            /^RM1 belum dimuat\. Gunakan --ranking DIRECTORY untuk arsip main D33\.$/,
+            'RQ1 is not loaded. Use --ranking DIRECTORY to add the D33 main archive.',
+          );
   let page = 0,
     printing = false;
   const study = () => data.studies.find((s) => s.studyId === $('study').value);
@@ -230,7 +239,7 @@ function client(data, labels, createInspector, language) {
         .map(([, rs]) => {
           const r = rs[0];
           return (
-            ui`<tr><td><b>${esc(r.caseId)}</b><span class="case-title">${esc(r.title)}</span>` +
+            ui`<tr><td><b>${esc(r.caseId)}</b><span class="case-title">${esc(t(r.title))}</span>` +
             ui`</td><td>${esc(r.profile ? { U: t('Kecil / unik'), D: t('Duplikat / pemilik'), L: t('Padat') }[r.profile] : t(CATEGORIES[r.category]))}<small>${esc(t(GROUPS[r.group]))}</small>` +
             ui`</td>${arms
               .map(
@@ -256,16 +265,39 @@ function client(data, labels, createInspector, language) {
     $('page-number').textContent = ui`${page + 1} / ${pages}`;
     $('previous').disabled = page === 0;
     $('next').disabled = page === pages - 1;
+    const done = s.rows.filter((r) => r.status === 'complete'),
+      stops = done.filter((r) => !r.executed && !r.operational),
+      repeats = new Set(s.rows.map((r) => r.repeat)).size;
     $('stats').innerHTML = [
-      [t('Eksekusi studi'), s.rows.length],
-      [t('Kondisi'), new Set(s.rows.map((r) => r.caseId)).size],
-      [t('Tindakan salah'), s.rows.filter((r) => r.wrong).length],
       [
+        '',
+        t('Eksekusi studi'),
+        s.rows.length,
+        ui`${new Set(s.rows.map((r) => r.caseId)).size} ${L('conditions', 'kondisi')} × ${arms.length} ${L('configurations', 'konfigurasi')} × ${repeats} ${L('repeats', 'ulangan')}`,
+      ],
+      [
+        'k-teal',
+        L('Assessed correct', 'Dinilai benar'),
+        s.rows.filter((r) => r.correct).length,
+        `${s.rows.filter((r) => r.correct && r.executed).length} ${L('correct actions', 'aksi benar')} · ${stops.filter((r) => r.correct).length} ${L('correct stops', 'berhenti tepat')}`,
+      ],
+      [
+        'k-red',
+        t('Tindakan salah'),
+        s.rows.filter((r) => r.wrong).length,
+        L('across all configurations', 'di semua konfigurasi'),
+      ],
+      [
+        'k-amber',
         t('Berhenti tanpa aksi'),
-        s.rows.filter((r) => !r.executed && !r.operational && r.status === 'complete').length,
+        stops.length,
+        `${stops.filter((r) => r.correct).length} ${L('of them assessed correct', 'di antaranya dinilai tepat')}`,
       ],
     ]
-      .map(([k, v]) => ui`<div><span>${k}</span><strong>${v}</strong></div>`)
+      .map(
+        ([tone, k, v, sub]) =>
+          `<div class="kpi ${tone}"><span>${esc(k)}</span><strong>${v}</strong><small>${esc(sub)}</small></div>`,
+      )
       .join('');
     $('case-rows')
       .querySelectorAll('[data-row]')
@@ -317,7 +349,20 @@ function client(data, labels, createInspector, language) {
       notices.push(t('Browser dijalankan ulang dengan jawaban model tersimpan.'));
     if (s.replayMismatches?.length)
       notices.push(t('Replay berbeda: ') + s.replayMismatches.join(', '));
-    $('coverage').innerHTML = notices.map((n) => ui`<p class="notice">${esc(n)}</p>`).join('');
+    const publicBundle = historical && s.studyId !== 'rm1' && !data.privateLoaded;
+    $('coverage').innerHTML =
+      (publicBundle
+        ? `<div class="scope-card">${labels.ICONS.info}<p><b>${L('Public bundle.', 'Bundel publik.')}</b> ${esc(
+            L(
+              `This archive contains the synthetic-application runs: ${new Set(s.rows.map((r) => r.caseId)).size} of 42 conditions, ${s.rows.length} of 378 runs. Runs on the private application are not included, so totals differ from the paper.`,
+              `Arsip ini berisi run aplikasi sintetis: ${new Set(s.rows.map((r) => r.caseId)).size} dari 42 kondisi, ${s.rows.length} dari 378 run. Run pada aplikasi privat tidak disertakan, sehingga totalnya berbeda dari paper.`,
+            ),
+          )}</p></div>`
+        : '') +
+      notices
+        .filter((n) => !(publicBundle && /^private-host: sumber belum dimuat$/.test(n)))
+        .map((n) => `<p class="notice">${esc(notice(n))}</p>`)
+        .join('');
     $('limitations').textContent =
       s.studyId === 'rm1'
         ? t(
@@ -438,8 +483,16 @@ function client(data, labels, createInspector, language) {
     printing = false;
     render();
   });
-  $('generated').textContent = t('Dibuat ') + new Date(data.createdAt).toLocaleString('id-ID');
+  const generated = () =>
+    ($('generated').textContent =
+      t('Dibuat ') +
+      new Date(data.createdAt).toLocaleString(language.current === 'id' ? 'id-ID' : 'en-GB', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }));
+  generated();
   language.subscribe(() => {
+    generated();
     const values = Object.fromEntries(
         ['search', 'category', 'group'].map((id) => [id, $(id).value]),
       ),
