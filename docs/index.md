@@ -2,12 +2,12 @@
 
 ## Start using the tool
 
-1. [Quick start](playwright.md): install from source, run a self-contained test and inspect its automatic report.
+1. [Quick start](../README.md#quick-start): install from GitHub, run a self-contained test and inspect its automatic report. The [Playwright guide](playwright.md) continues with your own application, LLM-assisted recovery and troubleshooting.
 2. [Core integration](integration.md): manual lifecycle control, provider configuration and optional target rules.
 3. [Report and demo guide](presentation.md): retained research results and explicitly labeled replay.
 4. [Release notes](../CHANGELOG.md) and [MIT license](../LICENSE).
 
-The main quick start requires no private application or model credential. Full mode is optional and requires the user's own provider configuration. The package is installed from a local archive; it is not published to npm yet.
+The main quick start requires no private application or model credential. Full mode is optional and requires the user's own provider configuration. The package installs from GitHub with npm, which builds it during installation; it is not published to the npm registry yet.
 
 ## Repository map
 
@@ -33,6 +33,6 @@ The repository includes independent synthetic fixtures and selected portable evi
 
 ## Contributing
 
-Use Node 24/25 and the pinned Playwright 1.62.1/Chromium configuration. Install with `npm ci`, then `npx playwright install chromium`. Relevant commands are `npm run check`, `npm run test:audit`, `npm run typecheck`, `npm run test:unit`, `npm run test:browser`, `npm run test:presentation`, `npm run test:consumer` and `npm run test:lifecycle`.
+Use Node 22–25. Development pins Playwright 1.62.1 with Chromium; CI also checks the packaged library with the newest 1.x release. Install with `npm ci`, then `npx playwright install chromium`, and run `npm test` for the full offline suite. The individual commands are `npm run check`, `npm run test:audit`, `npm run typecheck`, `npm run test:unit`, `npm run test:browser`, `npm run test:presentation`, `npm run test:consumer` and `npm run test:lifecycle`.
 
 Open an issue for a substantive change, work on a branch and submit a PR with the relevant checks. Keep source changes separate from frozen research artifacts. Live API calls are not part of offline checks. See [audit workflow](audit-workflow.md) and the current [working agreement](../AGENTS.md).

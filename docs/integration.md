@@ -4,7 +4,7 @@ For the shortest Playwright Test setup, start with [automatic reports](playwrigh
 
 ## Package and compatibility
 
-GitHub source release 0.1.0 under MIT; npm publication remains pending. Use ESM, Node.js 24/25 and Playwright 1.62.1. Chromium is the tested browser. Other browser versions, CommonJS, frames and shadow-root extraction are not verified. Build a local archive with `npm pack` and install it into the consumer project. Playwright Test is an optional peer used only by the `/playwright` subpath.
+GitHub source release under MIT; npm publication remains pending. Use ESM, Node.js 22–25 and Playwright `>=1.62.1 <2`; CI checks the packaged library with 1.62.1 and the newest 1.x release. Chromium is the tested browser. Other browser versions, CommonJS, frames and shadow-root extraction are not verified. Install from GitHub with `npm install --save-dev github:wildanniam/self-healing-tool`, which builds the package during installation. Playwright Test is an optional peer used only by the `/playwright` subpath.
 
 ## Explicit integration
 
