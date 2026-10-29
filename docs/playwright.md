@@ -97,6 +97,7 @@ Then add the same two files as in the quick start.
 | --- | --- |
 | `npm install` fails with `ERESOLVE` | Use Playwright 1.62.1 or a later 1.x release. Older versions are outside the supported range. |
 | Installing from GitHub fails | Git must be installed and able to reach github.com. npm clones the repository and builds the package during installation. |
+| pnpm stops with `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED` | pnpm 10 does not build Git-hosted packages by default. Add the entry it prints to `onlyBuiltDependencies` in `pnpm-workspace.yaml` and install again. The entry names a commit, so it changes when you update. npm needs no extra step. |
 | No action report | Import `test` from `self-healing-tool/playwright`; a skipped test or failed setup may never start the fixture. |
 | No suite index | Configure `self-healing-tool/reporter`, and check that its output directory is writable. |
 | Empty AI input/output | The original action succeeded, ranker-only mode is selected, capture was disabled, or a custom provider omitted the capture hook. |

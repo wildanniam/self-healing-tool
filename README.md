@@ -64,7 +64,7 @@ npx playwright install chromium
 mkdir tests
 ```
 
-npm builds the library from source during installation, so the first install can take up to half a minute. `@playwright/test` brings Playwright with it. The package is not published to the npm registry yet.
+npm builds the library from source during installation, so the first install can take up to half a minute. `@playwright/test` brings Playwright with it. The package is not published to the npm registry yet. Using pnpm? It needs [one extra setting](docs/playwright.md#troubleshooting).
 
 ### 2. Add the reporter to `playwright.config.ts`
 
