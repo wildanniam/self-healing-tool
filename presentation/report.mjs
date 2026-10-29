@@ -21,23 +21,55 @@ export function renderReport(data) {
     })),
   }));
   const view = { ...data, studies, rows: studies.flatMap((s) => s.rows) };
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Self-healing · Hasil dan bukti</title><style>${CSS}${INSPECTOR_CSS}${POLISH}</style></head><body>
-  <div class="language-bar"><label for="report-language">Language / Bahasa</label><select id="report-language"><option value="en">English</option><option value="id">Bahasa Indonesia</option></select></div><nav class="rail" aria-label="Report"><strong>Self-healing · Hasil dan bukti</strong><span id="generated"></span></nav>
-  <main id="overview-view"><header><div class="topline"><div><p id="mode" class="eyebrow"></p><h1>Hasil pemulihan locator</h1></div><div class="actions"><button id="download">Unduh ringkasan JSON</button><button id="print">Cetak</button></div></div>
-  <div class="report-navigation"><label id="study-label">Studi<select id="study">${studies.map((s) => `<option value="${s.studyId}">${s.studyId === 'rm1' ? 'RM1 · Pemeringkatan DOM' : 'RM2 · Aturan target'}</option>`).join('')}</select></label><div role="group" aria-label="Tampilan"><button id="view-results" aria-pressed="true">Hasil eksekusi</button> <button id="view-comparison" aria-pressed="false">Perbandingan studi</button></div></div>
-  <div id="coverage" role="status"></div><p id="scope" class="caption"></p><div class="stats" id="stats"></div></header>
-  <section id="cases"><div class="filters"><label class="search-label">Cari kasus<input id="search" type="search" placeholder="ID atau tujuan tes"></label><label>Aplikasi<select id="group"><option value="all">Semua aplikasi</option>${Object.entries(
-    GROUPS,
-  )
-    .map(([k, v]) => `<option value="${k}">${v}</option>`)
-    .join(
-      '',
-    )}</select></label><label>Kelompok<select id="category"><option value="all">Semua kelompok</option></select></label><label class="check"><input id="wrong-only" type="checkbox"> Kasus dengan tindakan salah</label></div>
-  <div class="section-heading"><p id="case-count" class="caption" role="status"></p><button id="csv">Unduh CSV terfilter</button></div><p class="caption">Pilih hasil ulangan untuk melihat proses. ✓ benar menurut evaluator · ! tindakan salah · — berhenti · ? belum dinilai.</p>
-  <div class="table-wrap"><table class="cases"><thead id="case-head"></thead><tbody id="case-rows"></tbody></table></div><div class="pagination"><button id="previous">← Sebelumnya</button><span id="page-number"></span><button id="next">Berikutnya →</button></div></section>
-  <section id="comparison" hidden><h2 id="comparison-title"></h2><p class="caption">Seluruh data studi terpilih; filter daftar kasus tidak mengubah perbandingan ini.</p><div class="table-wrap"><table><thead id="metric-head"></thead><tbody id="metrics"></tbody></table></div><p class="caption">Eksekusi berulang bukan kasus independen. Pemulihan, penolakan dan kontrol tidak digabung menjadi satu success rate.</p><details><summary>Konfigurasi yang dibandingkan</summary><div id="arms"></div></details><details><summary>Token, waktu dan asumsi biaya</summary><div id="resources"></div></details></section>
-  <details class="provenance"><summary>Sumber dan batas interpretasi</summary><p id="limitations"></p><pre id="provenance"></pre></details><footer>Hasil teknis, jawaban model, keputusan pemeriksa dan efek aplikasi adalah bukti yang berbeda.</footer></main><main id="inspector-root" hidden></main>
-  <script>const language=(${languageClient.toString()})(${embed(UI_TEXT)},'en');language.bindStatic(document.documentElement);const data=${embed(view)};(${client.toString()})(data,${embed({ ARMS: { ...ARMS, ...RANKING_ARMS }, CATEGORIES, GROUPS })},${inspectorClient.toString()},language);</script></body></html>`;
+  return (
+    `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">` +
+    `<title>Self-healing · Hasil dan bukti</title><style>${CSS}${INSPECTOR_CSS}${POLISH}</style>` +
+    `</head><body>
+  <div class="language-bar"><label for="report-language">Language / Bahasa</label>` +
+    `<select id="report-language"><option value="en">English</option><option value="id">Bahasa Indonesia</option>` +
+    `</select></div><nav class="rail" aria-label="Report"><strong>Self-healing · Hasil dan bukti</strong>` +
+    `<span id="generated"></span></nav>
+  <main id="overview-view"><header>` +
+    `<div class="topline"><div><p id="mode" class="eyebrow"></p><h1>Hasil pemulihan locator</h1>` +
+    `</div><div class="actions"><button id="download">Unduh ringkasan JSON</button>` +
+    `<button id="print">Cetak</button></div></div>
+  <div class="report-navigation">` +
+    `<label id="study-label">Studi<select id="study">${studies.map((s) => `<option value="${s.studyId}">${s.studyId === 'rm1' ? 'RM1 · Pemeringkatan DOM' : 'RM2 · Aturan target'}</option>`).join('')}</select>` +
+    `</label><div role="group" aria-label="Tampilan"><button id="view-results" aria-pressed="true">Hasil eksekusi</button> <button id="view-comparison" aria-pressed="false">Perbandingan studi</button>` +
+    `</div></div>
+  <div id="coverage" role="status"></div><p id="scope" class="caption">` +
+    `</p><div class="stats" id="stats"></div></header>
+  <section id="cases">` +
+    `<div class="filters"><label class="search-label">Cari kasus<input id="search" type="search" placeholder="ID atau tujuan tes">` +
+    `</label><label>Aplikasi<select id="group"><option value="all">Semua aplikasi</option>${Object.entries(
+      GROUPS,
+    )
+      .map(([k, v]) => `<option value="${k}">${v}</option>`)
+      .join('')}</select>` +
+    `</label><label>Kelompok<select id="category"><option value="all">Semua kelompok</option>` +
+    `</select></label><label class="check"><input id="wrong-only" type="checkbox"> Kasus dengan tindakan salah</label>` +
+    `</div>
+  <div class="section-heading"><p id="case-count" class="caption" role="status">` +
+    `</p><button id="csv">Unduh CSV terfilter</button></div><p class="caption">Pilih hasil ulangan untuk melihat proses. ✓ benar menurut evaluator · ! tindakan salah · — berhenti · ? belum dinilai.</p>
+  <div class="table-wrap">` +
+    `<table class="cases"><thead id="case-head"></thead><tbody id="case-rows">` +
+    `</tbody></table></div><div class="pagination"><button id="previous">← Sebelumnya</button>` +
+    `<span id="page-number"></span><button id="next">Berikutnya →</button></div>` +
+    `</section>
+  <section id="comparison" hidden><h2 id="comparison-title">` +
+    `</h2><p class="caption">Seluruh data studi terpilih; filter daftar kasus tidak mengubah perbandingan ini.</p>` +
+    `<div class="table-wrap"><table><thead id="metric-head"></thead><tbody id="metrics">` +
+    `</tbody></table></div><p class="caption">Eksekusi berulang bukan kasus independen. Pemulihan, penolakan dan kontrol tidak digabung menjadi satu success rate.</p>` +
+    `<details><summary>Konfigurasi yang dibandingkan</summary><div id="arms">` +
+    `</div></details><details><summary>Token, waktu dan asumsi biaya</summary>` +
+    `<div id="resources"></div></details></section>
+  <details class="provenance">` +
+    `<summary>Sumber dan batas interpretasi</summary><p id="limitations"></p>` +
+    `<pre id="provenance"></pre></details><footer>Hasil teknis, jawaban model, keputusan pemeriksa dan efek aplikasi adalah bukti yang berbeda.</footer>` +
+    `</main><main id="inspector-root" hidden></main>
+  <script>const language=(${languageClient.toString()})(${embed(UI_TEXT)},'en');language.bindStatic(document.documentElement);const data=${embed(view)};(${client.toString()})(data,${embed({ ARMS: { ...ARMS, ...RANKING_ARMS }, CATEGORIES, GROUPS })},${inspectorClient.toString()},language);</script>` +
+    `</body></html>`
+  );
 }
 function client(data, labels, createInspector, language) {
   const t = language.text,
@@ -197,21 +229,26 @@ function client(data, labels, createInspector, language) {
       (printing ? gg : gg.slice(page * 12, page * 12 + 12))
         .map(([, rs]) => {
           const r = rs[0];
-          return ui`<tr><td><b>${esc(r.caseId)}</b><span class="case-title">${esc(r.title)}</span></td><td>${esc(r.profile ? { U: t('Kecil / unik'), D: t('Duplikat / pemilik'), L: t('Padat') }[r.profile] : t(CATEGORIES[r.category]))}<small>${esc(t(GROUPS[r.group]))}</small></td>${arms
-            .map(
-              (a) =>
-                ui`<td><div class="repeat-results">${
-                  rs
-                    .filter((x) => x.arm === a)
-                    .sort((a, b) => a.repeat - b.repeat)
-                    .map(
-                      (x) =>
-                        ui`<button class="result-chip ${x.wrong ? 'bad' : x.correct ? 'good' : 'warn'}" data-row="${esc(x.id)}" aria-label="${esc(ui`${x.caseId} ${a} ulangan ${x.repeat}: ${label(x)}. Lihat proses`)}" title="${esc(label(x))}">${x.repeat} <b>${x.wrong ? '!' : !x.assessed ? '?' : x.correct ? '✓' : x.executed ? '?' : '—'}</b></button>`,
-                    )
-                    .join('') || t('Slot tidak tersedia')
-                }</div></td>`,
-            )
-            .join('')}</tr>`;
+          return (
+            ui`<tr><td><b>${esc(r.caseId)}</b><span class="case-title">${esc(r.title)}</span>` +
+            ui`</td><td>${esc(r.profile ? { U: t('Kecil / unik'), D: t('Duplikat / pemilik'), L: t('Padat') }[r.profile] : t(CATEGORIES[r.category]))}<small>${esc(t(GROUPS[r.group]))}</small>` +
+            ui`</td>${arms
+              .map(
+                (a) =>
+                  ui`<td><div class="repeat-results">${
+                    rs
+                      .filter((x) => x.arm === a)
+                      .sort((a, b) => a.repeat - b.repeat)
+                      .map(
+                        (x) =>
+                          ui`<button class="result-chip ${x.wrong ? 'bad' : x.correct ? 'good' : 'warn'}" data-row="${esc(x.id)}" aria-label="${esc(ui`${x.caseId} ${a} ulangan ${x.repeat}: ${label(x)}. Lihat proses`)}" title="${esc(label(x))}">${x.repeat} <b>${x.wrong ? '!' : !x.assessed ? '?' : x.correct ? '✓' : x.executed ? '?' : '—'}</b>` +
+                          ui`</button>`,
+                      )
+                      .join('') || t('Slot tidak tersedia')
+                  }</div>` + ui`</td>`,
+              )
+              .join('')}</tr>`
+          );
         })
         .join('') ||
       ui`<tr><td colspan="${arms.length + 2}">Tidak ada kasus yang cocok dengan filter.</td></tr>`;
