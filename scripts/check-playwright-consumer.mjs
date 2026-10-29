@@ -8,11 +8,16 @@ import assert from 'node:assert/strict';
 const root=resolve(import.meta.dirname,'..');
 const directory=mkdtempSync(join(tmpdir(),'healing-playwright-consumer-'));
 const env={...Object.fromEntries(['PATH','HOME','TMPDIR','PLAYWRIGHT_BROWSERS_PATH','npm_config_cache'].filter(k=>process.env[k]).map(k=>[k,process.env[k]])),CI:'1'};
+const pinnedPlaywright=JSON.parse(readFileSync(join(root,'package.json'),'utf8')).devDependencies['@playwright/test'];
+// CI sets this to check the declared peer range at its minimum and latest versions.
+const playwrightVersion=process.env.CONSUMER_PLAYWRIGHT_VERSION||pinnedPlaywright;
 try {
  const packed=JSON.parse(execFileSync('npm',['pack','--json','--ignore-scripts','--pack-destination',directory],{cwd:root,env,encoding:'utf8'}))[0];
  const consumer=join(directory,'consumer');mkdirSync(consumer);
  writeFileSync(join(consumer,'package.json'),JSON.stringify({name:'playwright-consumer-check',version:'1.0.0',private:true,type:'module'}));
- execFileSync('npm',['install','--prefer-offline','--ignore-scripts','--no-audit','--no-fund','--package-lock=false',join(directory,packed.filename),'playwright@1.62.1','@playwright/test@1.62.1'],{cwd:consumer,env,stdio:'pipe'});
+ execFileSync('npm',['install','--prefer-offline','--ignore-scripts','--no-audit','--no-fund','--package-lock=false',join(directory,packed.filename),`@playwright/test@${playwrightVersion}`],{cwd:consumer,env,stdio:'pipe'});
+ const installedPlaywright=JSON.parse(readFileSync(join(consumer,'node_modules/@playwright/test/package.json'),'utf8')).version;
+ if(installedPlaywright!==pinnedPlaywright)execFileSync('npx',['playwright','install','chromium'],{cwd:consumer,env,stdio:'pipe'});
  writeFileSync(join(consumer,'playwright.config.ts'),`import {defineConfig} from '@playwright/test';
 export default defineConfig({projects:[{name:'chromium'}],preserveOutput:'failures-only',testDir:'.',testMatch:'flow.spec.ts',workers:2,fullyParallel:true,retries:1,timeout:10000,reporter:[['json',{outputFile:'playwright-results.json'}],['self-healing-tool/reporter',{outputDir:'reports',open:'always'}]]});`);
  writeFileSync(join(consumer,'flow.spec.ts'),`import {test,expect} from 'self-healing-tool/playwright';

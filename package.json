@@ -5,13 +5,14 @@
   "description": "Bounded Playwright locator recovery with inspectable outcomes.",
   "license": "MIT",
   "engines": {
-    "node": ">=24 <26"
+    "node": ">=22 <26"
   },
   "scripts": {
     "spec:validate": "openspec validate --all --strict --no-interactive",
     "spec:list": "openspec list --json",
     "audit:check": "node scripts/check-traceability.mjs",
     "check": "npm run spec:validate && npm run audit:check",
+    "test": "npm run check && npm run test:audit && npm run typecheck && npm run test:unit && npm run test:browser && npm run test:presentation && npm run test:consumer && npm run test:lifecycle",
     "test:audit": "node --test scripts/check-traceability.test.mjs",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -20,7 +21,7 @@
     "test:consumer": "npm run build && node scripts/check-consumer.mjs",
     "demo:offline": "npm run build && node examples/local-demo/run.mjs",
     "demo:live": "npm run build && node --env-file=.env examples/local-demo/run.mjs --live",
-    "prepack": "npm run build",
+    "prepare": "npm run build",
     "demo": "npm run build && node presentation/cli.mjs",
     "demo:report": "node presentation/cli.mjs",
     "demo:walkthrough": "npm run build && node presentation/cli.mjs --walkthrough",
@@ -64,8 +65,8 @@
     "LICENSES"
   ],
   "peerDependencies": {
-    "playwright": "1.62.1",
-    "@playwright/test": "1.62.1"
+    "playwright": ">=1.62.1 <2",
+    "@playwright/test": ">=1.62.1 <2"
   },
   "peerDependenciesMeta": {
     "@playwright/test": {
