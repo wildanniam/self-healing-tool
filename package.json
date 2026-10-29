@@ -12,10 +12,12 @@
     "spec:list": "openspec list --json",
     "audit:check": "node scripts/check-traceability.mjs",
     "check": "npm run spec:validate && npm run audit:check",
-    "test": "npm run check && npm run test:audit && npm run typecheck && npm run test:unit && npm run test:browser && npm run test:presentation && npm run test:consumer && npm run test:lifecycle",
+    "test": "npm run check && npm run format:check && npm run test:audit && npm run typecheck && npm run test:unit && npm run test:browser && npm run test:presentation && npm run test:consumer && npm run test:lifecycle",
     "test:audit": "node --test scripts/check-traceability.test.mjs",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,js}\" \"presentation/*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js}\" \"presentation/*.mjs\"",
     "test:unit": "npm run build && node --test tests/*.test.mjs",
     "test:browser": "npm run build && playwright test",
     "test:consumer": "npm run build && node scripts/check-consumer.mjs",
@@ -33,6 +35,7 @@
     "@fission-ai/openspec": "1.12.0",
     "@playwright/test": "1.62.1",
     "@types/node": "24.0.0",
+    "prettier": "3.9.10",
     "typescript": "5.9.3"
   },
   "type": "module",
@@ -65,8 +68,8 @@
     "LICENSES"
   ],
   "peerDependencies": {
-    "playwright": ">=1.62.1 <2",
-    "@playwright/test": ">=1.62.1 <2"
+    "@playwright/test": ">=1.62.1 <2",
+    "playwright": ">=1.62.1 <2"
   },
   "peerDependenciesMeta": {
     "playwright": {
