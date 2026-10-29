@@ -36,7 +36,7 @@ Enable `audit: true` on `createHealingSession`, then call `writeReport(healing.s
 
 ## Check the specification workspace
 
-Install Node.js 24 (recommended for this workspace) and npm. OpenSpec `1.12.0` is an exact development dependency and requires Node.js at least `20.19.0`; the library supports Node 24/25 and Playwright 1.62.1 (Chromium), with evidence and limitations in the integration guide.
+Install Node.js 24 (recommended for this workspace) and npm. OpenSpec `1.12.0` is an exact development dependency and requires Node.js at least `20.19.0`; the library supports Node 22–25 and Playwright `>=1.62.1 <2` (Chromium), with evidence and limitations in the integration guide.
 
 ```sh
 npm ci --ignore-scripts

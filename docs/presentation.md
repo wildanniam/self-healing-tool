@@ -89,7 +89,7 @@ No paid live comparison was executed while implementing this workflow. Its missi
 
 ## Setup and troubleshooting
 
-- Node 24/25 and Chromium for Playwright 1.62.1 are required for the walkthrough. On a fresh checkout: `npm ci --ignore-scripts`, then `npx playwright install chromium`.
+- Node 22–25 and Chromium for Playwright 1.62.1 are required for the walkthrough. On a fresh checkout: `npm ci --ignore-scripts`, then `npx playwright install chromium`.
 - If automatic opening fails, open the printed `report.html` path directly.
 - `--step` needs an interactive terminal. Use the default automatic mode in noninteractive runners.
 - For unattended verification: `npm run demo:walkthrough -- --headless --no-open --pause 0`.
