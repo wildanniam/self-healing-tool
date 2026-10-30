@@ -217,7 +217,7 @@ Set `OPENAI_API_KEY` in your terminal before running. Eligible recoveries then m
 
 This repository accompanies **LLM-Assisted Locator Recovery for Playwright: DOM Context Preparation and Target Checks**, accepted for presentation in the APSEC 2026 Tool Demonstration track.
 
-- **Demo video:** [APSEC 2026 tool demonstration](https://youtu.be/vz3v4WI9_CI) shows library usage, LLM-assisted recovery on a synthetic profile page, the report, and a separate recorded target-rule example.
+- **Demo video:** [APSEC 2026 tool demonstration](https://www.youtube.com/watch?v=_kYqodsThgw) shows library usage, LLM-assisted recovery on a synthetic profile page, the report, and a separate recorded target-rule example.
 - **Evaluated version:** [v0.1.0](https://github.com/wildanniam/self-healing-tool/tree/v0.1.0). To install exactly that version, see [reproduce the paper version](docs/playwright.md#reproduce-the-paper-version-v010).
 - **Evidence:** methods, retained results and their limits are listed under [research and reproducibility](docs/index.md#research-and-reproducibility).
 
